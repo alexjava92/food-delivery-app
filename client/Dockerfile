@@ -1,5 +1,5 @@
 # Development image
-FROM node:20-alpine as dev
+FROM node:20 as dev
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
@@ -7,7 +7,7 @@ COPY . .
 CMD ["npm", "start"]
 
 # Production build
-FROM node:20-alpine as build
+FROM node:20 as build
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
