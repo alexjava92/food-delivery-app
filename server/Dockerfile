@@ -3,8 +3,9 @@ FROM node:20 as dev
 WORKDIR /app
 
 # Сразу меняем репозитории на Яндекс (ускорит все)
-RUN sed -i 's|deb.debian.org|mirror.yandex.ru|g' /etc/apt/sources.list \
-    && sed -i 's|security.debian.org|mirror.yandex.ru/debian-security|g' /etc/apt/sources.list
+RUN find /etc/apt/sources.list.d -type f -exec sed -i 's|deb.debian.org|mirror.yandex.ru|g' {} + \
+    && find /etc/apt/sources.list.d -type f -exec sed -i 's|security.debian.org|mirror.yandex.ru/debian-security|g' {} +
+
 
 COPY package*.json ./
 RUN apt-get update \
