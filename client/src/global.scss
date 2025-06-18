@@ -1,0 +1,162 @@
+
+:root {
+  --tg-theme-bg-color: #ffffff;
+  --tg-theme-text-color: #2D3146;
+  --tg-theme-hint-color: #8E8E8E;
+  --tg-theme-button-color: #F3D535;
+  --tg-theme-button-text-color: #2D3146;
+  --accent-color: #F3D535;
+  --bg-grey-color: #DEDEDE;
+  //--color-white: #ffffff;
+  --color-error: #FF3737;
+  --icon-color: #2D3146
+}
+
+
+body {
+  --tg-theme-bg-color: #ffffff;
+  --tg-theme-text-color: #2D3146;
+  --tg-theme-hint-color: #8E8E8E;
+  --tg-theme-button-color: #F3D535;
+  --tg-theme-button-text-color: #2D3146;
+
+  font-family: 'Montserrat', sans-serif;
+}
+
+svg {
+  fill: var(--icon-color)
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 377px;
+  margin: 0 auto;
+  padding: 32px 19px 0px 19px;
+  background: var(--tg-theme-bg-color);
+  color: var(--tg-theme-text-color);
+
+
+}
+
+.darkTheme {
+  --tg-theme-bg-color: #000;
+  --tg-theme-text-color: #ffffff;
+  --tg-theme-hint-color: #8E8E8E;
+  --bg-grey-color: #313131;
+  --icon-color: #DEDEDE;
+}
+
+*::-webkit-scrollbar {
+  width: 3px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #F3D535;
+  border-radius: 20px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #F3D535 transparent;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+select {
+  width: 100%;
+  padding: 6px;
+  border-radius: 12px;
+  color: var(--tg-theme-hint-color);
+  background-color: var(--tg-theme-bg-color);
+  border: 1px solid var(--tg-theme-button-color);
+  text-align: center;
+}
+
+button {
+  &:hover,
+  &:active {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+#root {
+  height: 100%;
+}
+
+.menuBg {
+  min-height: 85px;
+}
+
+.h1 {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+  font-weight: 600;
+  font-size: 30px;
+  position: relative;
+
+  & .back {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+  }
+}
+
+.textCenter {
+  justify-content: center;
+  font-size: 25px;
+
+  & .back {
+    padding: 10px;
+    position: absolute;
+    left: -10px;
+    top: 0px;
+    cursor: pointer;
+
+  }
+}
+
+.error {
+  color: var(--color-error);
+  font-size: 12px;
+}
+
+.mb-4 {
+  margin-bottom: 16px;
+}
+
+.mb-6 {
+  margin-bottom: 24px;
+}
+
+.loader {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}

@@ -1,0 +1,36 @@
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item {
+  margin-bottom: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--bg-grey-color);
+
+}
+
+.link {
+  width: 100%;
+  font-size: 14px;
+  color: var(--tg-theme-button-color);
+}
+.value{
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 12px;
+  color: var(--text-color);
+  border: 1px solid var(--accent-color);
+  font-size: 12px;
+  text-align: center;
+}
+.text{
+  width: 100%;
+}

@@ -1,0 +1,41 @@
+.title {
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.title {
+  margin-bottom: 9px;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.box {
+  margin-bottom: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.genderGroup {
+  margin-bottom: 26px;
+  display: flex;
+  gap: 7px;
+}
+
+.btn {
+  padding: 13px 24px;
+  border-radius: 16px;
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  cursor: pointer;
+
+  &.active {
+    color: var(--color-white);
+    background-color: var(--accent-color);
+  }
+}
+
+.calendar {
+  margin-bottom: 26px;
+}

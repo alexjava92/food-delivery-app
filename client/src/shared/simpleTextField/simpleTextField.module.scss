@@ -1,0 +1,24 @@
+
+.label {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  padding: 5px 0;
+  border-bottom: 1px solid var(--tg-theme-hint-color);
+  color: var(--tg-theme-hint-color);
+  font-size: 12px;
+}
+
+.borderAccent {
+  padding: 12px 20px;
+  border: 1px solid var(--accent-color);
+  border-radius: 16px;
+}
+
+.text {
+  margin-bottom: 16px;
+  font-weight: 600;
+  font-size: 18px;
+}

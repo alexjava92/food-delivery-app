@@ -1,0 +1,27 @@
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--tg-theme-text-color);
+
+  svg {
+    fill: var(--tg-theme-text-color)
+  }
+}
+.buttonGroupBlack{
+  color: var(--tg-theme-button-text-color);
+
+  svg {
+    fill: var(--tg-theme-button-text-color)
+  }
+}
+.button {
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+

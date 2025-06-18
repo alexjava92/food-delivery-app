@@ -1,0 +1,25 @@
+.box{
+   margin-bottom: 8px;
+   display: grid;
+   flex-wrap: wrap;
+   gap: 8px;
+   justify-content: flex-start;
+   grid-template-columns: 1fr auto;
+}
+.calendarBox{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+.statsBox{
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+}
+.title{
+   font-weight: 600;
+}
+.category{
+   cursor: pointer;
+   color: #000080;
+}

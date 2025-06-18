@@ -1,0 +1,51 @@
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  margin: 0;
+  scroll-behavior: smooth;
+  font-style: normal;
+}
+
+
+a {
+  text-decoration: none;
+}
+
+
+select,
+input,
+textarea,
+button{
+  background-color: transparent;
+  border: none;
+  outline: none;
+  padding: 0
+}
+ul,
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+ul,
+ol,
+li,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}

@@ -1,0 +1,23 @@
+
+.formCheckout {
+  & .button {
+    background: var(--tg-theme-button-color);
+  }
+}
+
+.box {
+  margin-bottom: 42px;
+  display: flex;
+  flex-direction: column;
+  gap: 38px;
+}
+
+.inner {
+  margin-bottom: 42px;
+}
+
+.paymentTitle {
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 16px;
+}
