@@ -1,54 +1,35 @@
-
 .list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
-.box {
-  padding: 16px;
-  border: 1px solid var(--bg-grey-color);
-  border-radius: 16px;
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
-.item {
-  margin-bottom: 16px;
+.topRow {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
+  margin-bottom: 8px;
 }
 
-.title {
-  flex-grow: 1;
+.orderId {
   font-weight: 600;
+  font-size: 16px;
 }
 
-.link {
-  width: 100%;
-  font-size: 14px;
-  color: var(--tg-theme-button-color);
+.iconLink {
+  font-size: 18px;
+  text-decoration: none;
 }
 
-.inner {
+.statusRow {
   display: flex;
   align-items: center;
-  gap: 24px
-}
-.paginationList{
-  display: flex;
-  justify-content: center;
-}
-.paginationBtn{
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--tg-theme-button-color);
-  &:first-child{
-    border-right: none;
-  }
-  &:last-child{
-    border-left: none;
-  }
+  gap: 8px;
 }
