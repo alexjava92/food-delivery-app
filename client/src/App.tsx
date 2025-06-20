@@ -26,6 +26,19 @@ function App() {
     const navigate = useNavigate()
     useEffect(() => {
 
+        const isDev = !tg?.initDataUnsafe?.user?.id;
+
+        if (isDev && process.env.NODE_ENV === "development") {
+            // эмуляция входа
+            authUser({
+                chatId: 123456789,
+                username: 'dev_user',
+                queryId: 'fake_query'
+            });
+            setIsPlug(false);
+            return;
+        }
+
         if (tg?.initDataUnsafe?.user?.id) {
             authUser({
                 chatId: tg?.initDataUnsafe?.user?.id,

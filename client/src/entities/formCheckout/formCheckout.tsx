@@ -117,7 +117,7 @@ export const FormCheckout: FC<IType> = memo(() => {
                 </div>
             }
 
-            <Button onClick={submitHandler}>Офрмить заказ</Button>
+            <Button onClick={submitHandler}>Оформить заказ</Button>
             {modalError && createPortal(
                 <Modal textModal={'Ошибка при оформлении заказа'} onClick={() => setModalError(false)}
                        textBtn={'Закрыть'} error/>,
