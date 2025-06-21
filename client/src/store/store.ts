@@ -7,6 +7,7 @@ import {ordersApi} from "./API/ordersApi";
 import {searchApi} from "./API/searchApi";
 import {userApi} from "./API/userApi";
 import {contactsApi} from "./API/contactsApi";
+import notificationReducer from "./slice/notificationSlice";
 
 const rootReducer = combineReducers({
     [productsApi.reducerPath]: productsApi.reducer,
@@ -17,7 +18,7 @@ const rootReducer = combineReducers({
     [contactsApi.reducerPath]: contactsApi.reducer,
     productReducer,
     userReducer,
-
+    notificationReducer,
 })
 
 export const setupStore = () =>
