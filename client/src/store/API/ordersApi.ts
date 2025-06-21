@@ -75,7 +75,7 @@ export const ordersApi = createApi({
                 body,
             }),
             invalidatesTags: (result, error, { body }) => [
-                { type: 'Orders', id: body.userId }, // ✅ не chatId
+                { type: 'Orders', id: body.userId },
             ]
         }),
 

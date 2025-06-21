@@ -37,17 +37,7 @@ const ChangeStatusOrderPage = () => {
             setTextModal("Ошибка при обновлении статуса");
         } else if (dataUpdate) {
             setTextModal("Статус обновлен");
-
-            // ✅ Форсируем получение актуальных уведомлений
-            refetchUserOrders().then((res) => {
-                const orders = res.data;
-                if (orders) {
-                    const count = orders.filter((item) => item.notifications).length;
-                    dispatch(setUnreadCount(count));
-                }
-            });
         }
-
         if (dataUpdate) setModal(true);
     }, [dataUpdate]);
 
