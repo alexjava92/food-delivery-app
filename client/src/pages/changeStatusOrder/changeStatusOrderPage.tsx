@@ -2,7 +2,7 @@ import { MainLayout } from "../../layout/mainLayout";
 import {
     useGetOrdersQuery,
     useUpdateOrderStatusMutation,
-    useGetAllOrdersUserQuery
+    useGetAllOrdersUserQuery,
 } from "../../store/API/ordersApi";
 import React, { useEffect, useState } from "react";
 import classes from "./changeStatusOrderPage.module.scss";
@@ -14,6 +14,7 @@ import { createPortal } from "react-dom";
 import { Modal } from "../../entities/modal/modal";
 import { useAppDispatch, useAppSelector } from "../../hooks/useRedux";
 import { setUnreadCount } from "../../store/slice/notificationSlice";
+import { ordersApi } from "../../store/API/ordersApi"; // Импортируйте ordersApi
 
 const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
 
@@ -22,24 +23,21 @@ const ChangeStatusOrderPage = () => {
     const { data, isError, isLoading } = useGetOrdersQuery(page);
     const [updateStatus, { data: dataUpdate, isError: isErrorUpdate, isLoading: isLoadingUpdate }] =
         useUpdateOrderStatusMutation();
+    const dispatch = useAppDispatch();
+    const { user } = useAppSelector((state) => state.userReducer);
 
     const [select, setSelect] = useState("");
     const [modal, setModal] = useState(false);
     const [textModal, setTextModal] = useState("");
-
-    const dispatch = useAppDispatch();
-    const { user } = useAppSelector((state) => state.userReducer);
-
-    const { refetch: refetchUserOrders } = useGetAllOrdersUserQuery(`${user?.id}`, { skip: !user?.id });
 
     useEffect(() => {
         if (isErrorUpdate) {
             setTextModal("Ошибка при обновлении статуса");
         } else if (dataUpdate) {
             setTextModal("Статус обновлен");
+            setModal(true);
         }
-        if (dataUpdate) setModal(true);
-    }, [dataUpdate]);
+    }, [dataUpdate, isErrorUpdate]);
 
     const handlerSubmit = (id: number | string, chatId: number | string, userId: number | string) => {
         updateStatus({
@@ -49,7 +47,12 @@ const ChangeStatusOrderPage = () => {
                 notifications: true,
                 chatId,
                 userId,
-            }
+            },
+        }).then(() => {
+            // Принудительно инвалидировать кэш для userId клиента
+            dispatch(
+                ordersApi.util.invalidateTags([{ type: "Orders", id: userId }])
+            );
         });
     };
 
@@ -81,7 +84,11 @@ const ChangeStatusOrderPage = () => {
                                 <NavLink className={classes.link} to={`/order/${item.id}`}>
                                     Перейти в заказ
                                 </NavLink>
-                                <Button onClick={() => handlerSubmit(item?.id, item?.user.chatId, item?.user.id)}>
+                                <Button
+                                    onClick={() =>
+                                        handlerSubmit(item?.id, item?.user.chatId, item?.user.id)
+                                    }
+                                >
                                     Сохранить
                                 </Button>
                             </div>
