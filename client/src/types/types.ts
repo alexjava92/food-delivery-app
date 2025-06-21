@@ -45,7 +45,10 @@ export interface IOrder {
     orderProducts: IProduct[];
     notifications?: boolean;
     status?: string;
-    user:{chatId:number | string}
+    user: {
+        id: number;
+        chatId: number | string;
+    };
     comment?: string
 }
 

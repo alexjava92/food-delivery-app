@@ -55,7 +55,6 @@ export const ordersApi = createApi({
             invalidatesTags: ['Orders'], // можно удалить, если не используешь в списке
         }),
 
-        // ✅ Обновление статуса заказа (и установка уведомления)
         updateOrderStatus: build.mutation<any, { id: string | number; body: any }>({
             query: ({ id, body }) => ({
                 url: `${id}`,
@@ -64,7 +63,7 @@ export const ordersApi = createApi({
                 headers: { Authorization: `Bearer ${token}` },
             }),
             invalidatesTags: (result, error, { body }) => [
-                { type: 'Orders', id: body.chatId },
+                { type: 'Orders', id: body.userId },
             ],
         }),
 

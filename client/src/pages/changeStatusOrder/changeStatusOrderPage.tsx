@@ -51,13 +51,14 @@ const ChangeStatusOrderPage = () => {
         if (dataUpdate) setModal(true);
     }, [dataUpdate]);
 
-    const handlerSubmit = (id: number | string, chatId: number | string) => {
+    const handlerSubmit = (id: number | string, chatId: number | string, userId: number | string) => {
         updateStatus({
             id,
             body: {
                 status: select,
                 notifications: true,
-                chatId
+                chatId,
+                userId,
             }
         });
     };
@@ -90,7 +91,7 @@ const ChangeStatusOrderPage = () => {
                                 <NavLink className={classes.link} to={`/order/${item.id}`}>
                                     Перейти в заказ
                                 </NavLink>
-                                <Button onClick={() => handlerSubmit(item?.id, item?.user.chatId)}>
+                                <Button onClick={() => handlerSubmit(item?.id, item?.user.chatId, item?.user.id)}>
                                     Сохранить
                                 </Button>
                             </div>
