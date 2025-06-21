@@ -23,9 +23,13 @@ function App() {
     const [allRoutes, setAllRoutes] = useState<IRoutes[]>();
     const [isPlug, setIsPlug] = useState(true);
     const [authUser, { data, error }] = useAuthUserMutation();
-    const { data: userOrders } = useGetAllOrdersUserQuery(`${user?.id}`, { skip: !user?.id }); // Добавьте запрос
+    const { data: userOrders } = useGetAllOrdersUserQuery(`${user?.id}`, {
+        skip: !user?.id,
+        pollingInterval: 5000, // Каждые 5 секунд
+    });
 
     const navigate = useNavigate();
+
 
     useEffect(() => {
         const isDev = !tg?.initDataUnsafe?.user?.id;
