@@ -22,7 +22,7 @@ export const ordersApi = createApi({
             query: (id) => ({
                 url: `/user/${id}`,
             }),
-            providesTags: ['Orders'],
+            providesTags: (result, error, id) => [{ type: 'Orders', id }],
         }),
         getOneOrder: build.query<IOrder, number | string>({
             query: (id) => ({
@@ -45,14 +45,16 @@ export const ordersApi = createApi({
             }),
             invalidatesTags: ['Orders']
         }),
-        updateOrderStatus: build.mutation({
-            query: ({id, body}) => ({
+        updateOrderStatus: build.mutation<any, { id: string | number; body: any }>({
+            query: ({ id, body }) => ({
                 url: `${id}`,
-                headers: {Authorization: `Bearer ${token}`},
                 method: 'PATCH',
-                body
+                body,
+                headers: { Authorization: `Bearer ${token}` },
             }),
-            invalidatesTags: ['Orders']
+            invalidatesTags: (result, error, { body }) => [
+                { type: 'Orders', id: body.chatId },
+            ],
         }),
         updateOrderNotification: build.mutation({
             query: ({id, body}) => ({
