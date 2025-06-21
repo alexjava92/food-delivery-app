@@ -74,9 +74,9 @@ export const ordersApi = createApi({
                 method: 'PATCH',
                 body,
             }),
-            invalidatesTags: (result, error, { id }) => [
-                { type: 'Orders', id },
-            ],
+            invalidatesTags: (result, error, { body }) => [
+                { type: 'Orders', id: body.userId }, // ✅ не chatId
+            ]
         }),
 
     }),
