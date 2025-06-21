@@ -64,7 +64,8 @@ function App() {
         if (userOrders) {
             console.log("User orders updated:", userOrders);
             const count = userOrders.filter(item => item.notifications).length;
-            dispatch(setUnreadCount(count)); // Обновляйте unreadCount
+            console.log("Setting unreadCount:", count);
+            dispatch(setUnreadCount(count));
         }
     }, [userOrders, dispatch]);
 

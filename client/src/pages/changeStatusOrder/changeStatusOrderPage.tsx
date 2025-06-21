@@ -40,6 +40,7 @@ const ChangeStatusOrderPage = () => {
     }, [dataUpdate, isErrorUpdate]);
 
     const handlerSubmit = (id: number | string, chatId: number | string, userId: number | string) => {
+        console.log("Updating order:", { id, userId, status: select }); // Логирование
         updateStatus({
             id,
             body: {
@@ -48,10 +49,15 @@ const ChangeStatusOrderPage = () => {
                 chatId,
                 userId,
             },
-        }).then(() => {
-            // Принудительно инвалидировать кэш для userId клиента
+        }).then((result) => {
+            console.log("Update result:", result); // Логирование результата
+            // Принудительно перезапросить данные для userId
             dispatch(
                 ordersApi.util.invalidateTags([{ type: "Orders", id: userId }])
+            );
+            // Дополнительно: принудительный refetch
+            dispatch(
+                ordersApi.endpoints.getAllOrdersUser.initiate(userId, { forceRefetch: true })
             );
         });
     };
