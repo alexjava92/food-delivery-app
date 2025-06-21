@@ -30,10 +30,7 @@ const ChangeStatusOrderPage = () => {
     const dispatch = useAppDispatch();
     const { user } = useAppSelector((state) => state.userReducer);
 
-    const {
-        data: userOrders,
-        refetch: refetchUserOrders
-    } = useGetAllOrdersUserQuery(`${user?.id}`, { skip: !user?.id });
+    const { refetch: refetchUserOrders } = useGetAllOrdersUserQuery(`${user?.id}`, { skip: !user?.id });
 
     useEffect(() => {
         if (isErrorUpdate) {
@@ -41,7 +38,7 @@ const ChangeStatusOrderPage = () => {
         } else if (dataUpdate) {
             setTextModal("Статус обновлен");
 
-            // ✅ Рефетч заказов пользователя и обновление счётчика уведомлений
+            // ✅ Форсируем получение актуальных уведомлений
             refetchUserOrders().then((res) => {
                 const orders = res.data;
                 if (orders) {
