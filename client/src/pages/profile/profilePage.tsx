@@ -55,10 +55,10 @@ const ProfilePage = () => {
                 <div className={classes.box}>
                     <SimpleTextField placeholder={'Имя'} onChange={nameInput.onChange} value={nameInput.value}
                                      borderAccent/>
-                    <SimpleTextField placeholder={'Почта'} onChange={emailInput.onChange} value={emailInput.value}
-                                     borderAccent/>
+                   {/* <SimpleTextField placeholder={'Почта'} onChange={emailInput.onChange} value={emailInput.value}
+                                     borderAccent/>*/}
                 </div>
-                <div className={classes.title}>Пол</div>
+                {/*<div className={classes.title}>Пол</div>
                 <div className={classes.genderGroup}>
                     <button
                         className={gender.id === 1 ? `${classes.btn} ${classes.active}` : classes.btn}
@@ -70,11 +70,11 @@ const ProfilePage = () => {
                         onClick={() => setGender({id: 2, text: 'Женский'})}>
                         Женский
                     </button>
-                </div>
-                <div className={classes.calendar}>
+                </div>*/}
+                {/*<div className={classes.calendar}>
                     <div className={classes.title}>Дата рождения</div>
                     <Calendar changeDate={setDate}/>
-                </div>
+                </div>*/}
                 <div className={classes.title}>Контакты</div>
                 <div className="mb-4">
                     <SimpleTextField
