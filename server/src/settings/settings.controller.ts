@@ -1,21 +1,30 @@
 import { Controller, Get, Patch, Body, UseGuards } from '@nestjs/common';
 import { SettingsService } from './settings.service';
 import { JwtAuthGuard } from '../auth/auth.guard';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 
+class SetMaintenanceDto {
+    maintenance: boolean;
+}
+
+@ApiTags('Settings')
 @Controller('api/settings')
 export class SettingsController {
     constructor(private settingsService: SettingsService) {}
 
-
     @Get('maintenance')
+    @ApiOperation({ summary: 'Получить состояние режима обслуживания' })
+    @ApiResponse({ status: 200, description: 'Текущее значение maintenance-флага' })
     getMaintenance() {
         return this.settingsService.getMaintenance();
     }
 
-    // PATCH оставляем защищённым
     @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
     @Patch('maintenance')
-    async setMaintenance(@Body() body: { maintenance: boolean }) {
+    @ApiOperation({ summary: 'Установить состояние режима обслуживания (только для админов)' })
+    @ApiResponse({ status: 200, description: 'Флаг успешно обновлён' })
+    async setMaintenance(@Body() body: SetMaintenanceDto) {
         console.log('[PATCH] /api/settings/maintenance → body:', body);
 
         try {

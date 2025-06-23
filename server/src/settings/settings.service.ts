@@ -24,16 +24,8 @@ export class SettingsService {
     }
 
     async setMaintenance(value: boolean) {
-        console.log('[SERVICE] setMaintenance():', value); // ✅ лог значения
-
         const [setting] = await this.settingsRepo.findOrCreate({ where: { key: 'maintenance' } });
-
-        console.log('[SERVICE] findOrCreate → setting:', setting?.toJSON?.()); // ✅ лог найденной записи
-
         await setting.update({ value: value.toString() });
-
-        console.log('[SERVICE] Обновлено значение:', value);
-
         return { maintenance: value };
     }
 }
