@@ -90,7 +90,9 @@ function App() {
         }
     }, [user]);
 
-    const MaintenanceGuard = ({ children }: { children: React.ReactNode }) => {
+
+
+    /*const MaintenanceGuard = ({ children }: { children: React.ReactNode }) => {
         const { data, isLoading } = useGetMaintenanceQuery();
         const location = useLocation();
 
@@ -104,11 +106,11 @@ function App() {
         }
 
         return <>{children}</>;
-    };
+    };*/
 
 
     return (
-        <MaintenanceGuard>
+
             <Routes>
                 <Route path="/maintenance" element={<MaintenancePage />} />
 
@@ -120,7 +122,7 @@ function App() {
                     ))
                 )}
             </Routes>
-        </MaintenanceGuard>
+
     );
 
 }
