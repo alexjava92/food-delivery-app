@@ -17,6 +17,7 @@ import {UpdateRoleUserPage} from "../pages/updateRoleUser/updateRoleUserPageLazy
 import {AddAminPage} from "../pages/addAmin/addAminPageLazy";
 import {QrcodePage} from "../pages/qrcode/qrcodePageLazy";
 import {AllOrdersPage} from "../pages/allOrders/allOrdersPageLazy";
+import MaintenanceTogglePage from "../pages/maintenanceTogglePage/MaintenanceTogglePage";
 
 
 export const routes = [
@@ -54,5 +55,6 @@ export const adminRoutes =[
 ]
 export const superAdminRoutes =[
     {path: "/update-user/:id", element: <UpdateRoleUserPage/>},
-    {path: "/more/add-admin", element: <AddAminPage/>}
+    {path: "/more/add-admin", element: <AddAminPage/>},
+    {path: "/more/maintenance-toggle", element: <MaintenanceTogglePage/>}
 ]
