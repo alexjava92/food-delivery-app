@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./reset.scss";
 import "./global.scss";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import { useTelegram } from "./hooks/useTelegram";
 import { useAppDispatch, useAppSelector } from "./hooks/useRedux";
 import { fetchUser } from "./store/slice/userSlice";
@@ -10,6 +10,7 @@ import { useAuthUserMutation } from "./store/API/userApi";
 import { QrcodePage } from "./pages/qrcode/qrcodePageLazy";
 import { useGetAllOrdersUserQuery } from "./store/API/ordersApi";
 import { setUnreadCount } from "./store/slice/notificationSlice"; // Импортируйте setUnreadCount
+import { useGetMaintenanceQuery } from "./store/API/maintenanceApi";
 
 interface IRoutes {
     path: string;
@@ -87,31 +88,36 @@ function App() {
         }
     }, [user]);
 
-    useEffect(() => {
-        const originalFetch = window.fetch;
-        window.fetch = async (...args) => {
-            const response = await originalFetch(...args);
-            if (response.status === 503) {
+    const MaintenanceGuard = ({ children }: { children: React.ReactNode }) => {
+        const { data, isLoading } = useGetMaintenanceQuery();
+        const location = useLocation();
+
+        const isAdmin = localStorage.getItem("role") === "admin" || localStorage.getItem("role") === "superAdmin";
+        const onMaintenancePage = location.pathname === "/maintenance";
+
+        useEffect(() => {
+            if (!isLoading && data?.maintenance && !isAdmin && !onMaintenancePage) {
                 window.location.href = "/maintenance";
             }
-            return response;
-        };
-        return () => {
-            window.fetch = originalFetch;
-        };
-    }, []);
+        }, [data, isAdmin, isLoading, location]);
+
+        return <>{children}</>;
+    };
 
     return (
-        <Routes>
-            {isPlug ? (
-                <Route path={`/qrcode`} element={<QrcodePage />} />
-            ) : (
-                allRoutes?.map((route) => (
-                    <Route key={route?.path} path={route?.path} element={route?.element} />
-                ))
-            )}
-        </Routes>
+        <MaintenanceGuard>
+            <Routes>
+                {isPlug ? (
+                    <Route path={`/qrcode`} element={<QrcodePage />} />
+                ) : (
+                    allRoutes?.map((route) => (
+                        <Route key={route?.path} path={route?.path} element={route?.element} />
+                    ))
+                )}
+            </Routes>
+        </MaintenanceGuard>
     );
+
 }
 
 export default App;
