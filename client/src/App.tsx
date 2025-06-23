@@ -11,6 +11,7 @@ import { QrcodePage } from "./pages/qrcode/qrcodePageLazy";
 import { useGetAllOrdersUserQuery } from "./store/API/ordersApi";
 import { setUnreadCount } from "./store/slice/notificationSlice"; // Импортируйте setUnreadCount
 import { useGetMaintenanceQuery } from "./store/API/maintenanceApi";
+import ErrorBoundary from "./ErrorBoundary";
 
 interface IRoutes {
     path: string;
@@ -88,32 +89,10 @@ function App() {
         }
     }, [user]);
 
-    const MaintenanceGuard = ({ children }: { children: React.ReactNode }) => {
-        const token = localStorage.getItem("food-delivery-token");
-        const role = localStorage.getItem("role");
-
-        const isAdmin = role === "admin" || role === "superAdmin";
-
-        const { data, isLoading } = useGetMaintenanceQuery(undefined, {
-            skip: !token, // не делаем запрос пока токена нет
-        });
-
-        const location = useLocation();
-        const onMaintenancePage = location.pathname === "/maintenance";
-
-        useEffect(() => {
-            if (!isLoading && data?.maintenance && !isAdmin && !onMaintenancePage) {
-                window.location.href = "/maintenance";
-            }
-        }, [data, isLoading, isAdmin, onMaintenancePage]);
-
-        return <>{children}</>;
-    };
-
 
 
     return (
-        <MaintenanceGuard>
+        <ErrorBoundary>
             <Routes>
                 {isPlug ? (
                     <Route path={`/qrcode`} element={<QrcodePage />} />
@@ -123,7 +102,7 @@ function App() {
                     ))
                 )}
             </Routes>
-        </MaintenanceGuard>
+        </ErrorBoundary>
     );
 
 }
