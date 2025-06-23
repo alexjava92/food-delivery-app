@@ -19,7 +19,7 @@ export class BotService{
         for (let chatId of adminId) {
             await tgBot.sendMessage(
                 chatId,
-                `Появился новый заказ №${order.id}\nАдрес: ${order.address}\nИмя: ${order.name}\nТелефон: ${order.phone}\nТип доставки: ${order.typeDelivery}\nМетод оплаты: ${order.paymentMethod}\nКоментарий: ${order.comment}\n${str}`,
+                `Появился новый заказ №${order.id}\nАдрес: ${order.address}\nИмя: ${order.name}\nТелефон: ${order.phone}\nТип доставки: ${order.typeDelivery}\nМетод оплаты: ${order.paymentMethod}\nКомментарий: ${order.comment}\n${str}`,
                 {
                 reply_markup: {
                     inline_keyboard: [

@@ -124,7 +124,7 @@ export class BotStartService {
                                 inline_keyboard: [
                                     [{
                                         text: 'Посмотреть пользователя',
-                                        web_app: {url: `${process.env.WEB_APP_URL}/update-user/${newUser.chatId}`}
+                                        web_app: {url: `${process.env.WEB_APP_URL}update-user/${newUser.chatId}`}
                                     }]
                                 ]
                             }
