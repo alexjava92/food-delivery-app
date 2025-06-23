@@ -90,20 +90,37 @@ function App() {
         }
     }, [user]);
 
+    const MaintenanceGuard = ({ children }: { children: React.ReactNode }) => {
+        const { data, isLoading } = useGetMaintenanceQuery();
+        const location = useLocation();
+
+        const isAdmin = user?.role === "admin" || user?.role === "superAdmin";
+        const onMaintenancePage = location.pathname === "/maintenance";
+
+        if (isLoading) return null;
+
+        if (data?.maintenance && !isAdmin && !onMaintenancePage) {
+            return <MaintenancePage />;
+        }
+
+        return <>{children}</>;
+    };
 
 
     return (
-        <Routes>
-            <Route path="/maintenance" element={<MaintenancePage />} />
+        <MaintenanceGuard>
+            <Routes>
+                <Route path="/maintenance" element={<MaintenancePage />} />
 
-            {isPlug ? (
-                <Route path={`/qrcode`} element={<QrcodePage />} />
-            ) : (
-                allRoutes?.map((route) => (
-                    <Route key={route?.path} path={route?.path} element={route?.element} />
-                ))
-            )}
-        </Routes>
+                {isPlug ? (
+                    <Route path={`/qrcode`} element={<QrcodePage />} />
+                ) : (
+                    allRoutes?.map((route) => (
+                        <Route key={route?.path} path={route?.path} element={route?.element} />
+                    ))
+                )}
+            </Routes>
+        </MaintenanceGuard>
     );
 
 }
