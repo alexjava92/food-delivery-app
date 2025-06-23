@@ -23,7 +23,7 @@ export class BotService{
                 {
                 reply_markup: {
                     inline_keyboard: [
-                        [{text: 'Посмотреть заказ', web_app: {url: `${process.env.WEB_APP_URL}/order/${order.id}`}}]
+                        [{text: 'Посмотреть заказ', web_app: {url: `${process.env.WEB_APP_URL}order/${order.id}`}}]
                     ]
                 }
             })
@@ -39,7 +39,7 @@ export class BotService{
             await tgBot.sendMessage(admin, `Изменена роль пользователя ${chatId}`, {
                 reply_markup: {
                     inline_keyboard: [
-                        [{text: 'Посмотреть пользователя', web_app: {url: `${process.env.WEB_APP_URL}/update-user/${chatId}`}}]
+                        [{text: 'Посмотреть пользователя', web_app: {url: `${process.env.WEB_APP_URL}update-user/${chatId}`}}]
                     ]
                 }
             })
