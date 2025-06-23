@@ -104,7 +104,7 @@ function App() {
             isError,
             error,
         } = useGetMaintenanceQuery(undefined, {
-            skip: isAdmin || onMaintenancePage, // ⚠️ Админ и страница /maintenance — пропускаем
+            skip: isAdmin || onMaintenancePage || !user?.id, // ⚠️ Админ и страница /maintenance — пропускаем
             refetchOnMountOrArgChange: false,   // ⚠️ не рефетчить при каждом монтировании
 
         });
