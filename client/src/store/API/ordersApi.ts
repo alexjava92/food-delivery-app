@@ -7,35 +7,41 @@ export const ordersApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${process.env.REACT_APP_API_URL}api/orders`,
     }),
-    tagTypes: ['Orders'], // используем с id для getAllOrdersUser
+    tagTypes: ["Orders"],
     endpoints: (build) => ({
 
-        // Заказы (пагинация) — НЕ используем providesTags
+        // Заказы с пагинацией
         getOrders: build.query<{ count: number; rows: IOrder[] }, number>({
             query: (page) => ({
                 url: '',
-                params: {
-                    page,
-                },
+                params: { page },
             }),
+            providesTags: (result) =>
+                result?.rows
+                    ? [
+                        ...result.rows.map((order) => ({ type: "Orders" as const, id: order.id })),
+                        { type: "Orders", id: "LIST" },
+                    ]
+                    : [{ type: "Orders", id: "LIST" }],
         }),
 
-        // Заказы текущего пользователя (основа для уведомлений)
+        // Заказы пользователя (для уведомлений)
         getAllOrdersUser: build.query<IOrder[], number | string>({
             query: (id) => ({
                 url: `/user/${id}`,
             }),
-            providesTags: (result, error, id) => [{ type: 'Orders', id }],
+            providesTags: (result, error, id) => [{ type: "Orders", id }],
         }),
 
-        // Один заказ (если нужен — не инвалидируем через него)
+        // Один заказ
         getOneOrder: build.query<IOrder, number | string>({
             query: (id) => ({
                 url: `/${id}`,
             }),
+            providesTags: (result, error, id) => [{ type: "Orders", id }],
         }),
 
-        // Статистика (не участвует в тегах)
+        // Статистика
         getStatistics: build.query({
             query: ({ startTime, endTime, catId }) => ({
                 url: `/statistics`,
@@ -45,40 +51,38 @@ export const ordersApi = createApi({
             }),
         }),
 
-        // Создание нового заказа (можно оставить общий invalidate)
+        // Создание нового заказа
         createNewOrder: build.mutation({
             query: (body) => ({
                 url: ``,
-                method: 'POST',
-                body,
-            }),
-            invalidatesTags: ['Orders'], // можно удалить, если не используешь в списке
-        }),
-
-        updateOrderStatus: build.mutation<any, { id: string | number; body: any }>({
-            query: ({ id, body }) => ({
-                url: `${id}`,
-                method: 'PATCH',
+                method: "POST",
                 body,
                 headers: { Authorization: `Bearer ${token}` },
             }),
-            invalidatesTags: (result, error, { body }) => [
-                { type: 'Orders', id: body.userId },
-            ],
+            invalidatesTags: [{ type: "Orders", id: "LIST" }],
         }),
 
-        // ✅ Прочитано уведомление
+        // Обновление статуса заказа
+        updateOrderStatus: build.mutation<any, { id: string | number; body: any }>({
+            query: ({ id, body }) => ({
+                url: `${id}`,
+                method: "PATCH",
+                body,
+                headers: { Authorization: `Bearer ${token}` },
+            }),
+            invalidatesTags: (result, error, { id }) => [{ type: "Orders", id }],
+        }),
+
+        // Обновление уведомления
         updateOrderNotification: build.mutation({
             query: ({ id, body }) => ({
                 url: `user/${id}`,
-                method: 'PATCH',
+                method: "PATCH",
                 body,
+                headers: { Authorization: `Bearer ${token}` },
             }),
-            invalidatesTags: (result, error, { body }) => [
-                { type: 'Orders', id: body.userId },
-            ]
+            invalidatesTags: (result, error, { id }) => [{ type: "Orders", id }],
         }),
-
     }),
 });
 
