@@ -12,6 +12,7 @@ import { useGetAllOrdersUserQuery } from "./store/API/ordersApi";
 import { setUnreadCount } from "./store/slice/notificationSlice"; // Импортируйте setUnreadCount
 import { useGetMaintenanceQuery } from "./store/API/maintenanceApi";
 import ErrorBoundary from "./ErrorBoundary";
+import {MaintenancePage} from "./pages/maintenance/MaintenanceLazy";
 
 interface IRoutes {
     path: string;
@@ -92,17 +93,17 @@ function App() {
 
 
     return (
-        <ErrorBoundary>
-            <Routes>
-                {isPlug ? (
-                    <Route path={`/qrcode`} element={<QrcodePage />} />
-                ) : (
-                    allRoutes?.map((route) => (
-                        <Route key={route?.path} path={route?.path} element={route?.element} />
-                    ))
-                )}
-            </Routes>
-        </ErrorBoundary>
+        <Routes>
+            <Route path="/maintenance" element={<MaintenancePage />} />
+
+            {isPlug ? (
+                <Route path={`/qrcode`} element={<QrcodePage />} />
+            ) : (
+                allRoutes?.map((route) => (
+                    <Route key={route?.path} path={route?.path} element={route?.element} />
+                ))
+            )}
+        </Routes>
     );
 
 }
