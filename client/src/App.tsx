@@ -10,9 +10,8 @@ import { useAuthUserMutation } from "./store/API/userApi";
 import { QrcodePage } from "./pages/qrcode/qrcodePageLazy";
 import { useGetAllOrdersUserQuery } from "./store/API/ordersApi";
 import { setUnreadCount } from "./store/slice/notificationSlice"; // Импортируйте setUnreadCount
-import { useGetMaintenanceQuery } from "./store/API/maintenanceApi";
-import ErrorBoundary from "./ErrorBoundary";
 import {MaintenancePage} from "./pages/maintenance/MaintenanceLazy";
+import MaintenanceGuard from "./MaintenanceGuard";
 
 interface IRoutes {
     path: string;
@@ -89,34 +88,6 @@ function App() {
             setAllRoutes([...routes]);
         }
     }, [user]);
-
-
-
-    const MaintenanceGuard = ({ children }: { children: React.ReactNode }) => {
-        const { user } = useAppSelector((state) => state.userReducer);
-        const location = useLocation();
-        const isAdmin = user?.role === "admin" || user?.role === "superAdmin";
-        const onMaintenancePage = location.pathname === "/maintenance";
-
-        const {
-            data,
-            isLoading,
-            isError,
-            error,
-        } = useGetMaintenanceQuery(undefined, {
-            skip: isAdmin || onMaintenancePage || !user?.id, // ⚠️ Админ и страница /maintenance — пропускаем
-            refetchOnMountOrArgChange: false,   // ⚠️ не рефетчить при каждом монтировании
-
-        });
-
-        if (isLoading) return null;
-
-        if (data?.maintenance && !isAdmin && !onMaintenancePage) {
-            return <MaintenancePage />;
-        }
-
-        return <>{children}</>;
-    };
 
 
     return (
