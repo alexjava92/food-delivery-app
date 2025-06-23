@@ -89,21 +89,28 @@ function App() {
     }, [user]);
 
     const MaintenanceGuard = ({ children }: { children: React.ReactNode }) => {
-        const { data, isLoading } = useGetMaintenanceQuery();
-        const location = useLocation();
+        const token = localStorage.getItem("food-delivery-token");
+        const role = localStorage.getItem("role");
 
-        const isAdmin = localStorage.getItem("role") === "admin" || localStorage.getItem("role") === "superAdmin";
+        const isAdmin = role === "admin" || role === "superAdmin";
+
+        const { data, isLoading } = useGetMaintenanceQuery(undefined, {
+            skip: !token, // не делаем запрос пока токена нет
+        });
+
+        const location = useLocation();
         const onMaintenancePage = location.pathname === "/maintenance";
 
         useEffect(() => {
-            console.log("Maintenance check", { isLoading, data });
             if (!isLoading && data?.maintenance && !isAdmin && !onMaintenancePage) {
                 window.location.href = "/maintenance";
             }
-        }, [data, isAdmin, isLoading, location]);
+        }, [data, isLoading, isAdmin, onMaintenancePage]);
 
         return <>{children}</>;
     };
+
+
 
     return (
         <MaintenanceGuard>
