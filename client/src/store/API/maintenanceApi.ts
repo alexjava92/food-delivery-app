@@ -1,6 +1,5 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import {baseQueryWithReauth} from "./baseQueryWithReauth";
- // путь к изменённому файлу
+import { baseQueryWithReauth } from "./baseQueryWithReauth";
 
 export const maintenanceApi = createApi({
     reducerPath: "maintenanceApi",
@@ -8,7 +7,7 @@ export const maintenanceApi = createApi({
     tagTypes: ["Maintenance"],
     endpoints: (build) => ({
         getMaintenance: build.query<{ maintenance: boolean }, void>({
-            query: () => "settings/maintenance", // без ведущего /
+            query: () => "settings/maintenance",
             providesTags: ["Maintenance"],
         }),
         setMaintenance: build.mutation<any, { maintenance: boolean }>({
@@ -21,3 +20,8 @@ export const maintenanceApi = createApi({
         }),
     }),
 });
+
+export const {
+    useGetMaintenanceQuery,
+    useSetMaintenanceMutation,
+} = maintenanceApi;

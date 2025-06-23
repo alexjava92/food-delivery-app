@@ -1,22 +1,28 @@
-import { BaseQueryApi, FetchArgs, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import {token} from "./apiToken";
+import {
+    fetchBaseQuery,
+    FetchBaseQueryError,
+    FetchArgs,
+    BaseQueryFn,
+} from '@reduxjs/toolkit/query/react';
 
-export const baseQueryWithReauth = async (args: string | FetchArgs, api: BaseQueryApi, extraOptions: {}) => {
-    const rawBaseQuery = fetchBaseQuery({
-        baseUrl: `${process.env.REACT_APP_API_URL}api/`,
-        prepareHeaders: (headers) => {
+
+const baseQuery = fetchBaseQuery({
+    baseUrl: `${process.env.REACT_APP_API_URL}api/`,
+    prepareHeaders: (headers) => {
+        const token = localStorage.getItem("food-delivery-token");
+        if (token) {
             headers.set("Authorization", `Bearer ${token}`);
-            return headers;
-        },
-    });
+        }
+        return headers;
+    },
+});
 
-    const result = await rawBaseQuery(args, api, extraOptions);
-
-    // 👉 Перехват 503 и редирект на maintenance
-    if (result.error?.status === 503) {
-        window.location.href = "/maintenance";
-        return;
-    }
-
+export const baseQueryWithReauth: BaseQueryFn<
+    string | FetchArgs,
+    unknown,
+    FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+    const result = await baseQuery(args, api, extraOptions);
+    // можно добавить обработку ошибок здесь
     return result;
 };
