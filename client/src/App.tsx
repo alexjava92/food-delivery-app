@@ -87,6 +87,20 @@ function App() {
         }
     }, [user]);
 
+    useEffect(() => {
+        const originalFetch = window.fetch;
+        window.fetch = async (...args) => {
+            const response = await originalFetch(...args);
+            if (response.status === 503) {
+                window.location.href = "/maintenance";
+            }
+            return response;
+        };
+        return () => {
+            window.fetch = originalFetch;
+        };
+    }, []);
+
     return (
         <Routes>
             {isPlug ? (
