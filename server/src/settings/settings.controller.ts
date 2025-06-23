@@ -14,7 +14,14 @@ export class SettingsController {
 
     @UseGuards(JwtAuthGuard)
     @Patch('maintenance')
-    setMaintenance(@Body() body: { maintenance: boolean }) {
-        return this.settingsService.setMaintenance(body.maintenance);
+    async setMaintenance(@Body() body: { maintenance: boolean }) {
+        console.log('[PATCH] /api/settings/maintenance → body:', body); // ✅ лог тела запроса
+
+        try {
+            return await this.settingsService.setMaintenance(body.maintenance);
+        } catch (error) {
+            console.error('[PATCH] Ошибка обновления maintenance:', error); // ✅ лог ошибки
+            throw error;
+        }
     }
 }
