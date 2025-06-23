@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetUserQuery, useUpdateRoleUserMutation } from "../../store/API/userApi";
 import { Select } from "../../shared/select/select";
 import { roles } from "../addAmin/addAminPage";
+import classes from "./UpdateRoleUserPage.module.scss";
 
 const UpdateRoleUserPage = () => {
     const navigate = useNavigate();
@@ -30,8 +31,8 @@ const UpdateRoleUserPage = () => {
             {isUserLoading ? (
                 <div>Загрузка...</div>
             ) : (
-                <div className="flex flex-col gap-4">
-                    <p>
+                <div className={classes.container}>
+                    <p className={classes.userInfo}>
                         Изменить роль пользователя <strong>{data?.username}</strong> (ID: {id})
                     </p>
                     <Select
@@ -41,7 +42,8 @@ const UpdateRoleUserPage = () => {
                     />
                     <Button
                         onClick={handleUpdate}
-                        /*disabled={!selectedRole || isLoading}*/
+                       /* disabled={!selectedRole || isLoading}*/
+                        /*className={classes.button}*/
                     >
                         {isLoading ? "Обновление..." : "Изменить"}
                     </Button>
