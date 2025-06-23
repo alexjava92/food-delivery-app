@@ -13,28 +13,26 @@ import { setUnreadCount } from "../../store/slice/notificationSlice";
 const NotificationPage = () => {
     const dispatch = useAppDispatch();
     const { user } = useAppSelector((state) => state.userReducer);
-
     const { data } = useGetAllOrdersUserQuery(`${user?.id}`, {
         skip: !user?.id,
     });
 
     const [updateStatus] = useUpdateOrderNotificationMutation();
+    const [readIds, setReadIds] = React.useState<any[]>([]); // локально прочитанные
 
     useEffect(() => {
         if (data) {
-            const count = data.filter(item => item.notifications).length;
+            const count = data.filter(item => item.notifications && !readIds.includes(item.id)).length;
             dispatch(setUnreadCount(count));
         }
-    }, [data]);
+    }, [data, readIds]);
 
-    const handler = async (orderId: number | string) => {
+    const handler = async (orderId: number|string) => {
+        setReadIds((prev) => [...prev, orderId]); // UI обновляется сразу
         await updateStatus({
             id: orderId,
-            body: {
-                notifications: false
-            }
+            body: { notifications: false },
         });
-        // Обновление состояния произойдёт через useEffect после обновления данных
     };
 
     return (
@@ -42,7 +40,7 @@ const NotificationPage = () => {
             <div className={classes.list}>
                 {data?.length &&
                     data.map(item =>
-                            item.notifications && (
+                            item.notifications && !readIds.includes(item.id) && (
                                 <div className={classes.item} key={item.id}>
                                     <div className={classes.box}>
                                         <div className={classes.text}>Заказ №{item.id}</div>
@@ -61,5 +59,6 @@ const NotificationPage = () => {
         </MainLayout>
     );
 };
+
 
 export default NotificationPage;
