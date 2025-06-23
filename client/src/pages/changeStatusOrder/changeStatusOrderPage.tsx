@@ -14,7 +14,7 @@ import { createPortal } from "react-dom";
 import { Modal } from "../../entities/modal/modal";
 import { useAppDispatch, useAppSelector } from "../../hooks/useRedux";
 import { setUnreadCount } from "../../store/slice/notificationSlice";
-import { ordersApi } from "../../store/API/ordersApi"; // Импортируйте ordersApi
+import { ordersApi } from "../../store/API/ordersApi";
 
 const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
 
@@ -33,14 +33,22 @@ const ChangeStatusOrderPage = () => {
     useEffect(() => {
         if (isErrorUpdate) {
             setTextModal("Ошибка при обновлении статуса");
+            setModal(true);
         } else if (dataUpdate) {
             setTextModal("Статус обновлен");
             setModal(true);
+            setSelect("");
         }
     }, [dataUpdate, isErrorUpdate]);
 
+    useEffect(() => {
+        if (modal) {
+            const timer = setTimeout(() => setModal(false), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [modal]);
+
     const handlerSubmit = (id: number | string, chatId: number | string, userId: number | string) => {
-        console.log("Updating order:", { id, userId, status: select }); // Логирование
         updateStatus({
             id,
             body: {
@@ -50,16 +58,26 @@ const ChangeStatusOrderPage = () => {
                 userId,
             },
         }).then((result) => {
-            console.log("Update result:", result); // Логирование результата
-            // Принудительно перезапросить данные для userId
-            dispatch(
-                ordersApi.util.invalidateTags([{ type: "Orders", id: userId }])
-            );
-            // Дополнительно: принудительный refetch
-            dispatch(
-                ordersApi.endpoints.getAllOrdersUser.initiate(userId, { forceRefetch: true })
-            );
+            dispatch(ordersApi.util.invalidateTags([{ type: "Orders", id: userId }]));
+            dispatch(ordersApi.endpoints.getAllOrdersUser.initiate(userId, { forceRefetch: true }));
         });
+    };
+
+    const getStatusClass = (status: any) => {
+        switch (status) {
+            case "новый":
+                return classes.new;
+            case "готовится":
+                return classes.processing;
+            case "готово к выдаче":
+                return classes.ready;
+            case "выдано":
+                return classes.issued;
+            case "отменен":
+                return classes.cancelled;
+            default:
+                return "";
+        }
     };
 
     if (isError) {
@@ -77,7 +95,10 @@ const ChangeStatusOrderPage = () => {
                 {isLoading && <Loader height={118} />}
                 {data &&
                     data?.rows.map((item) => (
-                        <div className={classes.box} key={item?.id}>
+                        <div
+                            className={`${classes.box} ${classes.statusBox} ${getStatusClass(item?.status)}`}
+                            key={item?.id}
+                        >
                             <div className={classes.item}>
                                 <div className={classes.title}>Заказ №{item?.id}</div>
                                 <Select
@@ -91,6 +112,7 @@ const ChangeStatusOrderPage = () => {
                                     Перейти в заказ
                                 </NavLink>
                                 <Button
+                                    /*disabled={item?.status === select}*/
                                     onClick={() =>
                                         handlerSubmit(item?.id, item?.user.chatId, item?.user.id)
                                     }

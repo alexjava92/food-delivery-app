@@ -52,3 +52,23 @@
     border-left: none;
   }
 }
+
+.new {
+  border-color: gray;
+}
+
+.processing {
+  border-color: blue;
+}
+
+.ready {
+  border-color: orange;
+}
+
+.issued {
+  border-color: green;
+}
+
+.cancelled {
+  border-color: red;
+}
