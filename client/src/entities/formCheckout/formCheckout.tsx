@@ -71,7 +71,7 @@ export const FormCheckout: FC<IType> = memo(() => {
         if (!phone.value || phone.value.includes('_')) {
             phone.setError(true)
         }
-        if (data.address && !data?.phone?.includes('_') && data.paymentMethod) {
+        if (data.address && data.phone && !data.phone.includes('_') && data.paymentMethod) {
 
             createOrder(data)
             updateUser({
