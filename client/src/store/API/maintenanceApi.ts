@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { baseQueryWithReauth } from "./baseQueryWithReauth"; // путь к изменённому файлу
+import {baseQueryWithReauth} from "./baseQueryWithReauth";
+ // путь к изменённому файлу
 
 export const maintenanceApi = createApi({
     reducerPath: "maintenanceApi",
