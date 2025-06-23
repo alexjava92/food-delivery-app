@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Patch, Body, UseGuards, Public } from '@nestjs/common';
 import { SettingsService } from './settings.service';
 import { JwtAuthGuard } from '../auth/auth.guard';
 
@@ -8,6 +8,7 @@ export class SettingsController {
 
     @UseGuards(JwtAuthGuard)
     @Get('maintenance')
+    @Public()
     getMaintenance() {
         return this.settingsService.getMaintenance();
     }
