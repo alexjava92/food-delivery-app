@@ -92,12 +92,22 @@ function App() {
 
 
 
-    /*const MaintenanceGuard = ({ children }: { children: React.ReactNode }) => {
-        const { data, isLoading } = useGetMaintenanceQuery();
+    const MaintenanceGuard = ({ children }: { children: React.ReactNode }) => {
+        const { user } = useAppSelector((state) => state.userReducer);
         const location = useLocation();
-
         const isAdmin = user?.role === "admin" || user?.role === "superAdmin";
         const onMaintenancePage = location.pathname === "/maintenance";
+
+        const {
+            data,
+            isLoading,
+            isError,
+            error,
+        } = useGetMaintenanceQuery(undefined, {
+            skip: isAdmin || onMaintenancePage, // ⚠️ Админ и страница /maintenance — пропускаем
+            refetchOnMountOrArgChange: false,   // ⚠️ не рефетчить при каждом монтировании
+
+        });
 
         if (isLoading) return null;
 
@@ -106,11 +116,11 @@ function App() {
         }
 
         return <>{children}</>;
-    };*/
+    };
 
 
     return (
-
+        <MaintenanceGuard>
             <Routes>
                 <Route path="/maintenance" element={<MaintenancePage />} />
 
@@ -122,7 +132,7 @@ function App() {
                     ))
                 )}
             </Routes>
-
+        </MaintenanceGuard>
     );
 
 }
