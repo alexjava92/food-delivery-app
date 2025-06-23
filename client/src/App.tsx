@@ -96,6 +96,7 @@ function App() {
         const onMaintenancePage = location.pathname === "/maintenance";
 
         useEffect(() => {
+            console.log("Maintenance check", { isLoading, data });
             if (!isLoading && data?.maintenance && !isAdmin && !onMaintenancePage) {
                 window.location.href = "/maintenance";
             }
