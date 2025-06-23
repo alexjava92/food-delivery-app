@@ -6,7 +6,11 @@ export const maintenanceApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: `${process.env.REACT_APP_API_URL}api/settings`,
         prepareHeaders: (headers) => {
-            headers.set("Authorization", `Bearer ${token}`);
+            const token = localStorage.getItem("food-delivery-token"); // ✅ всегда актуальный токен
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
+            return headers;
         },
     }),
     tagTypes: ["Maintenance"],
