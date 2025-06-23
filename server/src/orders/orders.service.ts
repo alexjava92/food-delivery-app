@@ -120,7 +120,7 @@ export class OrdersService {
             await order.update({...dto});
             const user = await this.usersService.findOneId(order.userId)
             if (dto.status) {
-                await this.botService.userNotification(user.chatId, `Изменен статус заказа ${id} на ${dto.status}`)
+                await this.botService.userNotification(user.chatId, `Номер заказа: ${id} - Изменен статус заказа на ${dto.status}`)
             }
 
             return order;
