@@ -1,0 +1,21 @@
+.maintenance {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  height: 100vh;
+  background-color: #f4f4f4;
+
+  h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  p {
+    font-size: 16px;
+    color: #666;
+  }
+}

@@ -20,6 +20,10 @@ import {TextMessageModule} from './text-message/text-message.module';
 import {TextMessageModel} from "./text-message/text-message.model";
 import {ContactsModule} from './contacts/contacts.module';
 import {ContactsModel} from "./contacts/contacts.model";
+import {SettingsModule} from "./settings/settings.module";
+import {SettingsModel} from "./settings/settings.model";
+
+
 
 @Module({
     imports: [
@@ -34,8 +38,16 @@ import {ContactsModel} from "./contacts/contacts.model";
             username: process.env.DATA_BASE_USERNAME,
             password: process.env.DATA_BASE_PASSWORD,
             database: process.env.DATA_BASE_NAME,
-            models: [ProductsModel, CategoriesModel, UsersModel, OrdersModel, OrderProductsModel, TextMessageModel, ContactsModel],
+            models: [ProductsModel,
+                CategoriesModel,
+                UsersModel,
+                OrdersModel,
+                OrderProductsModel,
+                TextMessageModel,
+                ContactsModel,
+                SettingsModel],
             autoLoadModels: true,
+
         }),
         ProductsModule,
         CategoriesModule,
@@ -46,7 +58,8 @@ import {ContactsModel} from "./contacts/contacts.model";
         TokenModule,
         BotModule,
         TextMessageModule,
-        ContactsModule
+        ContactsModule,
+        SettingsModule,
     ],
 })
 export class AppModule {

@@ -17,7 +17,11 @@ import {UpdateRoleUserPage} from "../pages/updateRoleUser/updateRoleUserPageLazy
 import {AddAminPage} from "../pages/addAmin/addAminPageLazy";
 import {QrcodePage} from "../pages/qrcode/qrcodePageLazy";
 import {AllOrdersPage} from "../pages/allOrders/allOrdersPageLazy";
-import MaintenanceTogglePage from "../pages/maintenanceTogglePage/MaintenanceTogglePage";
+import {MaintenancePage} from "../pages/maintenance/MaintenanceLazy";
+import {MaintenanceTogglePage} from "../pages/maintenanceTogglePage/MaintenanceTogglePageLazy";
+
+
+
 
 
 export const routes = [
@@ -33,6 +37,7 @@ export const routes = [
     {path: "/more/orders", element: <OrdersPage/>},
     {path: "/more/favorites", element: <FavoritesPage/>},
     {path: "/qrcode", element: <QrcodePage/>},
+    {path: "/maintenance", element: <MaintenancePage />}
 ]
 export const cashierRoutes =[
     {path: "/more/change-status-order", element: <ChangeStatusOrderPage/>},
