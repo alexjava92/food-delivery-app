@@ -47,4 +47,25 @@
     font-size: 17px;
     padding: 12px 20px;
   }
+  // Цветовые стили:
+  &.primary {
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+  }
+
+  &.success {
+    background: #4caf50;
+    color: #fff;
+  }
+
+  &.danger {
+    background: #f44336;
+    color: #fff;
+  }
+
+  &.gray {
+    background: #9e9e9e;
+    color: #fff;
+  }
 }
+

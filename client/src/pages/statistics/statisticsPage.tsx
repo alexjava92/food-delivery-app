@@ -79,7 +79,7 @@ const StatisticsPage = memo(() => {
                 </Button>
             </div>
             <div className="mb-4">
-                {catId && <Button size="small" onClick={() => setCatId('')}>Назад</Button>}
+                {catId && <Button size="small" color="danger" onClick={() => setCatId('')}>Назад</Button>}
             </div>
 
             <div className={classes.statsGrid}>
