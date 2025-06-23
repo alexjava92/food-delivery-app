@@ -10,10 +10,11 @@ import * as TelegramBot from "node-telegram-bot-api";
 import {UsersService} from "../users/users.service";
 import {UsersModel} from "../users/users.model";
 import {CategoriesModel} from "../categories/categories.model";
+import {WebsocketService} from "../websocket/websocket.gateway";
 
 @Module({
   controllers: [OrdersController],
-  providers: [OrdersService,BotService,TelegramBot,UsersService],
+  providers: [OrdersService,BotService,TelegramBot,UsersService,WebsocketService],
   imports: [
     SequelizeModule.forFeature([OrderProductsModel,CategoriesModel,OrdersModel, ProductsModel,UsersModel]),
   ],

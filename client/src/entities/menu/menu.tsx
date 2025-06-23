@@ -6,9 +6,11 @@ import { MoreIcon } from "../../shared/images/icons/moreIcon";
 import { NotificationIcon } from "../../shared/images/icons/notificationIcon";
 import { CartIcon } from "../../shared/images/icons/cartIcon";
 import { ProfileIcon } from "../../shared/images/icons/profileIcon";
-import { useAppSelector } from "../../hooks/useRedux";
+import { useAppSelector, useAppDispatch } from "../../hooks/useRedux";
 import { createPortal } from "react-dom";
 import { Modal } from "../modal/modal";
+import { useUpdateOrderNotificationMutation } from "../../store/API/ordersApi";
+import { clearUnreadCount } from "../../store/slice/notificationSlice";
 
 interface IType {
     children?: React.ReactNode;
@@ -25,8 +27,21 @@ const linkArr = [
 export const Menu: FC<IType> = memo(({ children }) => {
     const { countProducts } = useAppSelector((state) => state.productReducer);
     const { unreadCount } = useAppSelector((state) => state.notificationReducer);
-
+    const { user } = useAppSelector((state) => state.userReducer);
+    const dispatch = useAppDispatch();
+    const [updateOrderNotification] = useUpdateOrderNotificationMutation();
     const [modal, setModal] = useState(false);
+
+    const handleNotificationClick = () => {
+        if (unreadCount > 0 && user?.id) {
+            updateOrderNotification({
+                id: user.id,
+                body: { notifications: false, userId: user.id },
+            }).then(() => {
+                dispatch(clearUnreadCount());
+            });
+        }
+    };
 
     return (
         <nav className={classes.menu}>
@@ -41,6 +56,9 @@ export const Menu: FC<IType> = memo(({ children }) => {
                         if (!countProducts && item.text === "Корзина") {
                             e.preventDefault();
                             setModal(true);
+                        }
+                        if (item.text === "Уведомления") {
+                            handleNotificationClick();
                         }
                     }}
                 >

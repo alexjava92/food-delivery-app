@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import {WebsocketService} from "./websocket/websocket.gateway";
 
 async function bootstrap() {
   try {
@@ -18,6 +19,10 @@ async function bootstrap() {
       .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api/docs', app, document);
+
+    // Инициализация WebSocket
+    const websocketService = app.get(WebsocketService);
+    websocketService.onModuleInit(); // Запуск WebSocket сервера
 
     await app.listen(PORT, () => console.log(`server started on PORT ${PORT}`));
 

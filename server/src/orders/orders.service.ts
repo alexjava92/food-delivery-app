@@ -9,6 +9,7 @@ import {BotService} from "../bot/bot.service";
 import {UsersService} from "../users/users.service";
 import {CategoriesModel} from "../categories/categories.model";
 import {Op} from "sequelize";
+import {WebsocketService} from "../websocket/websocket.gateway";
 
 @Injectable()
 export class OrdersService {
@@ -19,6 +20,7 @@ export class OrdersService {
         private categoriesRepository: typeof CategoriesModel,
         private readonly botService: BotService,
         private readonly usersService: UsersService,
+        private readonly websocketService: WebsocketService,
     ) {
     }
 
@@ -120,6 +122,10 @@ export class OrdersService {
             const user = await this.usersService.findOneId(order.userId)
             if (dto.status) {
                 await this.botService.userNotification(user.chatId, `Изменен статус заказа ${id} на ${dto.status}`)
+            }
+            // Отправка WS-уведомления при изменении статуса или уведомлений
+            if (dto.status || dto.notifications) {
+                await this.websocketService.notifyOrderUpdate(id, order.userId);
             }
             return order;
         } catch (e) {

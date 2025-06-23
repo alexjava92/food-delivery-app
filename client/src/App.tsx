@@ -9,7 +9,8 @@ import { adminRoutes, cashierRoutes, cookRoutes, routes, superAdminRoutes } from
 import { useAuthUserMutation } from "./store/API/userApi";
 import { QrcodePage } from "./pages/qrcode/qrcodePageLazy";
 import { useGetAllOrdersUserQuery } from "./store/API/ordersApi";
-import { setUnreadCount } from "./store/slice/notificationSlice"; // Импортируйте setUnreadCount
+import { setUnreadCount } from "./store/slice/notificationSlice";
+import {wsService} from "./services/websocket"; // Импортируйте setUnreadCount
 
 interface IRoutes {
     path: string;
@@ -25,7 +26,7 @@ function App() {
     const [authUser, { data, error }] = useAuthUserMutation();
     const { data: userOrders } = useGetAllOrdersUserQuery(`${user?.id}`, {
         skip: !user?.id,
-        pollingInterval: 5000, // Каждые 5 секунд
+        /*pollingInterval: 5000,*/ // Каждые 5 секунд
     });
 
     const navigate = useNavigate();
@@ -72,6 +73,13 @@ function App() {
             dispatch(setUnreadCount(count));
         }
     }, [userOrders, dispatch]);
+
+    useEffect(() => {
+        if (user?.id) {
+            wsService.connect(user.id); // Подключение WebSocket
+            return () => wsService.disconnect(); // Отключение при размонтировании
+        }
+    }, [user]);
 
     useEffect(() => {
         if (user?.role === "superAdmin") {
