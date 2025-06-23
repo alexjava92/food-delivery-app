@@ -13,12 +13,38 @@
   font-size: 15px;
   cursor: pointer;
   border-radius: 16px;
+  transition: all 0.2s ease;
 
   &:active {
     transform: scale(1.1);
     opacity: 0.8;
   }
-  &.active{
+
+  &.active {
     opacity: 0.5;
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  &.small {
+    height: 32px;
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  &.medium {
+    height: 38px;
+    font-size: 15px;
+    padding: 10px 15px;
+  }
+
+  &.large {
+    height: 48px;
+    font-size: 17px;
+    padding: 12px 20px;
   }
 }
