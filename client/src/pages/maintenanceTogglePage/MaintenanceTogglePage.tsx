@@ -1,20 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { MainLayout } from "../../layout/mainLayout";
- // Можно использовать любой toggle компонент
 import { Button } from "../../shared/button/button";
 import classes from "./maintenancePage.module.scss";
 import { Switch } from "../../shared/switch/Switch";
+import {
+    useGetMaintenanceQuery,
+    useSetMaintenanceMutation,
+} from "../../store/API/maintenanceApi";
 
-// Предположим, что ты будешь получать и сохранять флаг через API
-// Пока без API, локально:
 
 const MaintenanceTogglePage = () => {
-    const [enabled, setEnabled] = useState(false); // текущее значение
+    const { data, isLoading } = useGetMaintenanceQuery();
+    const [setMaintenance, { isLoading: isMutating }] = useSetMaintenanceMutation();
+    const [enabled, setEnabled] = useState(false);
+
+    useEffect(() => {
+        if (data) {
+            setEnabled(data.maintenance);
+        }
+    }, [data]);
 
     const toggleHandler = () => {
-        setEnabled(!enabled);
-        // В будущем: отправка на сервер
-        // await api.patch('/admin/settings', { maintenance: !enabled })
+        const newValue = !enabled;
+        setEnabled(newValue);
+        setMaintenance({ maintenance: newValue });
     };
 
     return (
@@ -23,12 +32,12 @@ const MaintenanceTogglePage = () => {
                 <h2>Режим технических работ</h2>
                 <div className={classes.control}>
                     <span>{enabled ? "Включено" : "Выключено"}</span>
-                    <Switch checked={enabled} onChange={toggleHandler} />
+                    <Switch checked={enabled} onChange={toggleHandler} disabled={isMutating || isLoading} />
                 </div>
                 <p className={classes.note}>
                     При включении режима пользователи не смогут использовать приложение, кроме админов.
                 </p>
-                <Button size="small" onClick={toggleHandler}>
+                <Button size="small" onClick={toggleHandler} disabled={isMutating || isLoading}>
                     {enabled ? "Выключить" : "Включить"}
                 </Button>
             </div>

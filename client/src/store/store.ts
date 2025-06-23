@@ -8,6 +8,7 @@ import {searchApi} from "./API/searchApi";
 import {userApi} from "./API/userApi";
 import {contactsApi} from "./API/contactsApi";
 import notificationReducer from "./slice/notificationSlice";
+import { maintenanceApi } from "./API/maintenanceApi";
 
 const rootReducer = combineReducers({
     [productsApi.reducerPath]: productsApi.reducer,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
     [searchApi.reducerPath]: searchApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [contactsApi.reducerPath]: contactsApi.reducer,
+    [maintenanceApi.reducerPath]: maintenanceApi.reducer,
     productReducer,
     userReducer,
     notificationReducer,
@@ -31,6 +33,7 @@ export const setupStore = () =>
             searchApi.middleware,
             userApi.middleware,
             contactsApi.middleware,
+            maintenanceApi.middleware,
         ),
     });
 
