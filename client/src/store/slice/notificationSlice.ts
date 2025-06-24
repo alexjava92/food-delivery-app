@@ -18,8 +18,12 @@ const notificationSlice = createSlice({
         clearUnreadCount(state) {
             state.unreadCount = 0;
         },
+        incrementUnread(state) {
+            state.unreadCount += 1;
+        },
     },
 });
 
-export const { setUnreadCount, clearUnreadCount } = notificationSlice.actions;
+// ✅ экспорт нового действия
+export const { setUnreadCount, clearUnreadCount, incrementUnread } = notificationSlice.actions;
 export default notificationSlice.reducer;

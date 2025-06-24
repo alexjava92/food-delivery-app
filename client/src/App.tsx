@@ -9,9 +9,11 @@ import { adminRoutes, cashierRoutes, cookRoutes, routes, superAdminRoutes } from
 import { useAuthUserMutation } from "./store/API/userApi";
 import { QrcodePage } from "./pages/qrcode/qrcodePageLazy";
 import { useGetAllOrdersUserQuery } from "./store/API/ordersApi";
-import { setUnreadCount } from "./store/slice/notificationSlice"; // Импортируйте setUnreadCount
+import {incrementUnread, setUnreadCount} from "./store/slice/notificationSlice"; // Импортируйте setUnreadCount
 import {MaintenancePage} from "./pages/maintenance/MaintenanceLazy";
 import MaintenanceGuard from "./MaintenanceGuard";
+import { io, Socket } from "socket.io-client";
+
 
 interface IRoutes {
     path: string;
@@ -27,11 +29,30 @@ function App() {
     const [authUser, { data, error }] = useAuthUserMutation();
     const { data: userOrders } = useGetAllOrdersUserQuery(`${user?.id}`, {
         skip: !user?.id,
-        pollingInterval: 5000, // Каждые 5 секунд
+        /*pollingInterval: 5000,*/ // Каждые 5 секунд
     });
+    const [socket, setSocket] = useState<Socket | null>(null);
 
     const navigate = useNavigate();
 
+    // ✅ Подключение WebSocket
+    useEffect(() => {
+        if (user?.id) {
+            const newSocket = io("https://pivko.pro", {
+                query: { userId: user.id },
+            });
+
+            newSocket.on("order-notification", (data) => {
+                console.log("🟢 WS уведомление:", data);
+                dispatch(incrementUnread());
+            });
+
+            setSocket(newSocket);
+            return () => {
+                newSocket.disconnect();
+            };
+        }
+    }, [user?.id]);
 
     useEffect(() => {
         const isDev = !tg?.initDataUnsafe?.user?.id;
@@ -88,6 +109,8 @@ function App() {
             setAllRoutes([...routes]);
         }
     }, [user]);
+
+
 
 
     return (
