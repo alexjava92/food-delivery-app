@@ -9,6 +9,7 @@ import {BotService} from "../bot/bot.service";
 import {UsersService} from "../users/users.service";
 import {CategoriesModel} from "../categories/categories.model";
 import {Op} from "sequelize";
+import { EventsGateway } from '../ws/events.gateway'; // путь зависит от твоей структуры
 
 @Injectable()
 export class OrdersService {
@@ -19,7 +20,7 @@ export class OrdersService {
         private categoriesRepository: typeof CategoriesModel,
         private readonly botService: BotService,
         private readonly usersService: UsersService,
-
+        private readonly eventsGateway: EventsGateway,
     ) {
     }
 
@@ -121,6 +122,12 @@ export class OrdersService {
             const user = await this.usersService.findOneId(order.userId)
             if (dto.status) {
                 await this.botService.userNotification(user.chatId, `Номер заказа: ${id} - Изменен статус заказа на ${dto.status}`)
+                this.eventsGateway.emitToUser(user.id, 'order-notification', {
+                    id: order.id,
+                    status: dto.status,
+                    message: `Ваш заказ №${order.id} теперь "${dto.status}"`,
+                });
+
             }
 
             return order;

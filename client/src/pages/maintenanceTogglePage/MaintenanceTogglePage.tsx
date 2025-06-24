@@ -28,7 +28,7 @@ const MaintenanceTogglePage = () => {
     return (
         <MainLayout heading="Технические работы">
             <div className={classes.wrapper}>
-                <h2>Режим технических работ</h2>
+                {/*<h2>Режим технических работ</h2>*/}
                 <div className={classes.control}>
                     <span>{enabled ? "Включено" : "Выключено"}</span>
                     <Switch checked={enabled} onChange={toggleHandler} disabled={isMutating || isLoading} />

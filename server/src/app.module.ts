@@ -22,6 +22,7 @@ import {ContactsModule} from './contacts/contacts.module';
 import {ContactsModel} from "./contacts/contacts.model";
 import {SettingsModule} from "./settings/settings.module";
 import {SettingsModel} from "./settings/settings.model";
+import {WsModule} from "./ws/ws.module";
 
 
 
@@ -48,6 +49,7 @@ import {SettingsModel} from "./settings/settings.model";
                 SettingsModel],
             autoLoadModels: true,
 
+
         }),
         ProductsModule,
         CategoriesModule,
@@ -60,6 +62,7 @@ import {SettingsModel} from "./settings/settings.model";
         TextMessageModule,
         ContactsModule,
         SettingsModule,
+        WsModule,
     ],
 })
 export class AppModule {
