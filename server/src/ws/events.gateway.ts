@@ -18,6 +18,8 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
         if (userId) {
             this.clients.set(userId, client);
             console.log(`User ${userId} connected`);
+            console.log(`👤 Клиент подключен: userId=${userId}, socketId=${client.id}`);
+
         }
     }
 
@@ -26,6 +28,8 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
             if (socket.id === client.id) {
                 this.clients.delete(userId);
                 console.log(`User ${userId} disconnected`);
+                console.log(`❌ Клиент отключился: ${client.id}`);
+
                 break;
             }
         }

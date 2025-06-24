@@ -123,10 +123,13 @@ export class OrdersService {
             if (dto.status) {
                 await this.botService.userNotification(user.chatId, `Номер заказа: ${id} - Изменен статус заказа на ${dto.status}`)
                 this.eventsGateway.emitToUser(user.id, 'order-notification', {
+
                     id: order.id,
                     status: dto.status,
                     message: `Ваш заказ №${order.id} теперь "${dto.status}"`,
+
                 });
+                console.log("📤 Отправка WS клиенту:", user.id);
 
             }
 

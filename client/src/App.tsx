@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./reset.scss";
 import "./global.scss";
 import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
-import { useTelegram } from "./hooks/useTelegram";
-import { useAppDispatch, useAppSelector } from "./hooks/useRedux";
-import { fetchUser } from "./store/slice/userSlice";
-import { adminRoutes, cashierRoutes, cookRoutes, routes, superAdminRoutes } from "./routes/routes";
-import { useAuthUserMutation } from "./store/API/userApi";
-import { QrcodePage } from "./pages/qrcode/qrcodePageLazy";
-import { useGetAllOrdersUserQuery } from "./store/API/ordersApi";
+import {useTelegram} from "./hooks/useTelegram";
+import {useAppDispatch, useAppSelector} from "./hooks/useRedux";
+import {fetchUser} from "./store/slice/userSlice";
+import {adminRoutes, cashierRoutes, cookRoutes, routes, superAdminRoutes} from "./routes/routes";
+import {useAuthUserMutation} from "./store/API/userApi";
+import {QrcodePage} from "./pages/qrcode/qrcodePageLazy";
+import {useGetAllOrdersUserQuery} from "./store/API/ordersApi";
 import {incrementUnread, setUnreadCount} from "./store/slice/notificationSlice"; // Импортируйте setUnreadCount
 import {MaintenancePage} from "./pages/maintenance/MaintenanceLazy";
 import MaintenanceGuard from "./MaintenanceGuard";
-import { io, Socket } from "socket.io-client";
+import {io, Socket} from "socket.io-client";
 import {Menu} from "./entities/menu/menu";
 
 
@@ -22,13 +22,13 @@ interface IRoutes {
 }
 
 function App() {
-    const { tg } = useTelegram();
+    const {tg} = useTelegram();
     const dispatch = useAppDispatch();
-    const { user } = useAppSelector((state) => state.userReducer);
+    const {user} = useAppSelector((state) => state.userReducer);
     const [allRoutes, setAllRoutes] = useState<IRoutes[]>();
     const [isPlug, setIsPlug] = useState(true);
-    const [authUser, { data, error }] = useAuthUserMutation();
-    const { data: userOrders } = useGetAllOrdersUserQuery(`${user?.id}`, {
+    const [authUser, {data, error}] = useAuthUserMutation();
+    const {data: userOrders} = useGetAllOrdersUserQuery(`${user?.id}`, {
         skip: !user?.id,
         /*pollingInterval: 5000,*/ // Каждые 5 секунд
     });
@@ -43,8 +43,12 @@ function App() {
                 query: { userId: user.id },
             });
 
+            newSocket.on("connect", () => {
+                console.log("🟢 WS connected:", newSocket.id);
+            });
+
             newSocket.on("order-notification", (data) => {
-                console.log("🟢 WS уведомление:", data);
+                console.log("🛎️ Уведомление получено:", data);
                 dispatch(incrementUnread());
             });
 
@@ -112,23 +116,21 @@ function App() {
     }, [user]);
 
 
-
-
     return (
         <MaintenanceGuard>
             <>
-            <Routes>
-                <Route path="/maintenance" element={<MaintenancePage />} />
+                <Routes>
+                    <Route path="/maintenance" element={<MaintenancePage/>}/>
 
-                {isPlug ? (
-                    <Route path={`/qrcode`} element={<QrcodePage />} />
-                ) : (
-                    allRoutes?.map((route) => (
-                        <Route key={route?.path} path={route?.path} element={route?.element} />
-                    ))
-                )}
-            </Routes>
-                <Menu />
+                    {isPlug ? (
+                        <Route path={`/qrcode`} element={<QrcodePage/>}/>
+                    ) : (
+                        allRoutes?.map((route) => (
+                            <Route key={route?.path} path={route?.path} element={route?.element}/>
+                        ))
+                    )}
+                </Routes>
+                <Menu/>
             </>
         </MaintenanceGuard>
     );
