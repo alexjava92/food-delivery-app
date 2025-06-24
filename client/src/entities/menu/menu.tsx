@@ -24,7 +24,7 @@ const linkArr = [
     { to: "/more", text: "Еще", icon: <MoreIcon /> },
 ];
 
-export const Menu: FC<IType> = memo(({ children }) => {
+export const Menu: FC<IType> = ({ children }) => {
     const { countProducts } = useAppSelector((state) => state.productReducer);
     const { unreadCount } = useAppSelector((state) => state.notificationReducer);
     const { user } = useAppSelector((state) => state.userReducer);
@@ -83,4 +83,4 @@ export const Menu: FC<IType> = memo(({ children }) => {
                 )}
         </nav>
     );
-});
+};
