@@ -39,8 +39,10 @@ function App() {
     // ✅ Подключение WebSocket
     useEffect(() => {
         if (user?.id) {
-            const newSocket = io("https://pivko.pro", {
+            const newSocket = io("https://pivko.pro/ws", {
+                path: "/ws",
                 query: { userId: user.id },
+                transports: ["websocket"]
             });
 
             newSocket.on("connect", () => {
