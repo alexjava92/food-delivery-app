@@ -34,7 +34,7 @@ const MoreSettingsAppPage = () => {
     const {user} = useAppSelector((state) => state.userReducer);
 
     return (
-        <MainLayout heading={"Настройки"}>
+        <MainLayout heading={"Настройки"} textCenter>
             <nav className={classes.menu}>
                 {/*{
                     linkArr?.map(item => (
