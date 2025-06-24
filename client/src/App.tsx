@@ -13,6 +13,7 @@ import {incrementUnread, setUnreadCount} from "./store/slice/notificationSlice";
 import {MaintenancePage} from "./pages/maintenance/MaintenanceLazy";
 import MaintenanceGuard from "./MaintenanceGuard";
 import { io, Socket } from "socket.io-client";
+import {Menu} from "./entities/menu/menu";
 
 
 interface IRoutes {
@@ -115,6 +116,7 @@ function App() {
 
     return (
         <MaintenanceGuard>
+            <>
             <Routes>
                 <Route path="/maintenance" element={<MaintenancePage />} />
 
@@ -126,6 +128,8 @@ function App() {
                     ))
                 )}
             </Routes>
+                <Menu />
+            </>
         </MaintenanceGuard>
     );
 

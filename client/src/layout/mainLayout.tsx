@@ -1,7 +1,7 @@
 import React, {FC} from "react";
 import {useNavigate} from "react-router-dom";
 import {ArrowIconBack} from "../shared/images/icons/arrowIconBack";
-import {Menu} from "../entities/menu/menu";
+
 import {Search} from "../entities/search/search";
 import {useTelegram} from "../hooks/useTelegram";
 
@@ -28,7 +28,6 @@ export const MainLayout: FC<IType> = ({children, heading, homePage, textCenter, 
             </h1>
             {isSearch && <Search url={'search?search'}/>}
             {children}
-            <Menu/>
             <div className="menuBg"></div>
         </div>
     );
