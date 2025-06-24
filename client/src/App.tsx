@@ -14,6 +14,7 @@ import {MaintenancePage} from "./pages/maintenance/MaintenanceLazy";
 import MaintenanceGuard from "./MaintenanceGuard";
 import {io, Socket} from "socket.io-client";
 import {Menu} from "./entities/menu/menu";
+import {useWebSocket} from "./hooks/useWebSocket";
 
 
 interface IRoutes {
@@ -30,36 +31,19 @@ function App() {
     const [authUser, {data, error}] = useAuthUserMutation();
     const {data: userOrders} = useGetAllOrdersUserQuery(`${user?.id}`, {
         skip: !user?.id,
-        /*pollingInterval: 5000,*/ // Каждые 5 секунд
     });
-    const [socket, setSocket] = useState<Socket | null>(null);
+    const { connected, subscribe } = useWebSocket(user?.id);
 
     const navigate = useNavigate();
 
-    // ✅ Подключение WebSocket
+
     useEffect(() => {
-        if (user?.id) {
-            const newSocket = io("https://pivko.pro", {
-                path: "/ws", // без :3000
-                transports: ["websocket"],
-                query: { userId: user.id },
-            });
+        if (!connected) return;
 
-            newSocket.on("connect", () => {
-                console.log("🟢 WS connected:", newSocket.id);
-            });
-
-            newSocket.on("order-notification", (data) => {
-                console.log("🛎️ Уведомление получено:", data);
-                dispatch(incrementUnread());
-            });
-
-            setSocket(newSocket);
-            return () => {
-                newSocket.disconnect();
-            };
-        }
-    }, [user?.id]);
+        subscribe("order-notification", (data) => {
+            dispatch(incrementUnread());
+        });
+    }, [connected]);
 
     useEffect(() => {
         const isDev = !tg?.initDataUnsafe?.user?.id;
