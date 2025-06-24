@@ -5,10 +5,10 @@
 
 .control {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 12px;
-  margin: 16px 0;
+  justify-content: space-between;
+  gap: 20px; // можно убрать или изменить
+  padding: 10px 0;
 }
 
 .note {

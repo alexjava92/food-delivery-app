@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { MainLayout } from "../../layout/mainLayout";
-import { Button } from "../../shared/button/button";
 import classes from "./maintenancePage.module.scss";
 import { Switch } from "../../shared/switch/Switch";
 import {
@@ -37,9 +36,9 @@ const MaintenanceTogglePage = () => {
                 <p className={classes.note}>
                     При включении режима пользователи не смогут использовать приложение, кроме админов.
                 </p>
-                <Button size="small" onClick={toggleHandler} disabled={isMutating || isLoading}>
+                {/*<Button size="small" onClick={toggleHandler} disabled={isMutating || isLoading}>
                     {enabled ? "Выключить" : "Включить"}
-                </Button>
+                </Button>*/}
             </div>
         </MainLayout>
     );
