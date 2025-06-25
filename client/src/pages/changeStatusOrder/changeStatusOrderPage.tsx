@@ -2,7 +2,7 @@ import { MainLayout } from "../../layout/mainLayout";
 import {
     useGetOrdersQuery,
     useUpdateOrderStatusMutation,
-    useGetAllOrdersUserQuery,
+    ordersApi,
 } from "../../store/API/ordersApi";
 import React, { useEffect, useState } from "react";
 import classes from "./changeStatusOrderPage.module.scss";
@@ -12,9 +12,7 @@ import { Select } from "../../shared/select/select";
 import { Loader } from "../../shared/loader/loader";
 import { createPortal } from "react-dom";
 import { Modal } from "../../entities/modal/modal";
-import { useAppDispatch, useAppSelector } from "../../hooks/useRedux";
-import { setUnreadCount } from "../../store/slice/notificationSlice";
-import { ordersApi } from "../../store/API/ordersApi";
+import { useAppDispatch } from "../../hooks/useRedux";
 
 const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
 
@@ -24,9 +22,8 @@ const ChangeStatusOrderPage = () => {
     const [updateStatus, { data: dataUpdate, isError: isErrorUpdate, isLoading: isLoadingUpdate }] =
         useUpdateOrderStatusMutation();
     const dispatch = useAppDispatch();
-    const { user } = useAppSelector((state) => state.userReducer);
 
-    const [select, setSelect] = useState("");
+    const [selectMap, setSelectMap] = useState<Record<string, string>>({});
     const [modal, setModal] = useState(false);
     const [textModal, setTextModal] = useState("");
 
@@ -37,7 +34,6 @@ const ChangeStatusOrderPage = () => {
         } else if (dataUpdate) {
             setTextModal("Статус обновлен");
             setModal(true);
-            setSelect("");
         }
     }, [dataUpdate, isErrorUpdate]);
 
@@ -48,22 +44,30 @@ const ChangeStatusOrderPage = () => {
         }
     }, [modal]);
 
-    const handlerSubmit = (id: number | string, chatId: number | string, userId: number | string) => {
+    const handlerSubmit = (
+        id: number | string,
+        chatId: number | string,
+        userId: number | string
+    ) => {
+        const selectedStatus = selectMap[String(id)];
+
         updateStatus({
             id,
             body: {
-                status: select,
+                status: selectedStatus,
                 notifications: true,
                 chatId,
                 userId,
             },
-        }).then((result) => {
+        }).then(() => {
             dispatch(ordersApi.util.invalidateTags([{ type: "Orders", id: userId }]));
-            dispatch(ordersApi.endpoints.getAllOrdersUser.initiate(userId, { forceRefetch: true }));
+            dispatch(
+                ordersApi.endpoints.getAllOrdersUser.initiate(userId, { forceRefetch: true })
+            );
         });
     };
 
-    const getStatusClass = (status: any) => {
+    const getStatusClass = (status: string) => {
         switch (status) {
             case "новый":
                 return classes.new;
@@ -96,15 +100,21 @@ const ChangeStatusOrderPage = () => {
                 {data &&
                     data?.rows.map((item) => (
                         <div
-                            className={`${classes.box} ${classes.statusBox} ${getStatusClass(item?.status)}`}
+                            className={`${classes.box} ${classes.statusBox} ${getStatusClass(item?.status ?? "")}`}
+
                             key={item?.id}
                         >
                             <div className={classes.item}>
                                 <div className={classes.title}>Заказ №{item?.id}</div>
                                 <Select
-                                    onChange={setSelect}
+                                    onChange={(val) =>
+                                        setSelectMap((prev) => ({
+                                            ...prev,
+                                            [String(item.id)]: val,
+                                        }))
+                                    }
                                     dataOption={variants}
-                                    initValue={item?.status}
+                                    initValue={selectMap[String(item.id)] ?? item?.status}
                                 />
                             </div>
                             <div className={classes.inner}>
@@ -112,7 +122,10 @@ const ChangeStatusOrderPage = () => {
                                     Перейти в заказ
                                 </NavLink>
                                 <Button
-                                    /*disabled={item?.status === select}*/
+                                    disabled={
+                                        selectMap[String(item.id)] === item?.status ||
+                                        !selectMap[String(item.id)]
+                                    }
                                     onClick={() =>
                                         handlerSubmit(item?.id, item?.user.chatId, item?.user.id)
                                     }
