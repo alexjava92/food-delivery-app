@@ -10,6 +10,14 @@ export interface IProduct {
     count: number;
     grams: number;
     disabled: boolean;
+    OrderProductsModel?: {
+        id: number;
+        orderId: number;
+        products: number;
+        count: number;
+        createdAt: string;
+        updatedAt: string;
+    };
 }
 
 export interface ICategory {
@@ -50,6 +58,7 @@ export interface IOrder {
         chatId: number | string;
     };
     comment?: string
+    createdAt?: string;
 }
 
 export interface IUser {
