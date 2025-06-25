@@ -96,13 +96,22 @@ export class UsersService {
         }
     }
     async search(query: string) {
-        console.log('query',query)
+        console.log('query', query);
         try {
-            return await this.usersRepository.findAll({ where: {name: {[Op.iLike]: `%${query}%`}} });
+            return await this.usersRepository.findAll({
+                where: {
+                    [Op.or]: [
+                        { name: { [Op.iLike]: `%${query}%` } },
+                        { username: { [Op.iLike]: `%${query}%` } },
+                        { email: { [Op.iLike]: `%${query}%` } },
+                        { chatId: { [Op.iLike]: `%${query}%` } }, // если chatId — string
+                    ],
+                },
+            });
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при поиске пользователя: ${e}`)
+            await this.botService.errorMessage(`Произошла ошибка при поиске пользователя: ${e}`);
             throw new HttpException(
-                `Произошла ошибка при обновлении роли пользователя: ${e}`,
+                `Произошла ошибка при поиске пользователя: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
