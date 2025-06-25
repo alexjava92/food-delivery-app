@@ -8,6 +8,7 @@ interface IType {
 }
 
 export const Order: FC<IType> = memo(({data}) => {
+    console.log('data', data)
     return (
         <div className={classes.order}>
             <div className={classes.title}>
