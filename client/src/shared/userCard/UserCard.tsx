@@ -58,7 +58,7 @@ export const UserCard: React.FC<Props> = ({
                         ))}
                 </select>
                 <Button
-
+                    size={"small"}
                     disabled={!roleChanged}
                     onClick={() => onSave(id)}
                 >
