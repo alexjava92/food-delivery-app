@@ -23,12 +23,7 @@ export const Order: FC<IType> = memo(({ data }) => {
     return (
         <div className={classes.order}>
             <div className={classes.title}>
-                <div>
-                    <span>Заказ №{data?.id}</span>
-                    {data.status && (
-                        <span className={classes.status}>Статус: {data.status}</span>
-                    )}
-                </div>
+                <span>Заказ №{data?.id}</span>
                 <span>{totalSum}₽</span>
             </div>
             <div className={classes.date}>
@@ -41,6 +36,11 @@ export const Order: FC<IType> = memo(({ data }) => {
                     )
                 }
             </div>
+            {data.status && (
+                <div className={classes.status}>
+                    <span>Статус: {data.status}</span>
+                </div>
+            )}
         </div>
     );
 });
