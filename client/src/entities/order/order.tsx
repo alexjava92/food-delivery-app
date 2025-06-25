@@ -32,7 +32,7 @@ export const Order: FC<IType> = memo(({ data }) => {
             <div className={classes.box}>
                 {
                     data.orderProducts.map(item =>
-                        <span key={item.id} className={classes.text}>- {item.title} x{item.count}</span>
+                        <span key={item.id} className={classes.text}>- {item.title} x{item.OrderProductsModel?.count}</span>
                     )
                 }
             </div>
