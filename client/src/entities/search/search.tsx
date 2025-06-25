@@ -50,9 +50,9 @@ export const Search: FC<IType> = memo(({url, callback}) => {
                             products?.map(item =>
                                 <NavLink key={item.id} className={classes.inner} to={`/product/${item.id}`}>
                                     <div className={classes.image}>
-                                        <img src={process.env.REACT_APP_API_URL + item.image} alt={item.title}/>
+                                        <img src={process.env.REACT_APP_API_URL + item.image} alt={item.title} />
                                     </div>
-                                    <div>
+                                    <div className={classes.content}>
                                         <div className={classes.title}>{item.title}</div>
                                         <div className={classes.description}>{item.description}</div>
                                         <div className={classes.price}>{item.price}₽</div>
