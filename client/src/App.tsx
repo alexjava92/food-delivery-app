@@ -94,9 +94,7 @@ function App() {
 
     useEffect(() => {
         if (userOrders) {
-            console.log("User orders updated:", userOrders);
             const count = userOrders.filter(item => item.notifications).length;
-            console.log("Setting unreadCount:", count);
             dispatch(setUnreadCount(count));
         }
     }, [userOrders, dispatch]);
