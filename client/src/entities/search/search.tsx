@@ -54,6 +54,7 @@ export const Search: FC<IType> = memo(({url, callback}) => {
                                     </div>
                                     <div>
                                         <div className={classes.title}>{item.title}</div>
+                                        <div className={classes.description}>{item.description}</div>
                                         <div className={classes.price}>{item.price}₽</div>
                                     </div>
                                 </NavLink>
