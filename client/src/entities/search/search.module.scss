@@ -55,10 +55,16 @@
   color: var(--tg-theme-text-color);
 }
 .description {
-  margin-bottom: 13px;
+  margin-bottom: 5px;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 10px;
   color: var(--text-color);
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Максимум 2 строки */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 2.4em; /* Примерная высота 2 строк */
 }
 
 .image {
