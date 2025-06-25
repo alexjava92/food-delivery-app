@@ -56,6 +56,12 @@ export const userApi = createApi({
                 }
             },
         }),
+        getUsersByRole: build.query({
+            query: (role) => ({
+                url: `/user/role?role=${role}`,
+            }),
+            providesTags: ['Users'],
+        }),
     }),
 });
 
@@ -63,6 +69,7 @@ export const {
     useAuthUserMutation,
     useGetUserQuery,
     useGetAllUsersQuery,
+    useGetUsersByRoleQuery,
     useUpdateRoleUserMutation,
     useDeleteUserMutation,
     useUpdateUserMutation

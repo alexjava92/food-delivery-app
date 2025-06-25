@@ -107,4 +107,16 @@ export class UsersService {
             );
         }
     }
+
+    async getAllByRole(role: string) {
+        try {
+            return await this.usersRepository.findAll({ where: { role } });
+        } catch (e) {
+            await this.botService.errorMessage(`Ошибка при получении пользователей по роли: ${e}`);
+            throw new HttpException(
+                `Ошибка при получении пользователей по роли: ${e}`,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
 }

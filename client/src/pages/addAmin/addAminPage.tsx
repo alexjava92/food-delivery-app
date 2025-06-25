@@ -1,5 +1,9 @@
 import { MainLayout } from "../../layout/mainLayout";
-import { useGetAllUsersQuery, useUpdateUserMutation } from "../../store/API/userApi";
+import {
+    useGetAllUsersQuery,
+    useGetUsersByRoleQuery,
+    useUpdateUserMutation,
+} from "../../store/API/userApi";
 import classes from "../changeStatusOrder/changeStatusOrderPage.module.scss";
 import { Button } from "../../shared/button/button";
 import React, { useEffect, useState } from "react";
@@ -16,20 +20,25 @@ export const roles = [
 ];
 
 const AddAminPage = () => {
-    const { data: allUsers } = useGetAllUsersQuery("");
-    const [updateUser, { isLoading }] = useUpdateUserMutation();
-
-    const [searchResults, setSearchResults] = useState([]);
     const [selectedRoleFilter, setSelectedRoleFilter] = useState("");
+    const [searchResults, setSearchResults] = useState<any[]>([]);
     const [editedRoles, setEditedRoles] = useState<Record<string, string>>({});
     const [modal, setModal] = useState(false);
     const [modalText, setModalText] = useState("");
 
-    const users = searchResults.length > 0 ? searchResults : allUsers || [];
-
-    const filteredUsers = users.filter((user: any) =>
-        selectedRoleFilter ? user.role === selectedRoleFilter : true
+    const { data: allUsers, refetch: refetchAll } = useGetAllUsersQuery("");
+    const { data: roleUsers, refetch: refetchRole } = useGetUsersByRoleQuery(
+        selectedRoleFilter,
+        { skip: !selectedRoleFilter }
     );
+    const [updateUser, { isLoading }] = useUpdateUserMutation();
+
+    const users =
+        Array.isArray(searchResults) && searchResults.length > 0
+            ? searchResults
+            : selectedRoleFilter
+                ? roleUsers || []
+                : allUsers || [];
 
     const handleRoleChange = (userId: string, newRole: string) => {
         setEditedRoles((prev) => ({
@@ -52,6 +61,8 @@ const AddAminPage = () => {
                 delete updated[userId];
                 return updated;
             });
+
+            selectedRoleFilter ? refetchRole() : refetchAll();
         } catch (e) {
             setModalText("Ошибка при обновлении роли");
             setModal(true);
@@ -72,7 +83,10 @@ const AddAminPage = () => {
             <div style={{ margin: "10px 0" }}>
                 <select
                     value={selectedRoleFilter}
-                    onChange={(e) => setSelectedRoleFilter(e.target.value)}
+                    onChange={(e) => {
+                        setSelectedRoleFilter(e.target.value);
+                        setSearchResults([]); // сбрасываем поиск при смене фильтра
+                    }}
                 >
                     {roles.map((r) => (
                         <option key={r.id} value={r.role}>
@@ -84,7 +98,7 @@ const AddAminPage = () => {
 
             <div className={classes.list}>
                 {isLoading && <Loader circle />}
-                {filteredUsers.map((user: any) => {
+                {users.map((user: any) => {
                     const currentEdited = editedRoles[user.id];
                     const roleChanged = currentEdited && currentEdited !== user.role;
                     return (

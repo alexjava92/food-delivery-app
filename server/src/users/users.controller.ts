@@ -17,11 +17,19 @@ export class UsersController {
     getAll() {
         return this.usersService.getAll();
     }
+
+    @Get('/role')
+    getAllByRole(@Query('role') role: string) {
+        return this.usersService.getAllByRole(role);
+    }
+
     @Get('/search')
     async search(@Query() query: {name:string}) {
         console.log('query',query)
         return this.usersService.search(query.name);
     }
+
+
     @ApiOperation({summary: 'Получение пользователя'})
     @ApiResponse({status: 200, type: UsersModel})
     @Get(':id')
