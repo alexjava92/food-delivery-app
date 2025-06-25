@@ -13,10 +13,12 @@ import { Modal } from "../../entities/modal/modal";
 
 export const roles = [
     { id: 0, role: "", name: "Все" },
-    { id: 1, role: "admin", name: "Администратор" },
-    { id: 2, role: "user", name: "Пользователь" },
-    { id: 3, role: "cashier", name: "Кассир" },
-    { id: 4, role: "cook", name: "Повар" },
+    { id: 1, role: "superAdmin", name: "СуперАдмин" },
+    { id: 2, role: "admin", name: "Администратор" },
+    { id: 3, role: "user", name: "Пользователь" },
+    { id: 4, role: "cashier", name: "Кассир" },
+    { id: 5, role: "cook", name: "Повар" },
+
 ];
 
 const AddAminPage = () => {
