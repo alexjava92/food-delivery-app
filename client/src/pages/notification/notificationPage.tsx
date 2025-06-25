@@ -17,6 +17,7 @@ const NotificationPage = () => {
         skip: !user?.id,
     });
 
+
     const [updateStatus] = useUpdateOrderNotificationMutation();
     const [readIds, setReadIds] = React.useState<any[]>([]); // локально прочитанные
 
@@ -26,6 +27,8 @@ const NotificationPage = () => {
             dispatch(setUnreadCount(count));
         }
     }, [data, readIds]);
+
+
 
     const handler = async (orderId: number|string) => {
         setReadIds((prev) => [...prev, orderId]); // UI обновляется сразу

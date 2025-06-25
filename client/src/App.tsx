@@ -8,13 +8,14 @@ import {fetchUser} from "./store/slice/userSlice";
 import {adminRoutes, cashierRoutes, cookRoutes, routes, superAdminRoutes} from "./routes/routes";
 import {useAuthUserMutation} from "./store/API/userApi";
 import {QrcodePage} from "./pages/qrcode/qrcodePageLazy";
-import {useGetAllOrdersUserQuery} from "./store/API/ordersApi";
+import {ordersApi, useGetAllOrdersUserQuery} from "./store/API/ordersApi";
 import {incrementUnread, setUnreadCount} from "./store/slice/notificationSlice"; // Импортируйте setUnreadCount
 import {MaintenancePage} from "./pages/maintenance/MaintenanceLazy";
 import MaintenanceGuard from "./MaintenanceGuard";
-import {io, Socket} from "socket.io-client";
 import {Menu} from "./entities/menu/menu";
 import {useWebSocket} from "./hooks/useWebSocket";
+
+
 
 
 interface IRoutes {
@@ -32,7 +33,7 @@ function App() {
     const {data: userOrders} = useGetAllOrdersUserQuery(`${user?.id}`, {
         skip: !user?.id,
     });
-    const { connected, subscribe } = useWebSocket(user?.id);
+    const { connected, subscribe, unsubscribe } = useWebSocket(user?.id);
 
     const navigate = useNavigate();
 
@@ -40,10 +41,23 @@ function App() {
     useEffect(() => {
         if (!connected) return;
 
-        subscribe("order-notification", (data) => {
+        const handleNotification = (data: { id: number; status: string; message: string }) => {
             dispatch(incrementUnread());
-        });
-    }, [connected]);
+
+            if (user?.id) {
+                dispatch(
+                    ordersApi.util.invalidateTags([{ type: "Orders", id: user.id }])
+                );
+            }
+        };
+
+        subscribe("order-notification", handleNotification);
+
+        return () => {
+            unsubscribe("order-notification", handleNotification);
+        };
+    }, [connected, user?.id]);
+
 
     useEffect(() => {
         const isDev = !tg?.initDataUnsafe?.user?.id;

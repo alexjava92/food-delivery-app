@@ -10,6 +10,7 @@ export const useWebSocket = (userId: number | undefined) => {
     const socketRef = useRef<Socket | null>(null);
     const [connected, setConnected] = useState(false);
 
+
     useEffect(() => {
         if (!userId) return;
 
@@ -42,6 +43,7 @@ export const useWebSocket = (userId: number | undefined) => {
         };
     }, [userId]);
 
+
     // 🎯 типизированная подписка вручную
     const subscribe = <T extends keyof Events>(
         event: T,
@@ -50,8 +52,11 @@ export const useWebSocket = (userId: number | undefined) => {
         socketRef.current?.on(event as string, callback as (...args: any[]) => void);
     };
 
-    const unsubscribe = (event: keyof Events) => {
-        socketRef.current?.off(event as string);
+    const unsubscribe = <T extends keyof Events>(
+        event: T,
+        callback: (data: Events[T]) => void
+    ) => {
+        socketRef.current?.off(event as string, callback as (...args: any[]) => void);
     };
 
     return {
