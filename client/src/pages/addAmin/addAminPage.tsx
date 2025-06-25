@@ -14,7 +14,7 @@ import { IUser } from "../../types/types";
 import {RoleFilter} from "../../shared/roleFilter/RoleFilter";
 import {UserCard} from "../../shared/userCard/UserCard";
 
-const roles = [
+export const roles = [
     { id: 0, role: "", name: "Все" },
     { id: 1, role: "superAdmin", name: "СуперАдмин" },
     { id: 2, role: "admin", name: "Администратор" },
