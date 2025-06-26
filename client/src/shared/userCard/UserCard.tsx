@@ -1,7 +1,7 @@
 // components/UserCard.tsx
 import React from "react";
 import classes from "./UserCard.module.scss";
-import { Button } from "../button/button";
+import {Button} from "../button/button";
 
 interface Role {
     id: number;
@@ -19,6 +19,7 @@ interface Props {
     roles: Role[];
     onChange: (id: string, value: string) => void;
     onSave: (id: string) => void;
+    phone: string;
 }
 
 export const UserCard: React.FC<Props> = ({
@@ -29,8 +30,10 @@ export const UserCard: React.FC<Props> = ({
                                               role,
                                               currentEdited,
                                               roles,
+                                              phone,
                                               onChange,
                                               onSave,
+
                                           }) => {
     const roleChanged = currentEdited && currentEdited !== role;
 
@@ -41,6 +44,7 @@ export const UserCard: React.FC<Props> = ({
                     <div className={classes.name}>{username || chatId}</div>
                     <div className={classes.meta}>ID: {id}</div>
                     {name && <div className={classes.meta}>{name}</div>}
+                    {phone && <div className={classes.meta}>{phone}</div>}
                 </div>
             </div>
             <div className={classes.controls}>

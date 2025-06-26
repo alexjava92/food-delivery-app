@@ -13,7 +13,7 @@ interface Props {
 const MaintenanceGuard: React.FC<Props> = ({ children }) => {
     const { user } = useAppSelector((state) => state.userReducer);
     const location = useLocation();
-    const isAdmin = user?.role === "admin" || user?.role === "superAdmin";
+    const isAdmin = user?.role === "admin" || user?.role === "superAdmin" || user?.role === "cashier" || user?.role === "cook" ;
     const onMaintenancePage = location.pathname === "/maintenance";
 
     const { data, isLoading } = useGetMaintenanceQuery(undefined, {

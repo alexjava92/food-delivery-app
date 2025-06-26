@@ -101,6 +101,7 @@ const AddAminPage = () => {
                         role={user.role || ""}
                         currentEdited={editedRoles[String(user.id)]}
                         roles={roles}
+                        phone={user.phone || ""}
                         onChange={handleRoleChange}
                         onSave={handleSave}
                     />
