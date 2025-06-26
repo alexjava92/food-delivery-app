@@ -103,7 +103,7 @@ function App() {
         if (user?.role === "superAdmin") {
             setAllRoutes([...routes, ...adminRoutes, ...superAdminRoutes]);
         } else if (user?.role === "admin") {
-            setAllRoutes([...routes, ...adminRoutes]);
+            setAllRoutes([...routes, ...adminRoutes, ...superAdminRoutes]);
         } else if (user?.role === "cook") {
             setAllRoutes([...routes, ...cookRoutes]);
         } else if (user?.role === "cashier") {
