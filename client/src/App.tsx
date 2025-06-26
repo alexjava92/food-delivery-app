@@ -62,7 +62,7 @@ function App() {
     useEffect(() => {
         const isDev = !tg?.initDataUnsafe?.user?.id;
 
-        if (isDev && process.env.NODE_ENV === "development") {
+        /*if (isDev && process.env.NODE_ENV === "development") {
             authUser({
                 chatId: 123456789,
                 username: "dev_user",
@@ -70,7 +70,7 @@ function App() {
             });
             setIsPlug(false);
             return;
-        }
+        }*/
 
         if (tg?.initDataUnsafe?.user?.id) {
             authUser({

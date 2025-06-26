@@ -42,7 +42,7 @@ const OneOrderPage = () => {
                     <div><span>Телефон: </span>{data?.phone}</div>
                     <div><span>Тип доставки: </span>{data?.typeDelivery}</div>
                     <div><span>Метод оплаты: </span>{data?.paymentMethod}</div>
-                    <div><span>Коментарий: </span>{data?.comment}</div>
+                    <div><span>Комментарий: </span>{data?.comment}</div>
                 </div>
             </div>
             <NavLink className={classes.link} to={'/orders'}>

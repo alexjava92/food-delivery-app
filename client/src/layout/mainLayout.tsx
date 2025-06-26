@@ -5,6 +5,7 @@ import {ArrowIconBack} from "../shared/images/icons/arrowIconBack";
 import {Search} from "../entities/search/search";
 import {useTelegram} from "../hooks/useTelegram";
 
+
 interface IType {
     children?: React.ReactNode;
     heading?: string;

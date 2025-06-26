@@ -51,7 +51,7 @@ const ProfilePage = () => {
         <MainLayout heading={'Профиль'} textCenter>
             <form onSubmit={(e) => e.preventDefault()}>
                 {isLoading && <Loader circle/>}
-                <div className={classes.title}>Мои данные</div>
+                <div className={classes.title}>Имя</div>
                 <div className={classes.box}>
                     <SimpleTextField placeholder={'Имя'} onChange={nameInput.onChange} value={nameInput.value}
                                      borderAccent/>
@@ -75,7 +75,7 @@ const ProfilePage = () => {
                     <div className={classes.title}>Дата рождения</div>
                     <Calendar changeDate={setDate}/>
                 </div>*/}
-                <div className={classes.title}>Контакты</div>
+                <div className={classes.title}>Телефон</div>
                 <div className="mb-4">
                     <SimpleTextField
                         type={'phone'}
