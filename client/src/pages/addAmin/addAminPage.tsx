@@ -1,7 +1,7 @@
 import { MainLayout } from "../../layout/mainLayout";
 import {
     useGetAllUsersQuery,
-    useGetUsersByRoleQuery,
+    useGetUsersByRoleQuery, useUpdateRoleUserMutation,
     useUpdateUserMutation,
 } from "../../store/API/userApi";
 import React, { useEffect, useState } from "react";
@@ -35,7 +35,7 @@ const AddAminPage = () => {
         selectedRoleFilter,
         { skip: !selectedRoleFilter }
     );
-    const [updateUser, { isLoading }] = useUpdateUserMutation();
+    const [updateUser, { isLoading }] = useUpdateRoleUserMutation();
 
     const users: IUser[] =
         Array.isArray(searchResults) && searchResults.length > 0
