@@ -55,7 +55,11 @@ export class CategoriesService {
 
             console.log('→ FROM DB, writing to Redis');
             const categories = await this.categoriesRepository.findAll();
-            await this.cacheManager.set(cacheKey, categories, 3600);
+            try {
+                await this.cacheManager.set(cacheKey, categories, 3600);
+            } catch (cacheError) {
+                console.error('Redis write error:', cacheError);
+            }
             return categories;
         } catch (e) {
             await this.botService.errorMessage(
