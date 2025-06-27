@@ -24,12 +24,24 @@ import {SettingsModule} from "./settings/settings.module";
 import {SettingsModel} from "./settings/settings.model";
 import {WsModule} from "./ws/ws.module";
 
+import * as redisStore from 'cache-manager-redis-store';
+import {CacheModule} from "@nestjs/cache-manager";
+
 
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             envFilePath: '.env',
+        }),
+        CacheModule.register({
+            isGlobal: true,
+            store: redisStore as any,
+            socket: {
+                host: 'localhost',
+                port: 6379,
+            },
+            ttl: 60 * 60,
         }),
         ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, '..', 'static')}),
         SequelizeModule.forRoot({

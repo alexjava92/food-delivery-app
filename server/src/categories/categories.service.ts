@@ -1,11 +1,18 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import {CategoriesModel} from './categories.model';
-import {InjectModel} from '@nestjs/sequelize';
-import {FileService} from '../file/file.service';
-import {CategoriesDto} from './categories.dto';
-import {ProductsModel} from '../products/products.model';
-import {BotService} from "../bot/bot.service";
+import {
 
+    HttpException,
+    HttpStatus,
+    Inject,
+    Injectable,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { CategoriesModel } from './categories.model';
+import { FileService } from '../file/file.service';
+import { CategoriesDto } from './categories.dto';
+import { ProductsModel } from '../products/products.model';
+import { BotService } from '../bot/bot.service';
+import { Cache } from 'cache-manager';
+import {CACHE_MANAGER} from "@nestjs/cache-manager";
 
 @Injectable()
 export class CategoriesService {
@@ -13,16 +20,23 @@ export class CategoriesService {
         @InjectModel(CategoriesModel)
         private categoriesRepository: typeof CategoriesModel,
         private fileService: FileService,
-        private readonly botService: BotService
-    ) {
-    }
+        private readonly botService: BotService,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    ) {}
 
     async createCategories(dto: CategoriesDto, image: string) {
         try {
             const fileName = await this.fileService.createFile(image);
-            return await this.categoriesRepository.create({...dto, image: fileName});
+            const category = await this.categoriesRepository.create({
+                ...dto,
+                image: fileName,
+            });
+            await this.cacheManager.del('categories:all'); // очистка кэша
+            return category;
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при создании категории: ${e}`)
+            await this.botService.errorMessage(
+                `Произошла ошибка при создании категории: ${e}`,
+            );
             throw new HttpException(
                 `Произошла ошибка при создании категории: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -32,9 +46,17 @@ export class CategoriesService {
 
     async getAllCategories(): Promise<CategoriesModel[]> {
         try {
-            return this.categoriesRepository.findAll();
+            const cacheKey = 'categories:all';
+            const cached = await this.cacheManager.get<CategoriesModel[]>(cacheKey);
+            if (cached) return cached;
+
+            const categories = await this.categoriesRepository.findAll();
+            await this.cacheManager.set(cacheKey, categories, 60 * 60); // TTL 1 час
+            return categories;
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при получении категорий: ${e}`)
+            await this.botService.errorMessage(
+                `Произошла ошибка при получении категорий: ${e}`,
+            );
             throw new HttpException(
                 `Произошла ошибка при получении категорий: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -44,11 +66,16 @@ export class CategoriesService {
 
     async getCategoryById(id: number): Promise<CategoriesModel> {
         try {
-            return await this.categoriesRepository.findOne({where: {id}, include: ProductsModel});
+            return await this.categoriesRepository.findOne({
+                where: { id },
+                include: ProductsModel,
+            });
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при получении категории: ${e}`)
+            await this.botService.errorMessage(
+                `Произошла ошибка при получении категории: ${e}`,
+            );
             throw new HttpException(
-                `Произошла ошибка при получении категории : ${e}`,
+                `Произошла ошибка при получении категории: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
@@ -56,11 +83,19 @@ export class CategoriesService {
 
     async updateCategory(id: number, dto: CategoriesDto, image: string) {
         try {
-            const category = await this.categoriesRepository.findOne({where: {id}});
-            const fileName = image ? await this.fileService.createFile(image) : category.dataValues.image;
-            return await category.update({...dto, image: fileName});
+            const category = await this.categoriesRepository.findOne({
+                where: { id },
+            });
+            const fileName = image
+                ? await this.fileService.createFile(image)
+                : category.dataValues.image;
+            const updated = await category.update({ ...dto, image: fileName });
+            await this.cacheManager.del('categories:all'); // очистка кэша
+            return updated;
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при обновлении категории: ${e}`)
+            await this.botService.errorMessage(
+                `Произошла ошибка при обновлении категории: ${e}`,
+            );
             throw new HttpException(
                 `Произошла ошибка при обновлении категории: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
@@ -71,9 +106,12 @@ export class CategoriesService {
     async deleteCategory(id: number): Promise<void> {
         try {
             const category = await this.getCategoryById(id);
-           return await category.destroy();
+            await category.destroy();
+            await this.cacheManager.del('categories:all'); // очистка кэша
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при удалении категории: ${e}`)
+            await this.botService.errorMessage(
+                `Произошла ошибка при удалении категории: ${e}`,
+            );
             throw new HttpException(
                 `Произошла ошибка при удалении категории: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,

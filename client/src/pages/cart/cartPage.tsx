@@ -16,12 +16,8 @@ const CartPage = () => {
     const {data: contactsData} = useGetContactsQuery('')
     const {productsInCart} = useAppSelector(state => state.productReducer)
     const [checkout, setCheckout] = useState(false)
-    /*const [workTime, setWorkTime] = useState(true)*/
     const [modal, setModal] = useState(false)
-    /*const [swipeItem, setSwipeItem] = useState<IProduct | null>(null);
-    const productRef = useRef<any>([])*/
     const workTime = useWorkTime(contactsData?.worktime);
-
 
 
     const addOrder = () => {
@@ -32,31 +28,6 @@ const CartPage = () => {
         }
     }
 
-    /*const handleSwipeEnd = (e:any,index:number) => {
-        const itemWidth = e.target.offsetWidth;
-        const swipeDistance = e.changedTouches[0].clientX - e.target.getBoundingClientRect().left;
-
-        if ((swipeDistance > itemWidth / 2) && swipeItem) {
-            dispatch(deleteSwipeProduct(swipeItem))
-        }
-        if (productRef.current) {
-            productRef.current[index].style.transform = `translateX(${0}px)`;
-        }
-        setSwipeItem(null);
-    };
-    const handleSwipeStart = (e:any,item:IProduct,index:number) => {
-        const itemWidth = e.target.offsetWidth;
-        const swipeDistance = e.changedTouches[0].clientX - e.target.getBoundingClientRect().left;
-        setSwipeItem(item)
-        if (productRef.current[index]) {
-            productRef.current[index].style.transform = `translateX(-${swipeDistance}px)`;
-        }
-        if (swipeDistance+10 < itemWidth / 2) {
-            if (productRef.current[index]) {
-                productRef.current[index].style.transform = `translateX(${0}px)`;
-            }
-        }
-    }*/
     return (
         <MainLayout heading={checkout ? 'Оформление заказа' : 'Корзина'} textCenter>
             {
