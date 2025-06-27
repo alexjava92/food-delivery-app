@@ -44,6 +44,7 @@ import { redisStore } from 'cache-manager-ioredis-yet';
             port: 6379,
             ttl: 60 * 60,
             onError: (err) => console.error('Redis connection error:', err),
+            onConnect: () => console.log('Connected to Redis'),
         }),
         ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, '..', 'static')}),
         SequelizeModule.forRoot({

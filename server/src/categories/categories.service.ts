@@ -56,7 +56,10 @@ export class CategoriesService {
             console.log('→ FROM DB, writing to Redis');
             const categories = await this.categoriesRepository.findAll();
             try {
-                await this.cacheManager.set(cacheKey, categories, 3600);
+                // Преобразуем в чистый JSON
+                const plainCategories = categories.map(category => category.get({ plain: true }));
+                await this.cacheManager.set(cacheKey, plainCategories, 3600);
+                console.log('→ Cache set successfully');
             } catch (cacheError) {
                 console.error('Redis write error:', cacheError);
             }
