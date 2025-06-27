@@ -89,13 +89,16 @@ export class UsersService {
         }
     }
 
-    async updateRoleUser(chatId: string, body) {
+    async updateRoleUser(chatId: string, body: { role: string }) {
         try {
-            const user = await this.usersRepository.findOne({ where: { chatId } });
+            const user = await this.usersRepository.findOne({where: {chatId}});
             if (!user) throw new Error('User not found');
 
-            await user.update({ role: body.role });
-            const refreshed = await this.usersRepository.findOne({ where: { chatId } });
+            // обновляем роль в БД
+            await user.update({role: body.role});
+
+            // перечитываем из БД, чтобы гарантировать актуальность
+            const refreshed = await this.usersRepository.findOne({where: {chatId}});
 
             const userData = {
                 id: refreshed.id,
@@ -105,9 +108,14 @@ export class UsersService {
             };
 
             const cacheKey = `auth:user:${chatId}`;
+
+            // удаляем и перезаписываем кэш
             await this.cacheManager.del(cacheKey);
             await this.cacheManager.set(cacheKey, userData, 60 * 60);
-            console.log('✅ Обновлён кэш:', cacheKey, userData);
+
+            // читаем обратно — для дебага
+            const check = await this.cacheManager.get(cacheKey);
+            console.log('✅ Кэш обновлён:', cacheKey, check);
 
             await this.botService.updateUser(chatId);
             return refreshed;
@@ -119,8 +127,6 @@ export class UsersService {
             );
         }
     }
-
-
 
 
     async search(query: string) {
