@@ -20,19 +20,42 @@ const CartPage = () => {
     /*const [swipeItem, setSwipeItem] = useState<IProduct | null>(null);
     const productRef = useRef<any>([])*/
     useEffect(() => {
-        if (contactsData) {
-            const timeRange = contactsData?.worktime;
-            const startHour = parseFloat(timeRange.split(" ")[1]);
-            const endHour = parseFloat(timeRange.split("до ")[1]);
-            const currentTime = new Date().getHours();
+        if (contactsData?.worktime) {
+            const worktime = contactsData.worktime;
+            const days = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+            const today = days[new Date().getDay()];
 
-            if (currentTime >= startHour && currentTime < endHour) {
-                setWorkTime(true)
+            // Найдём строку, соответствующую сегодняшнему дню
+            let timeMatch = '';
+
+            if (['Пн', 'Вт', 'Ср', 'Чт', 'Пт'].includes(today)) {
+                const match = worktime.match(/Пн-Пт\s*с\s*(\d{1,2}):\d{2}\s*-\s*(\d{1,2}):\d{2}/);
+                if (match) timeMatch = match[0];
+            } else if (['Сб', 'Вс'].includes(today)) {
+                const match = worktime.match(/Сб-Вс\s*с\s*(\d{1,2}):\d{2}\s*-\s*(\d{1,2}):\d{2}/);
+                if (match) timeMatch = match[0];
+            }
+
+            const match = timeMatch.match(/с\s*(\d{1,2}):\d{2}\s*-\s*(\d{1,2}):\d{2}/);
+
+            if (match) {
+                const startHour = Number(match[1]);
+                const endHour = Number(match[2]) === 24 ? 0 : Number(match[2]); // 24:00 → 00:00 следующего дня
+                const currentHour = new Date().getHours();
+
+                const isWorking = startHour < endHour
+                    ? currentHour >= startHour && currentHour < endHour
+                    : currentHour >= startHour || currentHour < endHour;
+
+                setWorkTime(isWorking);
             } else {
-                setWorkTime(false)
+                console.warn("Не удалось распарсить часы из строки:", contactsData.worktime);
+                setWorkTime(true); // по умолчанию — работаем
             }
         }
     }, [contactsData]);
+
+
     const addOrder = () => {
         if (!workTime) {
             setModal(true)
