@@ -16,8 +16,6 @@ import {Menu} from "./entities/menu/menu";
 import {useWebSocket} from "./hooks/useWebSocket";
 
 
-
-
 interface IRoutes {
     path: string;
     element: React.ReactNode;
@@ -33,7 +31,7 @@ function App() {
     const {data: userOrders} = useGetAllOrdersUserQuery(`${user?.id}`, {
         skip: !user?.id,
     });
-    const { connected, subscribe, unsubscribe } = useWebSocket(user?.id);
+    const {connected, subscribe, unsubscribe} = useWebSocket(user?.id);
 
     const navigate = useNavigate();
 
@@ -46,7 +44,7 @@ function App() {
 
             if (user?.id) {
                 dispatch(
-                    ordersApi.util.invalidateTags([{ type: "Orders", id: user.id }])
+                    ordersApi.util.invalidateTags([{type: "Orders", id: user.id}])
                 );
             }
         };
@@ -87,7 +85,7 @@ function App() {
 
     useEffect(() => {
         if (data) {
-            dispatch(fetchUser(data?.existUser));
+            dispatch(fetchUser(data?.user));
             localStorage.setItem("food-delivery-token", data?.access_token);
         }
     }, [data]);
