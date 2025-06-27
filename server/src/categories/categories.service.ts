@@ -48,10 +48,14 @@ export class CategoriesService {
         try {
             const cacheKey = 'categories:all';
             const cached = await this.cacheManager.get<CategoriesModel[]>(cacheKey);
-            if (cached) return cached;
+            if (cached) {
+                console.log('→ FROM CACHE');
+                return cached;
+            }
 
+            console.log('→ FROM DB, writing to Redis');
             const categories = await this.categoriesRepository.findAll();
-            await this.cacheManager.set(cacheKey, categories, 60 * 60); // TTL 1 час
+            await this.cacheManager.set(cacheKey, categories, 3600);
             return categories;
         } catch (e) {
             await this.botService.errorMessage(
