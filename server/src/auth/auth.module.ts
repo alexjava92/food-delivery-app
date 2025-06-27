@@ -8,17 +8,11 @@ import {TokenService} from "../token/token.service";
 import {JwtService} from "@nestjs/jwt";
 import {JwtStrategy} from "../strategy/strategy";
 import {BotService} from "../bot/bot.service";
-import {CacheModule} from "@nestjs/cache-manager";
 
 @Module({
   controllers: [AuthController],
   providers: [AuthService,UsersService,TokenService, JwtService,JwtStrategy,BotService],
-  imports: [
-    SequelizeModule.forFeature([UsersModel]),
-    CacheModule.register({
-      isGlobal: false, // Уже глобально в app.module.ts, но можно указать локально
-    }),
-  ],
+  imports: [SequelizeModule.forFeature([UsersModel])],
   exports:[AuthService]
 })
 export class AuthModule {}
