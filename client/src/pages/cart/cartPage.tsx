@@ -1,15 +1,13 @@
 import {MainLayout} from "../../layout/mainLayout"
 import {useAppDispatch, useAppSelector} from "../../hooks/useRedux";
 import {Product} from "../../entities/product/product";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 import classes from "./cartPage.module.scss"
 import {Button} from "../../shared/button/button";
 import {FormCheckout} from "../../entities/formCheckout/formCheckout";
 import {useGetContactsQuery} from "../../store/API/contactsApi";
 import {createPortal} from "react-dom";
 import {Modal} from "../../entities/modal/modal";
-import {IProduct} from "../../types/types";
-import {deleteSwipeProduct} from "../../store/slice/productsSlice";
 
 
 const CartPage = () => {
@@ -17,33 +15,33 @@ const CartPage = () => {
     const {data: contactsData} = useGetContactsQuery('')
     const {productsInCart} = useAppSelector(state => state.productReducer)
     const [checkout, setCheckout] = useState(false)
-    const [worktime, setWorktime] = useState(true)
+    const [workTime, setWorkTime] = useState(true)
     const [modal, setModal] = useState(false)
-    const [swipeItem, setSwipeItem] = useState<IProduct | null>(null);
-    const productRef = useRef<any>([])
+    /*const [swipeItem, setSwipeItem] = useState<IProduct | null>(null);
+    const productRef = useRef<any>([])*/
     useEffect(() => {
-     if(contactsData){
-         const timeRange = contactsData?.worktime;
-         const startHour = parseFloat(timeRange.split(" ")[1]);
-         const endHour = parseFloat(timeRange.split("до ")[1]);
-         const currentTime = new Date().getHours();
+        if (contactsData) {
+            const timeRange = contactsData?.worktime;
+            const startHour = parseFloat(timeRange.split(" ")[1]);
+            const endHour = parseFloat(timeRange.split("до ")[1]);
+            const currentTime = new Date().getHours();
 
-         // if (currentTime >= startHour && currentTime < endHour) {
-         //     setWorktime(true)
-         // } else {
-         //     setWorktime(false)
-         // }
-     }
+            if (currentTime >= startHour && currentTime < endHour) {
+                setWorkTime(true)
+            } else {
+                setWorkTime(false)
+            }
+        }
     }, [contactsData]);
     const addOrder = () => {
-        if (!worktime) {
+        if (!workTime) {
             setModal(true)
         } else {
             setCheckout(true)
         }
     }
 
-    const handleSwipeEnd = (e:any,index:number) => {
+    /*const handleSwipeEnd = (e:any,index:number) => {
         const itemWidth = e.target.offsetWidth;
         const swipeDistance = e.changedTouches[0].clientX - e.target.getBoundingClientRect().left;
 
@@ -67,7 +65,7 @@ const CartPage = () => {
                 productRef.current[index].style.transform = `translateX(${0}px)`;
             }
         }
-    }
+    }*/
     return (
         <MainLayout heading={checkout ? 'Оформление заказа' : 'Корзина'} textCenter>
             {
@@ -78,15 +76,10 @@ const CartPage = () => {
                         <div>
                             <div className={classes.list}>
                                 {
-                                    productsInCart && productsInCart.map((item,index:number) =>
+                                    productsInCart && productsInCart.map((item, index: number) =>
                                         <div
                                             className={classes.item}
-                                            ref={(element:any) => productRef.current[index] = element}
                                             key={item.id}
-                                            onDrag={(e)=>handleSwipeStart(e,item,index)}
-                                            onTouchStart={(e)=>handleSwipeStart(e,item,index)}
-                                            onTouchEnd={(e)=>handleSwipeEnd(e,index)}
-                                            onTouchMove={(e)=>handleSwipeEnd(e,index)}
                                         >
                                             <Product data={item} inCart count={item.count ? item.count : 0}/>
                                             <div className={classes.divider}></div>
@@ -109,7 +102,7 @@ const CartPage = () => {
             }
             {modal && createPortal(
                 <Modal textModal={`
-                К сожалнию в данный момент мы не работаем.\n
+                К сожалению в данный момент мы не работаем.\n
                 Время работы: ${contactsData.worktime}
                 `} onClick={() => setModal(false)}
                        textBtn={'Закрыть'}/>,
