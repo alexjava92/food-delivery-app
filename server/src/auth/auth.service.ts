@@ -29,10 +29,12 @@ export class AuthService {
             if (cachedUser && cachedUser.role) {
                 console.log('→ FROM AUTH CACHE');
                 return {
-                    id: cachedUser.id,
-                    chatId: cachedUser.chatId,
-                    username: cachedUser.username,
-                    role: cachedUser.role,
+                    user: {
+                        id: cachedUser.id,
+                        chatId: cachedUser.chatId,
+                        username: cachedUser.username,
+                        role: cachedUser.role,
+                    },
                     access_token: await this.tokenService.generateJwtToken({
                         chatId: cachedUser.chatId,
                         role: cachedUser.role,
@@ -56,7 +58,7 @@ export class AuthService {
                 await this.cacheManager.set(cacheKey, userData, 60 * 60);
 
                 return {
-                    ...userData,
+                    user: userData,
                     access_token: await this.tokenService.generateJwtToken({
                         ...payload,
                         role: userData.role,
@@ -78,7 +80,7 @@ export class AuthService {
             await this.cacheManager.set(cacheKey, userData, 60 * 60);
 
             return {
-                ...userData,
+                user: userData,
                 access_token: await this.tokenService.generateJwtToken({
                     ...payload,
                     role: user.role,
