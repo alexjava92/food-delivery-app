@@ -33,11 +33,11 @@ export class AuthService {
                         id: cachedUser.id,
                         chatId: cachedUser.chatId,
                         username: cachedUser.username,
-                        role: cachedUser.role,
+                        role: cachedUser.role || 'user', // 👈 доп. защита
                     },
                     access_token: await this.tokenService.generateJwtToken({
                         chatId: cachedUser.chatId,
-                        role: cachedUser.role,
+                        role: cachedUser.role || 'user',
                     }),
                 };
             }
