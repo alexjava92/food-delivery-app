@@ -5,13 +5,19 @@ import {UsersDto} from './users.dto';
 import {BotService} from "../bot/bot.service";
 import {Op} from "sequelize";
 import {ProductsModel} from "../products/products.model";
+import {Inject} from '@nestjs/common';
+import {CACHE_MANAGER} from '@nestjs/cache-manager';
+import {Cache} from 'cache-manager';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectModel(UsersModel) private usersRepository: typeof UsersModel,
-        private botService: BotService) {
+        private botService: BotService,
+        @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    ) {
     }
+
     async getAll() {
         try {
             return await this.usersRepository.findAll();
@@ -23,6 +29,7 @@ export class UsersService {
             );
         }
     }
+
     async getChatId() {
         try {
             const users = await this.usersRepository.findAll();
@@ -36,10 +43,11 @@ export class UsersService {
         }
     }
 
-    async findOne(chatId: string ) {
+    async findOne(chatId: string) {
         return this.usersRepository.findOne({where: {chatId}});
     }
-    async findOneId(id: number ) {
+
+    async findOneId(id: number) {
         return this.usersRepository.findOne({where: {id}});
     }
 
@@ -81,30 +89,46 @@ export class UsersService {
         }
     }
 
-    async updateRoleUser(chatId: string,body) {
+    async updateRoleUser(chatId: string, body) {
         try {
-            const user = await this.usersRepository.findOne({where: {chatId}});
-            await user.update({role: body.role});
-            await this.botService.updateUser(chatId)
+            const user = await this.usersRepository.findOne({ where: { chatId } });
+            if (!user) throw new Error('User not found');
+
+            await user.update({ role: body.role });
+
+            // 🔄 Обновляем кэш
+            const userData = {
+                id: user.id,
+                chatId: user.chatId,
+                username: user.username,
+                role: user.role || 'user',
+            };
+            await this.cacheManager.set(`auth:user:${user.chatId}`, userData, 60 * 60);
+
+            // ⚙️ бот уведомление
+            await this.botService.updateUser(chatId);
+
             return user;
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при обновлении роли пользователя: ${e}`)
+            await this.botService.errorMessage(`Произошла ошибка при обновлении роли пользователя: ${e}`);
             throw new HttpException(
                 `Произошла ошибка при обновлении роли пользователя: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     }
+
+
     async search(query: string) {
         console.log('query', query);
         try {
             return await this.usersRepository.findAll({
                 where: {
                     [Op.or]: [
-                        { name: { [Op.iLike]: `%${query}%` } },
-                        { username: { [Op.iLike]: `%${query}%` } },
-                        { email: { [Op.iLike]: `%${query}%` } },
-                        { chatId: { [Op.iLike]: `%${query}%` } }, // если chatId — string
+                        {name: {[Op.iLike]: `%${query}%`}},
+                        {username: {[Op.iLike]: `%${query}%`}},
+                        {email: {[Op.iLike]: `%${query}%`}},
+                        {chatId: {[Op.iLike]: `%${query}%`}}, // если chatId — string
                     ],
                 },
             });
@@ -119,7 +143,7 @@ export class UsersService {
 
     async getAllByRole(role: string) {
         try {
-            return await this.usersRepository.findAll({ where: { role } });
+            return await this.usersRepository.findAll({where: {role}});
         } catch (e) {
             await this.botService.errorMessage(`Ошибка при получении пользователей по роли: ${e}`);
             throw new HttpException(
