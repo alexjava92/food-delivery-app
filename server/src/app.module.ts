@@ -24,7 +24,7 @@ import {SettingsModule} from "./settings/settings.module";
 import {SettingsModel} from "./settings/settings.model";
 import {WsModule} from "./ws/ws.module";
 import { CacheModule } from '@nestjs/cache-manager';
-import redisStore from 'cache-manager-ioredis';
+import { redisStore } from 'cache-manager-ioredis-yet';
 
 
 
@@ -40,9 +40,10 @@ import redisStore from 'cache-manager-ioredis';
         CacheModule.register({
             isGlobal: true,
             store: redisStore,
-            ttl: 60 * 60,
             host: 'localhost',
             port: 6379,
+            ttl: 60 * 60,
+            onError: (err) => console.error('Redis connection error:', err),
         }),
         ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, '..', 'static')}),
         SequelizeModule.forRoot({
