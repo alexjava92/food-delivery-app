@@ -97,7 +97,7 @@ export class UsersService {
             await user.update({ role: body.role });
 
             const refreshed = await this.usersRepository.findByPk(id);
-
+            console.log('🧠 [updateRoleUser] вызван с ID:', id, 'и ролью:', body.role);
             const userData = {
                 id: refreshed.id,
                 chatId: refreshed.chatId,

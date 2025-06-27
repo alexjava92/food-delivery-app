@@ -39,6 +39,7 @@ export class UsersController {
     @UseGuards(JwtAuthGuard)
     @Patch('/update/:id')
     updateRole(@Param('id')  id:string,@Body() body) {
+        console.log('📥 PATCH /user/update/:id вызван');
         return this.usersService.updateRoleUser(id,body);
     }
 
