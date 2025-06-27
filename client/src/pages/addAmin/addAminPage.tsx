@@ -54,7 +54,10 @@ const AddAminPage = () => {
     const handleSave = async (userId: string) => {
         const role = editedRoles[userId];
         try {
-            await updateUser({ userId, body: { role } }).unwrap();
+            await updateUser({
+                userId: Number(userId), // 👈 приведение типа
+                body: { role },
+            }).unwrap();
             setModalText("Роль успешно обновлена");
             setModal(true);
             setEditedRoles((prev) => {
