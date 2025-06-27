@@ -41,7 +41,8 @@ import redisStore from 'cache-manager-ioredis';
             isGlobal: true,
             store: redisStore,
             ttl: 60 * 60,
-            url: 'redis://localhost:6379',
+            host: 'localhost',
+            port: 6379,
         }),
         ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, '..', 'static')}),
         SequelizeModule.forRoot({
