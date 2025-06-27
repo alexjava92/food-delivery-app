@@ -23,9 +23,11 @@ import {ContactsModel} from "./contacts/contacts.model";
 import {SettingsModule} from "./settings/settings.module";
 import {SettingsModel} from "./settings/settings.model";
 import {WsModule} from "./ws/ws.module";
-
 import { CacheModule } from '@nestjs/cache-manager';
-import {redisStore} from "cache-manager-redis-store";
+import {redisStore} from "cache-manager-ioredis";
+
+
+
 
 
 
@@ -38,10 +40,8 @@ import {redisStore} from "cache-manager-redis-store";
         CacheModule.register({
             isGlobal: true,
             store: redisStore,
-            socket: {
-                host: 'localhost',
-                port: 6379,
-            },
+            host: 'localhost',
+            port: 6379,
             ttl: 60 * 60,
         }),
         ServeStaticModule.forRoot({rootPath: path.resolve(__dirname, '..', 'static')}),
