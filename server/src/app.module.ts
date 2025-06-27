@@ -24,7 +24,7 @@ import {SettingsModule} from "./settings/settings.module";
 import {SettingsModel} from "./settings/settings.model";
 import {WsModule} from "./ws/ws.module";
 
-import * as redisStore from 'cache-manager-redis-store';
+import redisStore from 'cache-manager-redis-store';
 import {CacheModule} from "@nestjs/cache-manager";
 
 
@@ -36,7 +36,7 @@ import {CacheModule} from "@nestjs/cache-manager";
         }),
         CacheModule.register({
             isGlobal: true,
-            store: redisStore as any,
+            store: redisStore,
             socket: {
                 host: 'localhost',
                 port: 6379,
