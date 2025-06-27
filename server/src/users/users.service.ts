@@ -94,33 +94,32 @@ export class UsersService {
             const user = await this.usersRepository.findOne({ where: { chatId } });
             if (!user) throw new Error('User not found');
 
-            const updatedUser = await user.update({ role: body.role });
+            await user.update({ role: body.role });
+            const refreshed = await this.usersRepository.findOne({ where: { chatId } });
 
             const userData = {
-                id: updatedUser.id,
-                chatId: updatedUser.chatId,
-                username: updatedUser.username,
-                role: updatedUser.role || 'user',
+                id: refreshed.id,
+                chatId: refreshed.chatId,
+                username: refreshed.username,
+                role: refreshed.role || 'user',
             };
 
-            const cacheKey = `auth:user:${user.chatId}`;
+            const cacheKey = `auth:user:${chatId}`;
             await this.cacheManager.del(cacheKey);
             await this.cacheManager.set(cacheKey, userData, 60 * 60);
-
             console.log('✅ Обновлён кэш:', cacheKey, userData);
 
             await this.botService.updateUser(chatId);
-            return user;
+            return refreshed;
         } catch (e) {
-            await this.botService.errorMessage(
-                `Произошла ошибка при обновлении роли пользователя: ${e}`,
-            );
+            await this.botService.errorMessage(`Ошибка при обновлении роли: ${e}`);
             throw new HttpException(
-                `Произошла ошибка при обновлении роли пользователя: ${e}`,
+                `Ошибка при обновлении роли: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     }
+
 
 
 
