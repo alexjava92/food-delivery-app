@@ -20,6 +20,7 @@ const MaintenanceGuard: React.FC<Props> = ({ children }) => {
         skip: isAdmin || onMaintenancePage,
         refetchOnMountOrArgChange: false,
     });
+    console.log('user in guard:', user);
 
     if (isLoading) return null;
 
