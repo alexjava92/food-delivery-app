@@ -94,14 +94,13 @@ export class UsersService {
             const user = await this.usersRepository.findOne({ where: { chatId } });
             if (!user) throw new Error('User not found');
 
-            await user.update({ role: body.role });
+            const updatedUser = await user.update({ role: body.role });
 
-            // 🔄 Обновляем кэш
             const userData = {
-                id: user.id,
-                chatId: user.chatId,
-                username: user.username,
-                role: user.role || 'user',
+                id: updatedUser.id,
+                chatId: updatedUser.chatId,
+                username: updatedUser.username,
+                role: updatedUser.role || 'user',
             };
             await this.cacheManager.set(`auth:user:${user.chatId}`, userData, 60 * 60);
 
