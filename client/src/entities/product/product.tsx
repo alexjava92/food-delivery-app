@@ -84,7 +84,11 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
                 inCart &&
                 <div className={classes.priceBox}>
                     <PlusAndMinus data={data} />
-                    <div className={classes.price}>{data?.price}₽</div>
+                    <div className={classes.price}>
+                        {data.count && data.count > 1
+                            ? `${data.count} x ${data.price}₽ = ${data.count * +data.price}₽`
+                            : `${data.price}₽`}
+                    </div>
                 </div>
             }
         </div>
