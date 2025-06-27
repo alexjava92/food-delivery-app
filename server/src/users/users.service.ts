@@ -102,20 +102,26 @@ export class UsersService {
                 username: updatedUser.username,
                 role: updatedUser.role || 'user',
             };
-            await this.cacheManager.set(`auth:user:${user.chatId}`, userData, 60 * 60);
 
-            // ⚙️ бот уведомление
+            const cacheKey = `auth:user:${user.chatId}`;
+            await this.cacheManager.del(cacheKey);
+            await this.cacheManager.set(cacheKey, userData, 60 * 60);
+
+            console.log('✅ Обновлён кэш:', cacheKey, userData);
+
             await this.botService.updateUser(chatId);
-
             return user;
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при обновлении роли пользователя: ${e}`);
+            await this.botService.errorMessage(
+                `Произошла ошибка при обновлении роли пользователя: ${e}`,
+            );
             throw new HttpException(
                 `Произошла ошибка при обновлении роли пользователя: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     }
+
 
 
     async search(query: string) {
