@@ -24,7 +24,7 @@ import {SettingsModule} from "./settings/settings.module";
 import {SettingsModel} from "./settings/settings.model";
 import {WsModule} from "./ws/ws.module";
 import { CacheModule } from '@nestjs/cache-manager';
-import {redisStore} from "cache-manager-ioredis";
+import redisStore from 'cache-manager-ioredis';
 
 
 
