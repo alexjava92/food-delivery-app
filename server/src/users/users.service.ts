@@ -89,16 +89,14 @@ export class UsersService {
         }
     }
 
-    async updateRoleUser(chatId: string, body: { role: string }) {
+    async updateRoleUser(id: string, body) {
         try {
-            console.log('📥 Начинаем обновление роли:', chatId, '->', body.role);
-
-            const user = await this.usersRepository.findOne({ where: { chatId } });
+            const user = await this.usersRepository.findByPk(id);
             if (!user) throw new Error('User not found');
 
             await user.update({ role: body.role });
 
-            const refreshed = await this.usersRepository.findOne({ where: { chatId } });
+            const refreshed = await this.usersRepository.findByPk(id);
 
             const userData = {
                 id: refreshed.id,
@@ -107,30 +105,24 @@ export class UsersService {
                 role: refreshed.role || 'user',
             };
 
-            const cacheKey = `auth:user:${chatId}`;
-
-            console.log('🧹 Удаляем старый кэш:', cacheKey);
-            const delResult = await this.cacheManager.del(cacheKey);
-            console.log('🧹 del result:', delResult);
-
-            console.log('📝 Записываем новый кэш:', userData);
+            const cacheKey = `auth:user:${refreshed.chatId}`;
+            await this.cacheManager.del(cacheKey);
             await this.cacheManager.set(cacheKey, userData, 60 * 60);
 
             const result = await this.cacheManager.get(cacheKey);
-            console.log('📦 Проверка в Redis:', cacheKey, result);
+            console.log('✅ Кэш обновлён:', cacheKey, result);
 
-            await this.botService.updateUser(chatId);
-
+            await this.botService.updateUser(refreshed.chatId);
             return refreshed;
         } catch (e) {
-            console.error('❌ Ошибка в updateRoleUser:', e);
-            await this.botService.errorMessage(`Ошибка при обновлении роли: ${e}`);
+            console.error('❌ Ошибка при обновлении роли:', e);
             throw new HttpException(
                 `Ошибка при обновлении роли: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     }
+
 
 
 
