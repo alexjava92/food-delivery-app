@@ -91,14 +91,14 @@ export class UsersService {
 
     async updateRoleUser(chatId: string, body: { role: string }) {
         try {
-            const user = await this.usersRepository.findOne({where: {chatId}});
+            console.log('📥 Начинаем обновление роли:', chatId, '->', body.role);
+
+            const user = await this.usersRepository.findOne({ where: { chatId } });
             if (!user) throw new Error('User not found');
 
-            // обновляем роль в БД
-            await user.update({role: body.role});
+            await user.update({ role: body.role });
 
-            // перечитываем из БД, чтобы гарантировать актуальность
-            const refreshed = await this.usersRepository.findOne({where: {chatId}});
+            const refreshed = await this.usersRepository.findOne({ where: { chatId } });
 
             const userData = {
                 id: refreshed.id,
@@ -109,17 +109,21 @@ export class UsersService {
 
             const cacheKey = `auth:user:${chatId}`;
 
-            // удаляем и перезаписываем кэш
-            await this.cacheManager.del(cacheKey);
+            console.log('🧹 Удаляем старый кэш:', cacheKey);
+            const delResult = await this.cacheManager.del(cacheKey);
+            console.log('🧹 del result:', delResult);
+
+            console.log('📝 Записываем новый кэш:', userData);
             await this.cacheManager.set(cacheKey, userData, 60 * 60);
 
-            // читаем обратно — для дебага
-            const check = await this.cacheManager.get(cacheKey);
-            console.log('✅ Кэш обновлён:', cacheKey, check);
+            const result = await this.cacheManager.get(cacheKey);
+            console.log('📦 Проверка в Redis:', cacheKey, result);
 
             await this.botService.updateUser(chatId);
+
             return refreshed;
         } catch (e) {
+            console.error('❌ Ошибка в updateRoleUser:', e);
             await this.botService.errorMessage(`Ошибка при обновлении роли: ${e}`);
             throw new HttpException(
                 `Ошибка при обновлении роли: ${e}`,
@@ -127,6 +131,7 @@ export class UsersService {
             );
         }
     }
+
 
 
     async search(query: string) {
