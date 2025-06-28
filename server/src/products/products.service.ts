@@ -109,6 +109,7 @@ export class ProductsService {
       // Очистить кэш по ID и общий
       await this.cacheManager.del('products:all');
       await this.cacheManager.del(`product:${id}`);
+      await this.cacheManager.del('categories:all');
 
       return product;
     } catch (e) {
@@ -129,6 +130,8 @@ export class ProductsService {
 
       await this.cacheManager.del('products:all');
       await this.cacheManager.del(`product:${id}`);
+      await this.cacheManager.del('categories:all');
+
       console.log(`🗑️ Удалён продукт ${id}, кэш очищен`);
     } catch (e) {
       await this.botService.errorMessage(`Произошла ошибка при удалении продукта: ${e}`);
