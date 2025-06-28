@@ -109,9 +109,7 @@ export class ProductsService {
       // Очистить кэш по ID и общий
       await this.cacheManager.del('products:all');
       await this.cacheManager.del(`product:${id}`);
-      await this.cacheManager.del(`categories:${dto.categoryId}`);
-      console.log('dto', dto)
-      console.log('dto.categoryId DELETE', dto.categoryId)
+      await this.cacheManager.del(`category:${product.categoryId}`);
 
       return product;
     } catch (e) {
