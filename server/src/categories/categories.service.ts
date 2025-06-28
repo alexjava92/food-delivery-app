@@ -128,9 +128,17 @@ export class CategoriesService {
 
     async deleteCategory(id: number): Promise<void> {
         try {
-            const category = await this.getCategoryById(id);
+            const category = await this.categoriesRepository.findByPk(id);
+            if (!category) throw new Error('Category not found');
+
             await category.destroy();
-            await this.cacheManager.del('categories:all'); // очистка кэша
+
+            // Очистка общего кэша и кэша конкретной категории
+            await this.cacheManager.del('categories:all');
+            await this.cacheManager.del(`category:${id}`);
+
+            console.log(`🗑️ Удалена категория ${id}, кэш очищен`);
+
         } catch (e) {
             await this.botService.errorMessage(
                 `Произошла ошибка при удалении категории: ${e}`,
@@ -141,4 +149,5 @@ export class CategoriesService {
             );
         }
     }
+
 }
