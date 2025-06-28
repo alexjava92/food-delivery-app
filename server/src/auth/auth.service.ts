@@ -29,12 +29,7 @@ export class AuthService {
             if (cachedUser && cachedUser.role) {
                 console.log('→ FROM AUTH CACHE');
                 return {
-                    user: {
-                        id: cachedUser.id,
-                        chatId: cachedUser.chatId,
-                        username: cachedUser.username,
-                        role: cachedUser.role || 'user', // 👈 доп. защита
-                    },
+                    user: cachedUser, // 🔄 теперь это полные данные
                     access_token: await this.tokenService.generateJwtToken({
                         chatId: cachedUser.chatId,
                         role: cachedUser.role || 'user',
@@ -53,6 +48,10 @@ export class AuthService {
                     chatId: user.chatId,
                     username: user.username,
                     role: user.role || 'user',
+                    name: user.name || '',
+                    email: user.email || '',
+                    phone: user.phone || '',
+                    address: user.address || '',
                 };
 
                 await this.cacheManager.set(cacheKey, userData, 60 * 60);
@@ -74,7 +73,11 @@ export class AuthService {
                 id: user.id,
                 chatId: user.chatId,
                 username: user.username,
-                role: user.role,
+                role: user.role || 'user',
+                name: user.name || '',
+                email: user.email || '',
+                phone: user.phone || '',
+                address: user.address || '',
             };
 
             await this.cacheManager.set(cacheKey, userData, 60 * 60);
@@ -96,4 +99,5 @@ export class AuthService {
             );
         }
     }
+
 }
