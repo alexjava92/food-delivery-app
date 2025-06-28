@@ -103,6 +103,10 @@ export class UsersService {
                 chatId: refreshed.chatId,
                 username: refreshed.username,
                 role: refreshed.role || 'user',
+                name: refreshed.name || '',
+                email: refreshed.email || '',
+                phone: refreshed.phone || '',
+                address: refreshed.address || '',
             };
 
             const cacheKey = `auth:user:${refreshed.chatId}`;
