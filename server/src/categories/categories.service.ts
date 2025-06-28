@@ -46,23 +46,38 @@ export class CategoriesService {
 
     async getAllCategories(): Promise<CategoriesModel[]> {
         try {
+            console.time('🕒 getAllCategories');
             const cacheKey = 'categories:all';
+
+            console.time('📦 Redis GET');
             const cached = await this.cacheManager.get<CategoriesModel[]>(cacheKey);
+            console.timeEnd('📦 Redis GET');
+
             if (cached) {
                 console.log('→ FROM CACHE');
+                console.timeEnd('🕒 getAllCategories');
                 return cached;
             }
 
             console.log('→ FROM DB, writing to Redis');
+
+            console.time('💾 DB Query');
             const categories = await this.categoriesRepository.findAll();
+            console.timeEnd('💾 DB Query');
+
             try {
-                // Преобразуем в чистый JSON
-                const plainCategories = categories.map(category => category.get({ plain: true }));
+                console.time('🧱 Serialize + Redis SET');
+                const plainCategories = categories.map(category =>
+                    category.get({ plain: true })
+                );
                 await this.cacheManager.set(cacheKey, plainCategories, 3600);
+                console.timeEnd('🧱 Serialize + Redis SET');
                 console.log('→ Cache set successfully');
             } catch (cacheError) {
                 console.error('Redis write error:', cacheError);
             }
+
+            console.timeEnd('🕒 getAllCategories');
             return categories;
         } catch (e) {
             await this.botService.errorMessage(
@@ -74,6 +89,7 @@ export class CategoriesService {
             );
         }
     }
+
 
     async getCategoryById(id: number): Promise<CategoriesModel> {
         try {

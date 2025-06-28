@@ -130,7 +130,7 @@ export class ProductsService {
 
       await this.cacheManager.del('products:all');
       await this.cacheManager.del(`product:${id}`);
-      await this.cacheManager.del('categories:all');
+      await this.cacheManager.del(`category:${product.categoryId}`);
 
       console.log(`🗑️ Удалён продукт ${id}, кэш очищен`);
     } catch (e) {

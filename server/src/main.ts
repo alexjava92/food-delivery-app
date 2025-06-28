@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import {ServerTimingMiddleware} from "./common/middleware/serverTimingMiddleware";
+import {LoggerMiddleware} from "./common/middleware/LoggerMiddleware";
 
 
 async function bootstrap() {
@@ -14,7 +15,7 @@ async function bootstrap() {
     });
 
     // 👇 Подключаем Server-Timing middleware
-    app.use(new ServerTimingMiddleware().use);
+    app.use(new LoggerMiddleware().use);
 
     const config = new DocumentBuilder()
       .setTitle('Сервис доставки еды')
