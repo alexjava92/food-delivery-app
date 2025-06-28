@@ -17,7 +17,8 @@ export class ServerTimingMiddleware implements NestMiddleware {
         });
 
         // 👇 ставим Server-Timing заранее, он всё равно попадёт в ответ
-        res.setHeader('Server-Timing', 'processing');
+        res.setHeader('Server-Timing', `total;desc="NestJS",dur=0`);
+
 
         next();
     }
