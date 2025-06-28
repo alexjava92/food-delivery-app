@@ -110,6 +110,8 @@ export class ProductsService {
       await this.cacheManager.del('products:all');
       await this.cacheManager.del(`product:${id}`);
       await this.cacheManager.del(`categories:${dto.categoryId}`);
+      console.log('dto', dto)
+      console.log('dto.categoryId DELETE', dto.categoryId)
 
       return product;
     } catch (e) {
