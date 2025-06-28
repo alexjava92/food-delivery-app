@@ -77,6 +77,10 @@ export class CategoriesService {
 
     async getCategoryById(id: number): Promise<CategoriesModel> {
         try {
+            const cacheKey = `category:${id}`;
+            const cached = await this.cacheManager.get<CategoriesModel>(cacheKey);
+            if (cached) return cached;
+
             return await this.categoriesRepository.findOne({
                 where: { id },
                 include: ProductsModel,
