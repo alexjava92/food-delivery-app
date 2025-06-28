@@ -88,7 +88,7 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
                         {data.count && data.count > 1 ? (
                             <>
       <span className={classes.subPrice}>
-        {data.count} x {data.price}₽
+        {data.count} x {data.price}
       </span>{' '}
                                 {data.count * +data.price} ₽
                             </>
