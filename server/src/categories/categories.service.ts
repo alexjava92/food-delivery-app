@@ -81,10 +81,16 @@ export class CategoriesService {
             const cached = await this.cacheManager.get<CategoriesModel>(cacheKey);
             if (cached) return cached;
 
-            return await this.categoriesRepository.findOne({
+            const category = await this.categoriesRepository.findOne({
                 where: { id },
                 include: ProductsModel,
             });
+
+            if (category) {
+                await this.cacheManager.set(cacheKey, category.get({ plain: true }), 60 * 60); // 1 час
+            }
+
+            return category;
         } catch (e) {
             await this.botService.errorMessage(
                 `Произошла ошибка при получении категории: ${e}`,
@@ -95,6 +101,7 @@ export class CategoriesService {
             );
         }
     }
+
 
     async updateCategory(id: number, dto: CategoriesDto, image: string) {
         try {
