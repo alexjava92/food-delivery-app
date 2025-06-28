@@ -78,7 +78,9 @@ export class CategoriesService {
     async getCategoryById(id: number): Promise<CategoriesModel> {
         try {
             const cacheKey = `category:${id}`;
+            console.time(`⏱️ Redis get [${cacheKey}]`);
             const cached = await this.cacheManager.get<CategoriesModel>(cacheKey);
+            console.timeEnd(`⏱️ Redis get [${cacheKey}]`);
 
             if (cached) {
                 console.log(`📦 [category:${id}] → FROM CACHE`);

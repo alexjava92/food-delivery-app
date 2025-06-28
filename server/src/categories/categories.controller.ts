@@ -32,7 +32,10 @@ export class CategoriesController {
     @ApiResponse({status: 200, type: CategoriesModel})
     @Get(':id')
     async findOne(@Param('id') id: string) {
-        return this.categoriesService.getCategoryById(+id);
+        console.time(`🔁 /category/${id}`);
+        const result = await this.categoriesService.getCategoryById(+id);
+        console.timeEnd(`🔁 /category/${id}`);
+        return result;
     }
 
     @ApiOperation({summary: 'Частичное изменение категории'})
