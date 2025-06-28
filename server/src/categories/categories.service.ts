@@ -79,16 +79,24 @@ export class CategoriesService {
         try {
             const cacheKey = `category:${id}`;
             const cached = await this.cacheManager.get<CategoriesModel>(cacheKey);
-            if (cached) return cached;
 
+            if (cached) {
+                console.log(`📦 [category:${id}] → FROM CACHE`);
+                return cached;
+            }
+
+            console.log(`💾 [category:${id}] → FROM DB`);
             const category = await this.categoriesRepository.findOne({
                 where: { id },
                 include: ProductsModel,
             });
 
             if (category) {
-                await this.cacheManager.set(cacheKey, JSON.parse(JSON.stringify(category)), 60 * 60);
-
+                const plain = JSON.parse(JSON.stringify(category));
+                await this.cacheManager.set(cacheKey, plain, 60 * 60);
+                console.log(`✅ [category:${id}] → WRITTEN TO CACHE`);
+            } else {
+                console.log(`⚠️ [category:${id}] → NOT FOUND in DB`);
             }
 
             return category;
