@@ -87,7 +87,8 @@ export class CategoriesService {
             });
 
             if (category) {
-                await this.cacheManager.set(cacheKey, category.get({ plain: true }), 60 * 60); // 1 час
+                await this.cacheManager.set(cacheKey, JSON.parse(JSON.stringify(category)), 60 * 60);
+
             }
 
             return category;
