@@ -106,7 +106,7 @@ export class UsersService {
             };
 
             const cacheKey = `auth:user:${refreshed.chatId}`;
-            await this.cacheManager.del(cacheKey);
+            //await this.cacheManager.del(cacheKey);
             await this.cacheManager.set(cacheKey, userData, 60 * 60);
 
             const result = await this.cacheManager.get(cacheKey);
