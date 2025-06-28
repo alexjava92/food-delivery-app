@@ -52,10 +52,7 @@ const CartPage = () => {
                             <div className={classes.sum}>
                                 <span>Итого: </span>
                                 <span>
-                                {
-                                    productsInCart && productsInCart.reduce((acc, item) => acc + (+item?.price * (item.count ? item.count : 0)), 0)
-                                }
-                                     ₽
+                                {productsInCart && productsInCart.reduce((acc, item) => acc + (+item?.price * (item.count ? item.count : 0)), 0)} ₽
                             </span>
                             </div>
                         </div>

@@ -90,10 +90,10 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
       <span className={classes.subPrice}>
         {data.count} x {data.price}₽
       </span>{' '}
-                                {data.count * +data.price}
+                                {data.count * +data.price} ₽
                             </>
                         ) : (
-                            `${data.price} ₽`
+                            `${data.price}`
                         )}
                     </div>
                 </div>
