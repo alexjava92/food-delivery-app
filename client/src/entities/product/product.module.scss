@@ -15,7 +15,7 @@
 }
 
 .box {
-  width: 100%;
+  /*width: 100%;*/
 }
 
 .title {
@@ -72,6 +72,11 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+
+  span {
+    font-size: 30px;
+    font-weight: 600;
+  }
 }
 
 .buttonGroup {
