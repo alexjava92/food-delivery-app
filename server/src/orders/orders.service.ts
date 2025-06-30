@@ -144,7 +144,6 @@ export class OrdersService {
     }
 
     async statistics(query: any) {
-
         try {
             let productsInOrders = []
             let stat = []
@@ -158,48 +157,68 @@ export class OrdersService {
                         [Op.between]: [startTime, endTime],
                     },
                 },
-                include: {all: true}
+                include: { all: true }
             });
+
             for (let products of orders) {
                 productsInOrders.push(...products.orderProducts)
             }
 
             if (query.catId) {
+                // Все товары нужной категории
+                const filteredProducts = productsInOrders.filter(item => item.categoryId == query.catId);
 
-                ordersCounts = productsInOrders.filter(item => item.categoryId == query.catId)
-                productsInOrders = []
-                stat = []
-                const productsCounts = ordersCounts.reduce((item, product) => {
+                // Подсчёт количества проданных штук по каждому товару
+                const productsCounts = filteredProducts.reduce((acc, product) => {
                     const productId = product.id;
-                    item[productId] = item[productId] || {count: 0, title: product.title};
-                    item[productId].count++;
-                    productsInOrders.push(product);
-
-                    return item;
+                    acc[productId] = acc[productId] || { count: 0, title: product.title };
+                    acc[productId].count += product.count;
+                    return acc;
                 }, {});
-                for (const id in productsCounts) {
-                    stat.push({title: productsCounts[id].title, count: productsCounts[id].count,})
-                }
-            } else {
 
-                ordersCounts = orders
+                stat = Object.entries(productsCounts).map(([_, value]: any) => ({
+                    title: value.title,
+                    count: value.count,
+                }));
+
+                // Общая выручка
+                const gain = filteredProducts.reduce((sum, p) => sum + p.price * p.count, 0);
+
+                // Кол-во заказов, где есть хотя бы один товар этой категории
+                const ordersWithThisCategory = orders.filter(order =>
+                    order.orderProducts.some(p => p.categoryId == query.catId)
+                );
+
+                const countOfOrders = ordersWithThisCategory.length;
+                const averageCheck = countOfOrders ? (gain / countOfOrders).toFixed(2) : 0;
+
+                return { gain, countOfOrders, averageCheck, stat };
+            } else {
+                ordersCounts = orders;
+
                 const categoryCounts = productsInOrders.reduce((item, product) => {
                     const categoryId = product.categoryId;
-                    item[categoryId] = item[categoryId] || {count: 0, products: []};
-                    item[categoryId].count++;
+                    item[categoryId] = item[categoryId] || { count: 0, products: [] };
+                    item[categoryId].count += product.count;
                     item[categoryId].products.push(product);
                     return item;
                 }, {});
 
                 for (const categoryId in categoryCounts) {
-                    const category = await this.categoriesRepository.findOne({where: {id: categoryId}})
-                    stat.push({id: categoryId, title: category.title, count: categoryCounts[categoryId].count})
+                    const category = await this.categoriesRepository.findOne({ where: { id: categoryId } })
+                    stat.push({
+                        id: categoryId,
+                        title: category.title,
+                        count: categoryCounts[categoryId].count
+                    });
                 }
+
+                const gain = productsInOrders.reduce((total, product) => total + product.price * product.count, 0);
+                const countOfOrders = ordersCounts.length;
+                const averageCheck = countOfOrders ? (gain / countOfOrders).toFixed(2) : 0;
+
+                return { gain, countOfOrders, averageCheck, stat };
             }
-            const gain = productsInOrders.reduce((total, product) => total + product.price * product.count, 0);
-            const countOfOrders = ordersCounts.length;
-            const averageCheck = gain / countOfOrders;
-            return {gain, countOfOrders, averageCheck: averageCheck ? averageCheck.toFixed(2) : 0, stat};
 
         } catch (e) {
             await this.botService.errorMessage(`Произошла ошибка при получении статистики: ${e}`)
@@ -209,4 +228,5 @@ export class OrdersService {
             );
         }
     }
+
 }
