@@ -173,18 +173,19 @@ export class OrdersService {
 
                         const count = product.order_product?.count || 1;
                         const price = Number(product.price) || 0;
+                        gain += price * count;
 
                         // ⏱ Временный лог для отладки
                         console.log('🛒', {
                             orderId: order.id,
                             productId: product.id,
                             title: product.title,
+                            categoryId: product.categoryId,
                             count: product.order_product?.count,
                             price: product.price,
                             total: price * count,
                         });
 
-                        gain += price * count;
                         hasCategory = true;
 
                         const productId = Number(product.id);
@@ -261,6 +262,7 @@ export class OrdersService {
             );
         }
     }
+
 
 
 

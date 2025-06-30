@@ -1,4 +1,4 @@
-import {Column,DataType,Model,Table,ForeignKey} from 'sequelize-typescript';
+import {Column, DataType, Model, Table, ForeignKey, BelongsTo} from 'sequelize-typescript';
 import { ProductsModel } from 'src/products/products.model';
 import { OrdersModel } from './orders.model';
 
@@ -17,4 +17,10 @@ export class OrderProductsModel extends Model {
 
   @Column({ type: DataType.NUMBER })
   count: number;
+
+  @BelongsTo(() => OrdersModel)
+  order: OrdersModel;
+
+  @BelongsTo(() => ProductsModel)
+  product: ProductsModel;
 }

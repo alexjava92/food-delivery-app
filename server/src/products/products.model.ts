@@ -67,6 +67,9 @@ export class ProductsModel extends Model<ProductsModel, ProductsCreateAttrs> {
     @BelongsTo(() => CategoriesModel)
     category: CategoriesModel;
 
-    @BelongsToMany(() => OrdersModel, () => OrderProductsModel)
+    @BelongsToMany(() => OrdersModel, {
+        through: () => OrderProductsModel,
+        as: 'orders',
+    })
     orders: OrdersModel[];
 }
