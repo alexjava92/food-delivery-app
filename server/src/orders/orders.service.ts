@@ -176,6 +176,16 @@ export class OrdersService {
                         const count = product.order_product?.count || 1;
                         const price = Number(product.price) || 0;
 
+                        // ⏱ Временный лог для отладки
+                        console.log('🛒', {
+                            orderId: order.id,
+                            productId: product.id,
+                            title: product.title,
+                            count: product.order_product?.count,
+                            price: product.price,
+                            total: price * count,
+                        });
+
                         gain += price * count;
                         hasCategory = true;
 
@@ -208,6 +218,17 @@ export class OrdersService {
                         const count = product.order_product?.count || 1;
                         const price = Number(product.price) || 0;
 
+                        // ⏱ Временный лог для отладки
+                        console.log('🛒', {
+                            orderId: order.id,
+                            productId: product.id,
+                            title: product.title,
+                            categoryId,
+                            count: product.order_product?.count,
+                            price: product.price,
+                            total: price * count,
+                        });
+
                         gain += price * count;
 
                         if (!categoryMap.has(categoryId)) {
@@ -224,7 +245,7 @@ export class OrdersService {
                 }
 
                 const stat = Array.from(categoryMap.entries()).map(([id, value]) => ({
-                    id: id.toString(), // если на фронте id — string
+                    id: id.toString(),
                     title: value.title,
                     count: value.count,
                 }));
@@ -242,6 +263,7 @@ export class OrdersService {
             );
         }
     }
+
 
 
 
