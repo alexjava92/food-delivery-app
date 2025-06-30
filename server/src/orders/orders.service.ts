@@ -145,11 +145,8 @@ export class OrdersService {
 
     async statistics(query: any) {
         try {
-            let productsInOrders = []
-            let stat = []
-            let ordersCounts = []
-            const startTime = new Date(query.startTime).toISOString()
-            const endTime = new Date(query.endTime).toISOString()
+            const startTime = new Date(query.startTime).toISOString();
+            const endTime = new Date(query.endTime).toISOString();
 
             const orders = await this.ordersRepository.findAll({
                 where: {
@@ -160,78 +157,83 @@ export class OrdersService {
                 include: [
                     {
                         association: 'orderProducts',
-                        through: { attributes: ['count'] } // 💡 обязательно: чтобы получить product.order_product.count
-                    }
-                ]
+                        through: { attributes: ['count'] },
+                    },
+                ],
             });
 
-            for (let order of orders) {
-                productsInOrders.push(...order.orderProducts)
-            }
-
             if (query.catId) {
-                // Все товары нужной категории
-                const filteredProducts = productsInOrders.filter(item => item.categoryId == query.catId);
+                const statMap = new Map<number, { title: string; count: number }>();
+                let gain = 0;
+                const ordersWithThisCategory = new Set<number>();
 
-                // Подсчёт количества проданных штук по каждому товару
-                const productsCounts = filteredProducts.reduce((acc, product) => {
-                    const productId = product.id;
-                    const count = product.order_product?.count || 1;
-                    acc[productId] = acc[productId] || { count: 0, title: product.title };
-                    acc[productId].count += count;
-                    return acc;
-                }, {});
+                for (const order of orders) {
+                    let hasCategory = false;
 
-                stat = Object.entries(productsCounts).map(([_, value]: any) => ({
-                    title: value.title,
-                    count: value.count,
-                }));
+                    for (const product of order.orderProducts) {
+                        if (product.categoryId != query.catId) continue;
 
-                // Общая выручка
-                const gain = filteredProducts.reduce((sum, p) =>
-                    sum + p.price * (p.order_product?.count || 1), 0
-                );
+                        const count = product.order_product?.count || 1;
+                        const price = Number(product.price) || 0;
 
-                // Кол-во заказов, где есть хотя бы один товар этой категории
-                const ordersWithThisCategory = orders.filter(order =>
-                    order.orderProducts.some(p => p.categoryId == query.catId)
-                );
+                        gain += price * count;
+                        hasCategory = true;
 
-                const countOfOrders = ordersWithThisCategory.length;
+                        const productId = Number(product.id);
+                        const existing = statMap.get(productId);
+                        if (existing) {
+                            existing.count += count;
+                        } else {
+                            statMap.set(productId, { title: product.title, count });
+                        }
+                    }
+
+                    if (hasCategory) {
+                        ordersWithThisCategory.add(order.id);
+                    }
+                }
+
+                const stat = Array.from(statMap.values());
+                const countOfOrders = ordersWithThisCategory.size;
                 const averageCheck = countOfOrders ? (gain / countOfOrders).toFixed(2) : 0;
 
                 return { gain, countOfOrders, averageCheck, stat };
             } else {
-                ordersCounts = orders;
+                const categoryMap = new Map<number, { title: string; count: number }>();
+                let gain = 0;
 
-                const categoryCounts = productsInOrders.reduce((acc, product) => {
-                    const categoryId = product.categoryId;
-                    const count = product.order_product?.count || 1;
-                    acc[categoryId] = acc[categoryId] || { count: 0, products: [] };
-                    acc[categoryId].count += count;
-                    acc[categoryId].products.push(product);
-                    return acc;
-                }, {});
+                for (const order of orders) {
+                    for (const product of order.orderProducts) {
+                        const categoryId = Number(product.categoryId);
+                        const count = product.order_product?.count || 1;
+                        const price = Number(product.price) || 0;
 
-                for (const categoryId in categoryCounts) {
-                    const category = await this.categoriesRepository.findOne({ where: { id: categoryId } });
-                    stat.push({
-                        id: categoryId,
-                        title: category.title,
-                        count: categoryCounts[categoryId].count
-                    });
+                        gain += price * count;
+
+                        if (!categoryMap.has(categoryId)) {
+                            const category = await this.categoriesRepository.findOne({ where: { id: categoryId } });
+                            categoryMap.set(categoryId, {
+                                title: category?.title || 'Неизвестно',
+                                count,
+                            });
+                        } else {
+                            const existing = categoryMap.get(categoryId)!;
+                            existing.count += count;
+                        }
+                    }
                 }
 
-                const gain = productsInOrders.reduce((total, product) =>
-                    total + product.price * (product.order_product?.count || 1), 0
-                );
+                const stat = Array.from(categoryMap.entries()).map(([id, value]) => ({
+                    id: id.toString(), // если на фронте id — string
+                    title: value.title,
+                    count: value.count,
+                }));
 
-                const countOfOrders = ordersCounts.length;
+                const countOfOrders = orders.length;
                 const averageCheck = countOfOrders ? (gain / countOfOrders).toFixed(2) : 0;
 
                 return { gain, countOfOrders, averageCheck, stat };
             }
-
         } catch (e) {
             await this.botService.errorMessage(`Произошла ошибка при получении статистики: ${e}`);
             throw new HttpException(
@@ -240,6 +242,8 @@ export class OrdersService {
             );
         }
     }
+
+
 
 
 }
