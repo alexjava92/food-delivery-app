@@ -19,7 +19,6 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
     if (oneProduct) classesArr.push(classes.oneProduct)
     if (inCart || inOrder) classesArr.push(classes.small)
 
-
     const [favouritesProduct, setFavouritesProduct] = useState<IProduct[]>()
 
     useEffect(() => {
@@ -28,7 +27,7 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
         if (favorites) setFavouritesProduct(favorites)
     }, []);
 
-    const toggleFavorite = (e: any,) => {
+    const toggleFavorite = (e: any) => {
         e.preventDefault()
         const favorites = JSON.parse(localStorage.getItem('food-delivery-favorites') || '[]');
         const isFavorite = favorites.find((product: IProduct) => product.id === data.id);
@@ -49,15 +48,16 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
                 !data?.disabled &&
                 <>
                     <div className={classes.disabled}></div>
-
                     <span className={`error ${classes.textError}`}>
                         К сожалению данный товар временно отсутствует
                     </span>
                 </>
             }
+
             <div className={classes.image}>
                 <img src={process.env.REACT_APP_API_URL + data?.image} alt={data?.title}/>
             </div>
+
             <div className={classes.box}>
                 <div className={classes.title}>
                     <span>
@@ -68,47 +68,31 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
                     {
                         (!editAdmin && !inCart && !inOrder) &&
                         <span onClick={toggleFavorite}>
-                          <FavoritesIcon
-                              isActive={!!favouritesProduct?.find((product: IProduct) => product?.id === data?.id)}/>
+                            <FavoritesIcon
+                                isActive={!!favouritesProduct?.find((product: IProduct) => product?.id === data?.id)}/>
                         </span>
                     }
-                    {inOrder && <span>x{data?.count}</span>}
 
+                    {inOrder && <span>x{data?.count}</span>}
                 </div>
+
                 <div className={classes.description}>{data?.description}</div>
+
                 {!inCart && !inOrder && (
                     <div className={classes.price}>{data?.price} ₽</div>
                 )}
-
-                {inOrder && (
-                    <div className={classes.priceBox}>
-                        <div className={classes.price}>
-                            {data.count && data.count > 1 ? (
-                                <>
-          <span className={classes.subPrice}>
-            {data.count} x {data.price}
-          </span>{' '}
-                                    {data.count * +data.price} ₽
-                                </>
-                            ) : (
-                                `${data.price} ₽`
-                            )}
-                        </div>
-                    </div>
-                )}
-
             </div>
 
-            {
-                inCart &&
+            {/* Цена для корзины */}
+            {inCart && (
                 <div className={classes.priceBox}>
                     <PlusAndMinus data={data}/>
                     <div className={classes.price}>
                         {data.count && data.count > 1 ? (
                             <>
-      <span className={classes.subPrice}>
-        {data.count} x {data.price}
-      </span>{' '}
+                                <span className={classes.subPrice}>
+                                    {data.count} x {data.price}
+                                </span>{' '}
                                 {data.count * +data.price} ₽
                             </>
                         ) : (
@@ -116,7 +100,25 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
                         )}
                     </div>
                 </div>
-            }
+            )}
+
+            {/* Цена для заказа */}
+            {inOrder && (
+                <div className={classes.priceBox}>
+                    <div className={classes.price}>
+                        {data.count && data.count > 1 ? (
+                            <>
+                                <span className={classes.subPrice}>
+                                    {data.count} x {data.price}
+                                </span>{' '}
+                                {data.count * +data.price} ₽
+                            </>
+                        ) : (
+                            `${data.price} ₽`
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 });
