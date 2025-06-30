@@ -157,7 +157,7 @@ export class OrdersService {
                         association: 'orderProducts',
                         through: {
                             attributes: ['count'],
-                            as: 'order_product' // 💥 ЯВНО задаём alias
+                            as: 'order_product'
                         }
                     },
                 ],
@@ -177,17 +177,6 @@ export class OrdersService {
                         const count = product.order_product?.count || 1;
                         const price = Number(product.price) || 0;
                         gain += price * count;
-
-                        // ⏱ Временный лог для отладки
-                        console.log('🛒', {
-                            orderId: order.id,
-                            productId: product.id,
-                            title: product.title,
-                            categoryId: product.categoryId,
-                            count: product.order_product?.count,
-                            price: product.price,
-                            total: price * count,
-                        });
 
                         hasCategory = true;
 
@@ -219,17 +208,6 @@ export class OrdersService {
                         const categoryId = Number(product.categoryId);
                         const count = product.order_product?.count || 1;
                         const price = Number(product.price) || 0;
-
-                        // ⏱ Временный лог для отладки
-                        console.log('🛒', {
-                            orderId: order.id,
-                            productId: product.id,
-                            title: product.title,
-                            categoryId,
-                            count: product.order_product?.count,
-                            price: product.price,
-                            total: price * count,
-                        });
 
                         gain += price * count;
 
