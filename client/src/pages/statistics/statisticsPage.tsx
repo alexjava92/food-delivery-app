@@ -82,32 +82,34 @@ const StatisticsPage = memo(() => {
                 {catId && <Button size="small" color="danger" onClick={() => setCatId('')}>Назад</Button>}
             </div>
 
-            <div className={classes.statsGrid}>
-                <div className={classes.card}>
+            <div className={classes.mainStatsRow}>
+                <div className={classes.mainCard}>
                     <span className={classes.title}>Выручка</span>
                     <span className={classes.value}>{data?.gain}₽</span>
                 </div>
-                <div className={classes.card}>
+                <div className={classes.mainCard}>
                     <span className={classes.title}>Заказы</span>
                     <span className={classes.value}>{data?.countOfOrders} шт</span>
                 </div>
-                <div className={classes.card}>
+                <div className={classes.mainCard}>
                     <span className={classes.title}>Средний чек</span>
                     <span className={classes.value}>{data?.averageCheck}₽</span>
                 </div>
-                {
-                    data?.stat.map((item: any) =>
-                        <div
-                            key={item?.title}
-                            className={`${classes.card} ${item?.id ? classes.clickable : ''}`}
-                            onClick={() => item?.id && setCatId(item?.id)}
-                        >
-                            <span className={classes.title}>{item?.title}</span>
-                            <span className={classes.value}>{item?.count} шт</span>
-                        </div>
-                    )
-                }
             </div>
+
+            <div className={classes.statsGrid}>
+                {data?.stat.map((item: any) => (
+                    <div
+                        key={item?.title}
+                        className={`${classes.card} ${item?.id ? classes.clickable : ''}`}
+                        onClick={() => item?.id && setCatId(item?.id)}
+                    >
+                        <span className={classes.title}>{item?.title}</span>
+                        <span className={classes.value}>{item?.count} шт</span>
+                    </div>
+                ))}
+            </div>
+
         </MainLayout>
     );
 });
