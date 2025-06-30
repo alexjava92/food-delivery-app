@@ -155,7 +155,10 @@ export class OrdersService {
                 include: [
                     {
                         association: 'orderProducts',
-                        through: { attributes: ['count'] },
+                        through: {
+                            attributes: ['count'],
+                            as: 'order_product' // 💥 ЯВНО задаём alias
+                        }
                     },
                 ],
             });

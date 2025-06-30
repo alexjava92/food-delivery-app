@@ -44,7 +44,7 @@ export class OrdersModel extends Model {
 
     @BelongsToMany(() => ProductsModel, {
         through: () => OrderProductsModel,
-        as: 'orderProducts',
+        as: 'orderProducts'
     })
     orderProducts: (ProductsModel & { order_product: OrderProductsModel })[];
 
