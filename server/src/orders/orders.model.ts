@@ -42,8 +42,13 @@ export class OrdersModel extends Model {
     @Column({type: DataType.STRING, allowNull: true})
     comment: string;
 
-    @BelongsToMany(() => ProductsModel, () => OrderProductsModel)
-    orderProducts: Partial<ProductsModel>[];
+    @BelongsToMany(() => ProductsModel, {
+        through: () => OrderProductsModel,
+        as: 'orderProducts',
+    })
+    orderProducts: (ProductsModel & { order_product: OrderProductsModel })[];
+
+
 
     @ForeignKey(() => UsersModel)
     @Column({type: DataType.INTEGER, allowNull: false})
