@@ -72,7 +72,22 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
                               isActive={!!favouritesProduct?.find((product: IProduct) => product?.id === data?.id)}/>
                         </span>
                     }
-                    {inOrder && <span>x{data?.count}</span>}
+                    {inOrder && (
+                        <div className={classes.priceBox}>
+                            <div className={classes.price}>
+                                {data.count && data.count > 1 ? (
+                                    <>
+          <span className={classes.subPrice}>
+            {data.count} x {data.price}
+          </span>{' '}
+                                        {data.count * +data.price} ₽
+                                    </>
+                                ) : (
+                                    `${data.price} ₽`
+                                )}
+                            </div>
+                        </div>
+                    )}
 
                 </div>
                 <div className={classes.description}>{data?.description}</div>
