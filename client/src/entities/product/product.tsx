@@ -105,7 +105,7 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
             {/* Цена для заказа */}
             {inOrder && (
                 <div className={classes.priceBox}>
-                    {inOrder && <span>x{data?.count}</span>}
+                    {inOrder && <span className={classes.count}>x{data?.count}</span>}
                     <div className={classes.price}>
                         {data.count && data.count > 1 ? (
                             <>
