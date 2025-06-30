@@ -54,30 +54,32 @@
 }
 .mainStatsRow {
    display: flex;
-   justify-content: space-between;
    gap: 16px;
-   margin-bottom: 24px;
+   margin: 16px 0 24px;
    flex-wrap: wrap;
 }
 
-.mainCard {
-   flex: 1 1 30%;
-   background-color: #f6f6f6;
-   border-radius: 12px;
-   padding: 16px;
-   text-align: center;
-   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+.statItem {
+   flex: 1 1 0;
+   min-width: 140px;
+   padding: 12px 16px;
+   border: 1px solid #e0e0e0;
+   border-radius: 8px;
+   background-color: #fff;
+   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+}
 
-   .title {
-      display: block;
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 8px;
-   }
+.statLabel {
+   font-size: 13px;
+   color: #888;
+   margin-bottom: 4px;
+}
 
-   .value {
-      font-size: 20px;
-      font-weight: 700;
-      color: #333;
-   }
+.statValue {
+   font-size: 18px;
+   font-weight: 600;
+   color: #222;
 }

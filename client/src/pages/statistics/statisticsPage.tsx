@@ -83,19 +83,20 @@ const StatisticsPage = memo(() => {
             </div>
 
             <div className={classes.mainStatsRow}>
-                <div className={classes.mainCard}>
-                    <span className={classes.title}>Выручка</span>
-                    <span className={classes.value}>{data?.gain}₽</span>
+                <div className={classes.statItem}>
+                    <div className={classes.statLabel}>Выручка</div>
+                    <div className={classes.statValue}>{data?.gain} ₽</div>
                 </div>
-                <div className={classes.mainCard}>
-                    <span className={classes.title}>Заказы</span>
-                    <span className={classes.value}>{data?.countOfOrders} шт</span>
+                <div className={classes.statItem}>
+                    <div className={classes.statLabel}>Заказы</div>
+                    <div className={classes.statValue}>{data?.countOfOrders} шт</div>
                 </div>
-                <div className={classes.mainCard}>
-                    <span className={classes.title}>Средний чек</span>
-                    <span className={classes.value}>{data?.averageCheck}₽</span>
+                <div className={classes.statItem}>
+                    <div className={classes.statLabel}>Средний чек</div>
+                    <div className={classes.statValue}>{data?.averageCheck} ₽</div>
                 </div>
             </div>
+
 
             <div className={classes.statsGrid}>
                 {data?.stat.map((item: any) => (
