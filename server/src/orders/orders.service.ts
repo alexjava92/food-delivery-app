@@ -157,11 +157,16 @@ export class OrdersService {
                         [Op.between]: [startTime, endTime],
                     },
                 },
-                include: { all: true }
+                include: [
+                    {
+                        association: 'orderProducts',
+                        through: { attributes: ['count'] } // 💡 обязательно: чтобы получить product.order_product.count
+                    }
+                ]
             });
 
-            for (let products of orders) {
-                productsInOrders.push(...products.orderProducts)
+            for (let order of orders) {
+                productsInOrders.push(...order.orderProducts)
             }
 
             if (query.catId) {
@@ -171,8 +176,9 @@ export class OrdersService {
                 // Подсчёт количества проданных штук по каждому товару
                 const productsCounts = filteredProducts.reduce((acc, product) => {
                     const productId = product.id;
+                    const count = product.order_product?.count || 1;
                     acc[productId] = acc[productId] || { count: 0, title: product.title };
-                    acc[productId].count += product.count;
+                    acc[productId].count += count;
                     return acc;
                 }, {});
 
@@ -182,7 +188,9 @@ export class OrdersService {
                 }));
 
                 // Общая выручка
-                const gain = filteredProducts.reduce((sum, p) => sum + p.price * p.count, 0);
+                const gain = filteredProducts.reduce((sum, p) =>
+                    sum + p.price * (p.order_product?.count || 1), 0
+                );
 
                 // Кол-во заказов, где есть хотя бы один товар этой категории
                 const ordersWithThisCategory = orders.filter(order =>
@@ -196,16 +204,17 @@ export class OrdersService {
             } else {
                 ordersCounts = orders;
 
-                const categoryCounts = productsInOrders.reduce((item, product) => {
+                const categoryCounts = productsInOrders.reduce((acc, product) => {
                     const categoryId = product.categoryId;
-                    item[categoryId] = item[categoryId] || { count: 0, products: [] };
-                    item[categoryId].count += product.count;
-                    item[categoryId].products.push(product);
-                    return item;
+                    const count = product.order_product?.count || 1;
+                    acc[categoryId] = acc[categoryId] || { count: 0, products: [] };
+                    acc[categoryId].count += count;
+                    acc[categoryId].products.push(product);
+                    return acc;
                 }, {});
 
                 for (const categoryId in categoryCounts) {
-                    const category = await this.categoriesRepository.findOne({ where: { id: categoryId } })
+                    const category = await this.categoriesRepository.findOne({ where: { id: categoryId } });
                     stat.push({
                         id: categoryId,
                         title: category.title,
@@ -213,7 +222,10 @@ export class OrdersService {
                     });
                 }
 
-                const gain = productsInOrders.reduce((total, product) => total + product.price * product.count, 0);
+                const gain = productsInOrders.reduce((total, product) =>
+                    total + product.price * (product.order_product?.count || 1), 0
+                );
+
                 const countOfOrders = ordersCounts.length;
                 const averageCheck = countOfOrders ? (gain / countOfOrders).toFixed(2) : 0;
 
@@ -221,12 +233,13 @@ export class OrdersService {
             }
 
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при получении статистики: ${e}`)
+            await this.botService.errorMessage(`Произошла ошибка при получении статистики: ${e}`);
             throw new HttpException(
                 `Произошла ошибка при получении статистики: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     }
+
 
 }
