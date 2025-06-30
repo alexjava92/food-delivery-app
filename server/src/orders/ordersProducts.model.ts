@@ -4,7 +4,7 @@ import { OrdersModel } from './orders.model';
 
 @Table({ tableName: 'orders_products' })
 export class OrderProductsModel extends Model {
-  @Column({type: DataType.INTEGER,unique: true,autoIncrement: true, primaryKey: true,})
+  @Column({type: DataType.NUMBER,unique: true,autoIncrement: true, primaryKey: true,})
   id: number;
 
   @ForeignKey(() => OrdersModel)
@@ -15,6 +15,6 @@ export class OrderProductsModel extends Model {
   @Column({ type: DataType.NUMBER })
   products: number;
 
-  @Column({ type: DataType.INTEGER })
+  @Column({ type: DataType.NUMBER })
   count: number;
 }

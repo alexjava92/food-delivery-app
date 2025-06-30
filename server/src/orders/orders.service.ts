@@ -26,33 +26,31 @@ export class OrdersService {
 
     async createOrder(dto: CreateOrderDto) {
         try {
-            const order = await this.ordersRepository.create({...dto});
+            const order = await this.ordersRepository.create({ ...dto });
 
-            let arrProductId = [];
             for (const product of dto.orderProducts) {
-                arrProductId.push(product.id);
+                await order.$add('orderProducts', product.id, {
+                    through: { count: product.count },
+                });
             }
 
-            await order.$set('orderProducts', arrProductId);
-            for (const product of dto.orderProducts) {
-                await OrderProductsModel.update(
-                    {count: product.count},
-                    {where: {products: product.id}},
-                );
-            }
-            const adminId = await this.usersService.findAdmin()
-            const newOrder = await this.ordersRepository.findOne({where: {id: order.id}, include: ProductsModel});
+            const adminId = await this.usersService.findAdmin();
+            const newOrder = await this.ordersRepository.findOne({
+                where: { id: order.id },
+                include: ProductsModel,
+            });
 
-            await this.botService.notification(adminId, newOrder)
+            await this.botService.notification(adminId, newOrder);
             return order;
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при создании заказа: ${e}`)
+            await this.botService.errorMessage(`Произошла ошибка при создании заказа: ${e}`);
             throw new HttpException(
                 `Произошла ошибка при создании заказа: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     }
+
 
     async findAllOrder(page: string) {
 
