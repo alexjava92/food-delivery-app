@@ -13,6 +13,9 @@ import { Loader } from "../../shared/loader/loader";
 import { createPortal } from "react-dom";
 import { Modal } from "../../entities/modal/modal";
 import { useAppDispatch } from "../../hooks/useRedux";
+import {Store, Truck} from "lucide-react";
+
+
 
 const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
 
@@ -109,7 +112,14 @@ const ChangeStatusOrderPage = () => {
                             key={item?.id}
                         >
                             <div className={classes.item}>
-                                <div className={classes.title}>Заказ №{item?.id}</div>
+                                <div className={classes.title}>Заказ №{item?.id}
+                                    {item?.typeDelivery === "Доставка" && (
+                                        <Truck size={20} className={classes.iconDelivery} />
+                                    )}
+                                    {item?.typeDelivery === "Самовывоз" && (
+                                        <Store size={20} className={classes.iconPickup} />
+                                    )}
+                                </div>
                                 <Select
                                     onChange={(val) =>
                                         setSelectMap((prev) => ({
