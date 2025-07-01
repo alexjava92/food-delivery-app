@@ -117,16 +117,13 @@ const ChangeStatusOrderPage = () => {
                             key={item?.id}
                         >
                             <div className={classes.item}>
-                                <div className={classes.containerTitleSvg}>
-                                    <div className={classes.title}>Заказ №{item?.id}
-                                        {item?.typeDelivery === "Доставка" && (
-                                            <Truck size={24} color='red'/>
-                                        )}
-                                        {item?.typeDelivery === "Самовывоз" && (
-                                            <Store size={24} color='gold'/>
-                                        )}
-                                    </div>
+
+                                <div className={classes.title}>
+                                    <span>Заказ №{item?.id}</span>
+                                    {item?.typeDelivery === "Доставка" && <Truck size={24} color='red' />}
+                                    {item?.typeDelivery === "Самовывоз" && <Store size={24} color='gold' />}
                                 </div>
+
                                 <Select
                                     onChange={(val) =>
                                         setSelectMap((prev) => ({
