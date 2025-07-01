@@ -28,6 +28,10 @@ const ChangeStatusOrderPage = () => {
     const [textModal, setTextModal] = useState("");
 
     useEffect(() => {
+        console.log("data:", data);
+    }, [data]);
+
+    useEffect(() => {
         if (isErrorUpdate) {
             setTextModal("Ошибка при обновлении статуса");
             setModal(true);
