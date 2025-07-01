@@ -22,9 +22,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 
   font-weight: 600;
   margin-bottom: 10px;
+}
+
+.title svg {
+  fill: none !important; // отключает глобальный fill
+  stroke: currentColor;  // если хочешь, чтобы color='red' работал
 }
 
 .link {
@@ -86,4 +92,5 @@
   color: #0984e3; // синий
   margin-left: 8px;
 }
+
 
