@@ -114,10 +114,10 @@ const ChangeStatusOrderPage = () => {
                             <div className={classes.item}>
                                 <div className={classes.title}>Заказ №{item?.id}
                                     {item?.typeDelivery === "Доставка" && (
-                                        <Truck size={20} className={classes.iconDelivery} />
+                                        <Truck size={20} />
                                     )}
                                     {item?.typeDelivery === "Самовывоз" && (
-                                        <Store size={20} className={classes.iconPickup} />
+                                        <Store size={20}  />
                                     )}
                                 </div>
                                 <Select
