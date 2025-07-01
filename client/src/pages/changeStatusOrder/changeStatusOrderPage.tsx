@@ -1,28 +1,27 @@
-import { MainLayout } from "../../layout/mainLayout";
+import {MainLayout} from "../../layout/mainLayout";
 import {
     useGetOrdersQuery,
     useUpdateOrderStatusMutation,
     ordersApi,
 } from "../../store/API/ordersApi";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import classes from "./changeStatusOrderPage.module.scss";
-import { NavLink } from "react-router-dom";
-import { Button } from "../../shared/button/button";
-import { Select } from "../../shared/select/select";
-import { Loader } from "../../shared/loader/loader";
-import { createPortal } from "react-dom";
-import { Modal } from "../../entities/modal/modal";
-import { useAppDispatch } from "../../hooks/useRedux";
+import {NavLink} from "react-router-dom";
+import {Button} from "../../shared/button/button";
+import {Select} from "../../shared/select/select";
+import {Loader} from "../../shared/loader/loader";
+import {createPortal} from "react-dom";
+import {Modal} from "../../entities/modal/modal";
+import {useAppDispatch} from "../../hooks/useRedux";
 import {Store, Truck} from "lucide-react";
-
 
 
 const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
 
 const ChangeStatusOrderPage = () => {
     const [page, setPage] = useState(1);
-    const { data, isError, isLoading } = useGetOrdersQuery(page);
-    const [updateStatus, { data: dataUpdate, isError: isErrorUpdate, isLoading: isLoadingUpdate }] =
+    const {data, isError, isLoading} = useGetOrdersQuery(page);
+    const [updateStatus, {data: dataUpdate, isError: isErrorUpdate, isLoading: isLoadingUpdate}] =
         useUpdateOrderStatusMutation();
     const dispatch = useAppDispatch();
 
@@ -73,9 +72,9 @@ const ChangeStatusOrderPage = () => {
                 userId,
             },
         }).then(() => {
-            dispatch(ordersApi.util.invalidateTags([{ type: "Orders", id: userId }]));
+            dispatch(ordersApi.util.invalidateTags([{type: "Orders", id: userId}]));
             dispatch(
-                ordersApi.endpoints.getAllOrdersUser.initiate(userId, { forceRefetch: true })
+                ordersApi.endpoints.getAllOrdersUser.initiate(userId, {forceRefetch: true})
             );
         });
     };
@@ -108,8 +107,8 @@ const ChangeStatusOrderPage = () => {
     return (
         <MainLayout heading={"Изменение статуса заказа"}>
             <div className={classes.list}>
-                {isLoadingUpdate && <Loader circle />}
-                {isLoading && <Loader height={118} />}
+                {isLoadingUpdate && <Loader circle/>}
+                {isLoading && <Loader height={118}/>}
                 {data &&
                     data?.rows.map((item) => (
                         <div
@@ -118,13 +117,15 @@ const ChangeStatusOrderPage = () => {
                             key={item?.id}
                         >
                             <div className={classes.item}>
-                                <div className={classes.title}>Заказ №{item?.id}
-                                    {item?.typeDelivery === "Доставка" && (
-                                        <Truck size={20} />
-                                    )}
-                                    {item?.typeDelivery === "Самовывоз" && (
-                                        <Store size={20}  />
-                                    )}
+                                <div className={classes.containerTitleSvg}>
+                                    <div className={classes.title}>Заказ №{item?.id}
+                                        {item?.typeDelivery === "Доставка" && (
+                                            <Truck size={24} color='red'/>
+                                        )}
+                                        {item?.typeDelivery === "Самовывоз" && (
+                                            <Store size={24} color='gold'/>
+                                        )}
+                                    </div>
                                 </div>
                                 <Select
                                     onChange={(val) =>
