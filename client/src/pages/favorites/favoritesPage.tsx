@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {IProduct} from "../../types/types";
 import {Product} from "../../entities/product/product";
 import {NavLink} from "react-router-dom";
+import classes from "./favoritesPage.module.scss";
 
 
 const FavoritesPage = () => {
@@ -18,7 +19,7 @@ const FavoritesPage = () => {
             {
                 favouritesProduct ?
                     favouritesProduct?.map(item =>
-                        <NavLink key={item.id} to={`/product/${item.id}`}>
+                        <NavLink className={classes.favorite} key={item.id} to={`/product/${item.id}`}>
                             <Product key={item.id} data={item}/>
                         </NavLink>
                     )
