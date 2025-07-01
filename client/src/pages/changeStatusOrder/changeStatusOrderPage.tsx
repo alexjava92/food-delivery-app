@@ -35,6 +35,12 @@ const ChangeStatusOrderPage = () => {
     }, [data]);
 
     useEffect(() => {
+        data?.rows.forEach((order) => {
+            console.log(`ID: ${order.id}, type: ${order.typeDelivery}`);
+        });
+    }, [data]);
+
+    useEffect(() => {
         if (isErrorUpdate) {
             setTextModal("Ошибка при обновлении статуса");
             setModal(true);
