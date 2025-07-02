@@ -29,6 +29,7 @@ export class ProductsService {
 
       // Очистить общий кэш продуктов
       await this.cacheManager.del('products:all');
+      await this.cacheManager.del(`category:${product.categoryId}`);
       return product;
     } catch (e) {
       await this.botService.errorMessage(`Произошла ошибка при создании продукта: ${e}`);
