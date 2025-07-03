@@ -24,30 +24,24 @@
 
 .deliveryNote {
   margin: 20px 0;
-  padding: 12px 16px;
-  background-color: #f8f8f8;
-  border-left: 4px solid #ffb400;
-  font-size: 15px;
-  line-height: 1.5;
-  color: #333;
+  padding: 8px 10px;
+  border-left: 4px solid var(--tg-theme-button-color);
   border-radius: 6px;
 }
 
 .totalBlock {
   margin: 24px 0;
   padding: 16px 20px;
-  background-color: #fafafa;
-  border: 1px solid #ddd;
+  border: 1px solid var(--tg-theme-hint-color);
   border-radius: 8px;
 
   div {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
-    font-size: 16px;
   }
 
   b {
-    font-weight: 600;
+
   }
 }

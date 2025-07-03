@@ -36,7 +36,7 @@ const OneOrderPage = () => {
                     {data?.typeDelivery === 'Доставка' && (
                         <div><span>Доставка:</span><span>{delivery} ₽</span></div>
                     )}
-                    <div><b><span>Итого:</span><span>{total} ₽</span></b></div>
+                    <div><b><span>Итого: </span><span>{total} ₽</span></b></div>
                 </div>
 
                 <div className={classes.desc}>
