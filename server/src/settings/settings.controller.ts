@@ -7,6 +7,11 @@ class SetMaintenanceDto {
     maintenance: boolean;
 }
 
+class SetDeliveryDto {
+    deliveryPrice: number;
+    freeDeliveryFrom: number;
+}
+
 @ApiTags('Settings')
 @Controller('api/settings')
 export class SettingsController {
@@ -33,5 +38,21 @@ export class SettingsController {
             console.error('[PATCH] Ошибка обновления maintenance:', error);
             throw error;
         }
+    }
+
+    @Get('delivery')
+    @ApiOperation({ summary: 'Получить настройки доставки' })
+    @ApiResponse({ status: 200, description: 'deliveryPrice + freeDeliveryFrom' })
+    getDeliverySettings() {
+        return this.settingsService.getDeliverySettings();
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth()
+    @Patch('delivery')
+    @ApiOperation({ summary: 'Обновить deliveryPrice и freeDeliveryFrom (только админ)' })
+    @ApiResponse({ status: 200, description: 'Значения успешно обновлены' })
+    setDeliverySettings(@Body() body: SetDeliveryDto) {
+        return this.settingsService.setDeliverySettings(body);
     }
 }

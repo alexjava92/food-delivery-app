@@ -28,4 +28,20 @@ export class SettingsService {
         await setting.update({ value: value.toString() });
         return { maintenance: value };
     }
+
+    async getDeliverySettings() {
+        const deliveryPrice = parseInt(await this.get('delivery_price') || '0');
+        const freeFrom = parseInt(await this.get('free_delivery_from') || '0');
+        return {
+            deliveryPrice,
+            freeDeliveryFrom: freeFrom,
+        };
+    }
+
+    async setDeliverySettings(values: { deliveryPrice: number, freeDeliveryFrom: number }) {
+        await this.set('delivery_price', values.deliveryPrice.toString());
+        await this.set('free_delivery_from', values.freeDeliveryFrom.toString());
+        return { success: true };
+    }
+
 }
