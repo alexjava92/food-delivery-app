@@ -57,14 +57,15 @@ export const FormCheckout: FC<IType> = memo(() => {
     const submitHandler = () => {
         const data: IOrderCreate = {
             userId: user?.id,
-            address: typeDelivery === 'Доставка' ? address.value :'Самовывоз',
+            address: typeDelivery === 'Доставка' ? address.value : 'Самовывоз',
             typeDelivery,
             phone: phone.value,
             name: name.value,
             paymentMethod: typeDelivery === 'Доставка' ? paymentMethod : 'Наличные',
+            deliveryPrice: typeDelivery === 'Доставка' ? 150 : 0,
             orderProducts: productsInCart.map(item => ({id: +item?.id, count: +item?.count})),
             status: 'новый',
-            comment:commentInput.value
+            comment: commentInput.value
         }
         if (!paymentMethod) setPaymentMethodError(true)
         if (!address.value) address.setError(true)
@@ -83,6 +84,11 @@ export const FormCheckout: FC<IType> = memo(() => {
         }
 
     }
+
+    const productsTotalPrice = productsInCart.reduce((acc, item) => acc + +item.price * +item.count, 0);
+    const totalWithDelivery = productsTotalPrice + (typeDelivery === 'Доставка' ? 150 : 0);
+
+
     return (
         <form className={classes.formCheckout} onSubmit={(e) => e.preventDefault()}>
             {isLoading && <Loader circle/>}
@@ -98,12 +104,14 @@ export const FormCheckout: FC<IType> = memo(() => {
             <div className={classes.box}>
                 {
                     typeDelivery === 'Доставка' &&
-                    <SimpleTextField label={"Укажите адрес доставки"} value={address.value} onChange={address.onChange} error={address.error}/>
+                    <SimpleTextField label={"Укажите адрес доставки"} value={address.value} onChange={address.onChange}
+                                     error={address.error}/>
                 }
-                <SimpleTextField label={"Телефон"} type={'phone'} value={phone.value} onChange={phone.onChange} error={phone.error}/>
+                <SimpleTextField label={"Телефон"} type={'phone'} value={phone.value} onChange={phone.onChange}
+                                 error={phone.error}/>
                 <SimpleTextField label={"Имя"} value={name.value} onChange={name.onChange}/>
                 <SimpleTextField label={'Описание'} onChange={commentInput.onChange}
-                           value={commentInput.value} description/>
+                                 value={commentInput.value} description/>
             </div>
             {
                 typeDelivery === 'Доставка' &&
@@ -114,10 +122,25 @@ export const FormCheckout: FC<IType> = memo(() => {
                     </div>
                     <InputRadio label={'Наличные'} value={'Наличные'} onChange={setPaymentMethod} name={"payment"}/>
                     {/*<InputRadio label={'Эквайринг'} value={'Эквайринг'} onChange={setPaymentMethod} name={"payment"}/>*/}
-                    <InputRadio label={'Картой при получении'} value={'Картой при получении'} onChange={setPaymentMethod}
+                    <InputRadio label={'Картой при получении'} value={'Картой при получении'}
+                                onChange={setPaymentMethod}
                                 name={"payment"}/>
                 </div>
             }
+
+            {typeDelivery === 'Доставка' && (
+                <div className={classes.deliveryNote}>
+                    Стоимость доставки составляет <b>150 ₽</b> и включается в итоговую сумму.
+                </div>
+            )}
+
+            <div className={classes.totalBlock}>
+                <div>Сумма товаров: {productsTotalPrice} ₽</div>
+                {typeDelivery === 'Доставка' && (
+                    <div>Доставка: 150 ₽</div>
+                )}
+                <div><b>Итого: {totalWithDelivery} ₽</b></div>
+            </div>
 
             <Button onClick={submitHandler}>Оформить заказ</Button>
             {modalError && createPortal(

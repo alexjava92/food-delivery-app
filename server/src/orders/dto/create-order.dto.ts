@@ -1,5 +1,6 @@
 export class CreateOrderDto {
     readonly typeDelivery: string;
+    readonly deliveryPrice: number;
     readonly address: string;
     readonly phone: string;
     readonly name: string;

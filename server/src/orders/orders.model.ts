@@ -38,9 +38,13 @@ export class OrdersModel extends Model {
     @Column({type: DataType.STRING, allowNull: false})
     paymentMethod: string;
 
-    @ApiProperty({example: 'Комнтарий к заказу ', description: 'Комнтарий к заказу'})
+    @ApiProperty({example: 'Комментарий к заказу ', description: 'Комментарий к заказу'})
     @Column({type: DataType.STRING, allowNull: true})
     comment: string;
+
+    @ApiProperty({example: 150, description: 'Стоимость доставки'})
+    @Column({type: DataType.INTEGER, allowNull: false, defaultValue: 0})
+    deliveryPrice: number;
 
     @BelongsToMany(() => ProductsModel, {
         through: () => OrderProductsModel,

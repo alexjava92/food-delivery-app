@@ -32,6 +32,7 @@ export interface IOrderCreate {
     userId?: number;
     address?: string;
     typeDelivery?: string;
+    deliveryPrice?: number;
     phone?: string;
     name?: string;
     paymentMethod?: string;
@@ -46,6 +47,7 @@ export interface IOrder {
     userId?: number;
     address?: string;
     typeDelivery?: string;
+    deliveryPrice?: number;
     phone?: string;
     name?: string;
     paymentMethod?: string;
