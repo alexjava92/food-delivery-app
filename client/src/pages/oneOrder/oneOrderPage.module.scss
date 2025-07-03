@@ -39,3 +39,27 @@
   height: 1px;
   background-color: var(--tg-theme-hint-color);
 }
+
+.sum {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px;
+  margin: 24px 0;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 16px;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    line-height: 1.5;
+  }
+
+  b {
+    font-weight: 600;
+  }
+}
+
