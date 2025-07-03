@@ -75,3 +75,8 @@ export interface IUser {
     phone?: string;
     address?: string;
 }
+
+export interface IDeliverySettings {
+    deliveryPrice: number;
+    freeDeliveryFrom: number;
+}
