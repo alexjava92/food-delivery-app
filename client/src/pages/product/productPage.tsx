@@ -1,53 +1,70 @@
-import {MainLayout} from "../../layout/mainLayout"
-import {useParams} from "react-router-dom";
-import {useGetOneProductQuery} from "../../store/API/productsApi";
-import {Product} from "../../entities/product/product";
-import {Button} from "../../shared/button/button";
-import {useAppDispatch, useAppSelector} from "../../hooks/useRedux";
-import {addProductToCart} from "../../store/slice/productsSlice";
-import React, {useEffect, useState} from "react";
-import {Loader} from "../../shared/loader/loader";
-import {PlusAndMinus} from "../../shared/plusAndMinus/plusAndMinus";
-import {IProduct} from "../../types/types";
+import React, { useState, useEffect } from 'react';
+import { useSetDeliverySettingsMutation, useGetDeliverySettingsQuery } from "../../store/API/settingsApi";
+import classes from "./deliverySettingsPage.module.scss";
+import { MainLayout } from "../../layout/mainLayout";
+import { Loader } from "../../shared/loader/loader";
+import { SimpleTextField } from "../../shared/simpleTextField/simpleTextField";
+import { Button } from "../../shared/button/button";
 
+const DeliverySettingsPage = () => {
+    const [deliveryPrice, setDeliveryPrice] = useState(0);
+    const [freeDeliveryFrom, setFreeDeliveryFrom] = useState(0);
+    const [error, setError] = useState<string | null>(null);
+    const [setDeliverySettings, { isLoading: isSaving }] = useSetDeliverySettingsMutation();
+    const { data, isLoading } = useGetDeliverySettingsQuery();
 
-const ProductPage = () => {
-    const {id} = useParams()
-    const {data, isError,isLoading} = useGetOneProductQuery(`${id}`)
-    const dispatch = useAppDispatch()
-    const {productsInCart} = useAppSelector(state => state.productReducer)
-
-    const[product,setProduct] =useState<any>()
     useEffect(() => {
-        if(productsInCart && data ){
-            setProduct(productsInCart.find(item=> item.id === data.id))
+        if (data) {
+            setDeliveryPrice(data.deliveryPrice);
+            setFreeDeliveryFrom(data.freeDeliveryFrom);
         }
-    }, [productsInCart,data]);
-    const addHandler = () => {
-        dispatch(addProductToCart(data))
-    }
-    if (isError) {
-        return <h2 className={'error'}>Произошла ошибка при загрузке данных. Попробуйте обновить страницу</h2>
-    }
+    }, [data]);
+
+    const handleSubmit = async () => {
+        if (deliveryPrice < 0 || freeDeliveryFrom < 0) {
+            setError("Значения не могут быть отрицательными");
+            return;
+        }
+        if (deliveryPrice > freeDeliveryFrom) {
+            setError("Цена доставки не должна превышать порог бесплатной доставки");
+            return;
+        }
+        setError(null);
+        await setDeliverySettings({ deliveryPrice, freeDeliveryFrom });
+        alert("Настройки сохранены");
+    };
+
     return (
-        <MainLayout heading={data?.title} textCenter>
-            <div className="mb-4">
-                {isLoading && <Loader height={428}/>}
-                <Product data={data} oneProduct/>
+        <MainLayout heading="Настройки доставки" textCenter>
+            <div className={classes.settingsPage}>
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <div className={classes.form}>
+                        <SimpleTextField
+                            label="Цена доставки (₽)"
+                            type="number"
+                            value={deliveryPrice.toString()}
+                            onChange={(e) => setDeliveryPrice(Number(e.target.value))}
+                        />
+
+                        <SimpleTextField
+                            label="Бесплатная доставка от (₽)"
+                            type="number"
+                            value={freeDeliveryFrom.toString()}
+                            onChange={(e) => setFreeDeliveryFrom(Number(e.target.value))}
+                        />
+
+                        {error && <p className="error">{error}</p>}
+
+                        <Button onClick={handleSubmit} disabled={isSaving}>
+                            {isSaving ? "Сохранение..." : "Сохранить изменения"}
+                        </Button>
+                    </div>
+                )}
             </div>
-            {
-               data?.disabled &&
-                <>
-                    {
-                        product ?
-                            <Button><PlusAndMinus data={product} isBlack/></Button>
-                            :  <Button onClick={addHandler}>Добавить в корзину</Button>
-                    }
-                </>
-
-            }
-
         </MainLayout>
     );
 };
-export default ProductPage;
+
+export default DeliverySettingsPage;
