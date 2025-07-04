@@ -116,6 +116,12 @@ export class OrdersService {
     async updateOrder(id: number, dto: UpdateOrderDto) {
         try {
             const order = await this.ordersRepository.findOne({where: {id}});
+
+            if (dto.status && dto.status === order.status) {
+                // Статус не изменился — ничего не делаем
+                return order;
+            }
+
             await order.update({...dto});
             const user = await this.usersService.findOneId(order.userId)
             if (dto.status) {
