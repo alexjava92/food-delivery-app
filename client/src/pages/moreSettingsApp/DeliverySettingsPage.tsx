@@ -5,11 +5,13 @@ import { MainLayout } from "../../layout/mainLayout";
 import { Loader } from "../../shared/loader/loader";
 import { SimpleTextField } from "../../shared/simpleTextField/simpleTextField";
 import { Button } from "../../shared/button/button";
+import { Modal } from "../../entities/modal/modal";
 
 const DeliverySettingsPage = () => {
     const [deliveryPrice, setDeliveryPrice] = useState(0);
     const [freeDeliveryFrom, setFreeDeliveryFrom] = useState(0);
     const [error, setError] = useState<string | null>(null);
+    const [showModal, setShowModal] = useState(false);
     const [setDeliverySettings, { isLoading: isSaving }] = useSetDeliverySettingsMutation();
     const { data, isLoading } = useGetDeliverySettingsQuery();
 
@@ -31,7 +33,7 @@ const DeliverySettingsPage = () => {
         }
         setError(null);
         await setDeliverySettings({ deliveryPrice, freeDeliveryFrom });
-        alert("Настройки сохранены");
+        setShowModal(true);
     };
 
     return (
@@ -61,6 +63,13 @@ const DeliverySettingsPage = () => {
                             {isSaving ? "Сохранение..." : "Сохранить изменения"}
                         </Button>
                     </div>
+                )}
+                {showModal && (
+                    <Modal
+                        textModal="Настройки успешно сохранены"
+                        textBtn="Закрыть"
+                        onClick={() => setShowModal(false)}
+                    />
                 )}
             </div>
         </MainLayout>
