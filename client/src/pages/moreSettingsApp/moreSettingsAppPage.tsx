@@ -19,6 +19,7 @@ const linkArrAdmin = [
     {to: "/more/settings", text: "Настойка товаров", icon: <SettingsIcon/>},
     {to: "/more/change-status-order", text: "Изменение статуса заказа", icon: <OrdersIcon/>},
     {to: "/more/add-admin", text: "Изменение роли пользователя", icon: <SettingsIcon/>},*/
+    {to: "/more/delivery-settings", text: "Настройки доставки", icon: <SettingsIcon/>},
     {to: "/more/maintenance-toggle", text: "Технические работы", icon: <SettingsIcon/>},
 ];
 /*const linkArrCook = [
