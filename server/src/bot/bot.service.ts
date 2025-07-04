@@ -16,7 +16,7 @@ export class BotService {
             `• ${p.title} [${p.OrderProductsModel.count} шт.]`
         ).join('\n');
 
-        let message = `Появился новый заказ ${emoji} №${order.id}\n`;
+        let message = `Появился новый заказ ${emoji} №${order.id}\n\n`;
         if (!isPickup) message += `Адрес: ${order.address}\n`;
         message += `Имя: ${order.name}\n`;
         message += `Телефон: ${order.phone}\n`;
@@ -41,23 +41,35 @@ export class BotService {
         };
 
         for (const chatId of adminIds) {
-            await tgBot.sendMessage(chatId, message, keyboard);
+            try {
+                await tgBot.sendMessage(chatId, message, keyboard);
+            } catch (e) {
+                console.error(`[BotService] Ошибка отправки сообщения chatId=${chatId}:`, e.message);
+            }
         }
     }
 
     async userNotification(chatId: string | number, message: string) {
-        await tgBot.sendMessage(chatId, message);
+        try {
+            await tgBot.sendMessage(chatId, message);
+        } catch (e) {
+            console.error(`[BotService] Ошибка отправки пользователю chatId=${chatId}:`, e.message);
+        }
     }
 
     async updateUser(chatId: string) {
         for (const admin of process.env.BOT_CHAT_ID_MESSAGE.split(",")) {
-            await tgBot.sendMessage(admin, `Изменена роль пользователя ${chatId}`, {
-                reply_markup: {
-                    inline_keyboard: [
-                        [{ text: 'Посмотреть пользователя', web_app: { url: `${process.env.WEB_APP_URL}update-user/${chatId}` } }]
-                    ]
-                }
-            });
+            try {
+                await tgBot.sendMessage(admin, `Изменена роль пользователя ${chatId}`, {
+                    reply_markup: {
+                        inline_keyboard: [
+                            [{ text: 'Посмотреть пользователя', web_app: { url: `${process.env.WEB_APP_URL}update-user/${chatId}` } }]
+                        ]
+                    }
+                });
+            } catch (e) {
+                console.error(`[BotService] Ошибка уведомления об обновлении роли chatId=${admin}:`, e.message);
+            }
         }
     }
 }
