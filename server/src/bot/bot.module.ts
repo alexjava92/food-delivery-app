@@ -11,10 +11,14 @@ import {UsersModel} from "../users/users.model";
 import {AuthService} from "../auth/auth.service";
 import {TokenService} from "../token/token.service";
 import {JwtService} from "@nestjs/jwt";
+import {OrdersModule} from "../orders/orders.module";
 
 @Module({
-    providers: [BotService, BotStartService, TextMessageService, ContactsService, UsersService,AuthService,TokenService,JwtService],
-    imports: [SequelizeModule.forFeature([TextMessageModel, ContactsModel, UsersModel])],
+    providers: [BotService, BotStartService, TextMessageService, ContactsService, UsersService, AuthService, TokenService, JwtService],
+    imports: [
+        SequelizeModule.forFeature([TextMessageModel, ContactsModel, UsersModel]),
+        OrdersModule
+    ],
     exports: [BotService]
 })
 export class BotModule {
