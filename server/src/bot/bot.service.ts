@@ -32,18 +32,10 @@ export class BotService {
         if (!Array.isArray(adminIds) || adminIds.length === 0) return;
 
         const message = this.formatOrderNotification(order);
-
-        const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
-        const statusButtons = variants.map((status) => [{
-            text: `Изменить на: ${status}`,
-            callback_data: JSON.stringify({ action: 'set_status', id: order.id, status })
-        }]);
-
         const keyboard = {
             reply_markup: {
                 inline_keyboard: [
-                    [{ text: 'Посмотреть заказ', web_app: { url: `${process.env.WEB_APP_URL}order/${order.id}` } }],
-                    ...statusButtons
+                    [{ text: 'Посмотреть заказ', web_app: { url: `${process.env.WEB_APP_URL}order/${order.id}` } }]
                 ]
             }
         };
