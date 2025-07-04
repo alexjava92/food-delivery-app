@@ -8,6 +8,8 @@ import {tgBot} from "./bot";
 import * as process from "process";
 import {AuthService} from "../auth/auth.service";
 import { OrdersService } from "../orders/orders.service";
+import { BotService } from "./bot.service";
+
 
 
 
@@ -36,7 +38,8 @@ export class BotStartService {
                 private contactsService: ContactsService,
                 private authService: AuthService,
                 private usersService: UsersService,
-                private ordersService: OrdersService,) {
+                private ordersService: OrdersService,
+                private botService: BotService) {
         this.bot = tgBot
         this.start()
     }
@@ -290,7 +293,7 @@ export class BotStartService {
 
                 const adminChatIds = await this.usersService.findAdmin();
                 if (!adminChatIds.includes(String(msg.from.id))) {
-                    await this.bot.answerCallbackQuery(msg.id); // ✅ ответить, чтобы остановить мигание
+                    await this.bot.answerCallbackQuery(msg.id);
                     await this.bot.sendMessage(msg.from.id, '❌ У вас нет прав для изменения статуса.');
                     return;
                 }
@@ -300,8 +303,30 @@ export class BotStartService {
                     notifications: true,
                 });
 
-                await this.bot.answerCallbackQuery(msg.id); // ✅ обязательно
-                await this.bot.sendMessage(msg.from.id, `✅ Статус заказа №${orderId} обновлён на "${status}"`);
+                const updatedOrder = await this.ordersService.findOneOrder(orderId);
+                const updatedText = this.botService['formatOrderNotification'](updatedOrder); // доступ к приватке
+                const updatedKeyboard = {
+                    inline_keyboard: [
+                        [{ text: "Посмотреть заказ", web_app: { url: `${process.env.WEB_APP_URL}order/${orderId}` } }],
+                        [
+                            { text: "Готовится", callback_data: `setStatus_готовится_${orderId}` },
+                            { text: "Готово", callback_data: `setStatus_готово к выдаче_${orderId}` }
+                        ],
+                        [
+                            { text: "Выдан", callback_data: `setStatus_выдан_${orderId}` },
+                            { text: "Отменен", callback_data: `setStatus_отменен_${orderId}` }
+                        ]
+                    ]
+                };
+
+                await this.bot.editMessageText(updatedText, {
+                    chat_id: msg.message.chat.id,
+                    message_id: msg.message.message_id,
+                    reply_markup: updatedKeyboard,
+                    parse_mode: "HTML"
+                });
+
+                await this.bot.answerCallbackQuery(msg.id);
                 return;
             }
         })

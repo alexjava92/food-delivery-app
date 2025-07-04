@@ -12,11 +12,23 @@ export class BotService {
     private formatOrderNotification(order: any): string {
         const isPickup = order.typeDelivery === 'Самовывоз';
         const emoji = isPickup ? '🏠' : '🚚';
+
+        const statusEmojiMap = {
+            "отменен": "🔴",
+            "готово к выдаче": "🟠",
+            "выдано": "🟢",
+            "готовится": "🔵",
+            "новый": "🟡"
+        };
+
+        const statusLine = `${statusEmojiMap[order.status] || ''} ${order.status}`;
+
         const productsList = order.orderProducts.map(p =>
-            `• ${p.title} [${p.OrderProductsModel.count} шт.]`
+            `• ${p.title} [${p.OrderProductsModel?.count || p.order_product?.count || 1} шт.]`
         ).join('\n');
 
-        let message = `Появился новый заказ ${emoji} №${order.id}\n\n`;
+        let message = `${statusLine}\n\nПоявился новый заказ ${emoji} №${order.id}\n\n`;
+
         if (!isPickup) message += `Адрес: ${order.address}\n`;
         message += `Имя: ${order.name}\n`;
         message += `Телефон: ${order.phone}\n`;
