@@ -304,34 +304,45 @@ export class BotStartService {
                 });
 
                 const updatedOrder = await this.ordersService.findOneOrder(orderId);
-                const updatedText = this.botService['formatOrderNotification'](updatedOrder); // доступ к приватке
-                const row1 = [
-                    { text: "Готовится", callback_data: `setStatus_готовится_${orderId}` },
-                ];
-                if (updatedOrder.typeDelivery === 'Самовывоз') {
-                    row1.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${orderId}` });
+                const updatedText = this.botService.formatOrderNotification(updatedOrder);
+
+                // === Формируем поэтапные кнопки ===
+                const currentStatus = updatedOrder.status;
+                const isPickup = updatedOrder.typeDelivery === 'Самовывоз';
+
+                const nextStatusButtons = [];
+
+                if (currentStatus === 'новый') {
+                    nextStatusButtons.push({ text: "Готовится", callback_data: `setStatus_готовится_${orderId}` });
                 }
 
-                const row2 = [
-                    { text: "Выдан", callback_data: `setStatus_выдано_${orderId}` },
-                    { text: "Отменен", callback_data: `setStatus_отменен_${orderId}` },
-                ];
+                if (currentStatus === 'готовится') {
+                    if (isPickup) {
+                        nextStatusButtons.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${orderId}` });
+                    } else {
+                        nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${orderId}` });
+                    }
+                }
+
+                if (currentStatus === 'готово к выдаче') {
+                    nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${orderId}` });
+                }
+
+                // Отмена доступна всегда
+                nextStatusButtons.push({ text: "Отменен", callback_data: `setStatus_отменен_${orderId}` });
 
                 const updatedKeyboard = {
                     inline_keyboard: [
                         [{ text: "Посмотреть заказ", web_app: { url: `${process.env.WEB_APP_URL}order/${orderId}` } }],
-                        row1,
-                        row2,
+                        nextStatusButtons
                     ]
                 };
 
-                const newText = this.botService['formatOrderNotification'](updatedOrder);
-                // Проверка: если текст точно такой же — не обновляем
-                if (newText === msg.message.text) {
+                // Проверка: если текст не меняется — не трогаем
+                if (updatedText === msg.message.text) {
                     await this.bot.answerCallbackQuery(msg.id, { text: 'Статус уже установлен', show_alert: false });
                     return;
                 }
-
 
                 await this.bot.editMessageText(updatedText, {
                     chat_id: msg.message.chat.id,
@@ -343,6 +354,7 @@ export class BotStartService {
                 await this.bot.answerCallbackQuery(msg.id);
                 return;
             }
+
         })
     }
 

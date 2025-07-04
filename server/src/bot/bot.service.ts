@@ -9,7 +9,7 @@ export class BotService {
         }
     }
 
-    private formatOrderNotification(order: any): string {
+    public formatOrderNotification(order: any): string {
         const isPickup = order.typeDelivery === 'Самовывоз';
         const emoji = isPickup ? '🏠' : '🚚';
 
@@ -45,33 +45,39 @@ export class BotService {
 
         if (!Array.isArray(adminIds) || adminIds.length === 0) return;
         const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
-        const inlineStatusButtons = [];
+        const status = order.status;
+        const isPickup = order.typeDelivery === 'Самовывоз';
 
-        const row1 = [
-            { text: "Готовится", callback_data: `setStatus_готовится_${order.id}` },
-        ];
+        const nextStatusButtons = [];
 
-        if (order.typeDelivery === 'Самовывоз') {
-            row1.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${order.id}` });
+        if (status === 'новый') {
+            nextStatusButtons.push({ text: "Готовится", callback_data: `setStatus_готовится_${order.id}` });
+        }
+        if (status === 'готовится') {
+            if (isPickup) {
+                nextStatusButtons.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${order.id}` });
+            } else {
+                nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${order.id}` });
+            }
+        }
+        if (status === 'готово к выдаче') {
+            nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${order.id}` });
         }
 
-        const row2 = [
-            { text: "Выдан", callback_data: `setStatus_выдано_${order.id}` },
-            { text: "Отменен", callback_data: `setStatus_отменен_${order.id}` },
-        ];
+// Отмена доступна на любом этапе
+        nextStatusButtons.push({ text: "Отменен", callback_data: `setStatus_отменен_${order.id}` });
 
-        inlineStatusButtons.push(row1, row2);
-
-        const message = this.formatOrderNotification(order);
         const keyboard = {
             reply_markup: {
                 inline_keyboard: [
                     [{ text: "Посмотреть заказ", web_app: { url: `${process.env.WEB_APP_URL}order/${order.id}` } }],
-                    ...inlineStatusButtons,
+                    nextStatusButtons
                 ],
             },
         };
 
+
+        const message = this.formatOrderNotification(order);
         for (const chatId of adminIds) {
             try {
                 await tgBot.sendMessage(chatId, message, keyboard);
