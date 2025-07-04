@@ -32,14 +32,14 @@ export class BotService {
     async notification(adminIds: string[], order: any) {
 
         if (!Array.isArray(adminIds) || adminIds.length === 0) return;
-
+        const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
         const inlineStatusButtons = [
             [
                 { text: "Готовится", callback_data: `setStatus_готовится_${order.id}` },
-                { text: "Готово", callback_data: `setStatus_готово к выдаче_${order.id}` },
+                { text: "Готово к выдачи", callback_data: `setStatus_готово к выдаче_${order.id}` },
             ],
             [
-                { text: "Выдан", callback_data: `setStatus_выдан_${order.id}` },
+                { text: "Выдано", callback_data: `setStatus_выдано_${order.id}` },
                 { text: "Отменен", callback_data: `setStatus_отменен_${order.id}` },
             ]
         ];

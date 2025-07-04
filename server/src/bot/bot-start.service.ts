@@ -290,6 +290,7 @@ export class BotStartService {
 
                 const adminChatIds = await this.usersService.findAdmin();
                 if (!adminChatIds.includes(String(msg.from.id))) {
+                    await this.bot.answerCallbackQuery(msg.id); // ✅ ответить, чтобы остановить мигание
                     await this.bot.sendMessage(msg.from.id, '❌ У вас нет прав для изменения статуса.');
                     return;
                 }
@@ -299,6 +300,7 @@ export class BotStartService {
                     notifications: true,
                 });
 
+                await this.bot.answerCallbackQuery(msg.id); // ✅ обязательно
                 await this.bot.sendMessage(msg.from.id, `✅ Статус заказа №${orderId} обновлён на "${status}"`);
                 return;
             }
