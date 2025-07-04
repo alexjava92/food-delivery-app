@@ -7,6 +7,8 @@ import {UsersService} from "../users/users.service";
 import {tgBot} from "./bot";
 import * as process from "process";
 import {AuthService} from "../auth/auth.service";
+import { OrdersService } from "../orders/orders.service";
+
 
 
 const inlineKeyboardBtn = {
@@ -33,7 +35,8 @@ export class BotStartService {
     constructor(private textService: TextMessageService,
                 private contactsService: ContactsService,
                 private authService: AuthService,
-                private usersService: UsersService,) {
+                private usersService: UsersService,
+                private ordersService: OrdersService,) {
         this.bot = tgBot
         this.start()
     }
@@ -209,6 +212,8 @@ export class BotStartService {
                 return
             }
 
+
+
         })
 
         this.bot.on('callback_query', async msg => {
@@ -277,6 +282,25 @@ export class BotStartService {
             }
             if (msg.data === 'sendMailing') {
                 this.sendMailing()
+            }
+            //изменения статуса заказа
+            if (msg.data?.startsWith('setStatus_')) {
+                const [, status, orderIdStr] = msg.data.split('_');
+                const orderId = parseInt(orderIdStr);
+
+                const adminChatIds = await this.usersService.findAdmin();
+                if (!adminChatIds.includes(String(msg.from.id))) {
+                    await this.bot.sendMessage(msg.from.id, '❌ У вас нет прав для изменения статуса.');
+                    return;
+                }
+
+                await this.ordersService.updateOrder(orderId, {
+                    status,
+                    notifications: true,
+                });
+
+                await this.bot.sendMessage(msg.from.id, `✅ Статус заказа №${orderId} обновлён на "${status}"`);
+                return;
             }
         })
     }

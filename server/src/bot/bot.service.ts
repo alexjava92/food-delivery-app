@@ -28,16 +28,30 @@ export class BotService {
         return message;
     }
 
+
     async notification(adminIds: string[], order: any) {
+
         if (!Array.isArray(adminIds) || adminIds.length === 0) return;
+
+        const inlineStatusButtons = [
+            [
+                { text: "Готовится", callback_data: `setStatus_готовится_${order.id}` },
+                { text: "Готово", callback_data: `setStatus_готово к выдаче_${order.id}` },
+            ],
+            [
+                { text: "Выдан", callback_data: `setStatus_выдан_${order.id}` },
+                { text: "Отменен", callback_data: `setStatus_отменен_${order.id}` },
+            ]
+        ];
 
         const message = this.formatOrderNotification(order);
         const keyboard = {
             reply_markup: {
                 inline_keyboard: [
-                    [{ text: 'Посмотреть заказ', web_app: { url: `${process.env.WEB_APP_URL}order/${order.id}` } }]
-                ]
-            }
+                    [{ text: "Посмотреть заказ", web_app: { url: `${process.env.WEB_APP_URL}order/${order.id}` } }],
+                    ...inlineStatusButtons,
+                ],
+            },
         };
 
         for (const chatId of adminIds) {
