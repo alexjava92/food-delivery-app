@@ -50,7 +50,7 @@ export class BotService {
 
         const nextStatusButtons = [];
 
-        if (status === 'новый') {
+        if (status === 'новый' || status === 'отменен') {
             nextStatusButtons.push({ text: "Готовится", callback_data: `setStatus_готовится_${order.id}` });
         }
         if (status === 'готовится') {

@@ -312,7 +312,7 @@ export class BotStartService {
 
                 const nextStatusButtons = [];
 
-                if (currentStatus === 'новый'  || 'отменен') {
+                if (currentStatus === 'новый'  || currentStatus === 'отменен') {
                     nextStatusButtons.push({ text: "Готовится", callback_data: `setStatus_готовится_${orderId}` });
                 }
 
