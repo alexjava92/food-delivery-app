@@ -1,0 +1,41 @@
+.settingsPage {
+
+
+  h2 {
+
+  }
+
+  .form {
+
+
+    label {
+      margin-bottom: 50px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+
+      &:focus {
+        border-color: var(--primary, #007bff);
+        outline: none;
+      }
+    }
+
+    button {
+
+
+      &:hover {
+        background-color: var(--primary-hover, #0056b3);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
