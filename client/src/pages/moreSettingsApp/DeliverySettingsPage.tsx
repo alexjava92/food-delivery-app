@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useSetDeliverySettingsMutation, useGetDeliverySettingsQuery } from "../../store/API/settingsApi";
 import classes from "./deliverySettingsPage.module.scss";
+import { MainLayout } from "../../layout/mainLayout";
+import { Loader } from "../../shared/loader/loader";
+import { SimpleTextField } from "../../shared/simpleTextField/simpleTextField";
+import { Button } from "../../shared/button/button";
 
 const DeliverySettingsPage = () => {
     const [deliveryPrice, setDeliveryPrice] = useState(0);
     const [freeDeliveryFrom, setFreeDeliveryFrom] = useState(0);
+    const [error, setError] = useState<string | null>(null);
     const [setDeliverySettings, { isLoading: isSaving }] = useSetDeliverySettingsMutation();
     const { data, isLoading } = useGetDeliverySettingsQuery();
 
@@ -16,41 +21,49 @@ const DeliverySettingsPage = () => {
     }, [data]);
 
     const handleSubmit = async () => {
+        if (deliveryPrice < 0 || freeDeliveryFrom < 0) {
+            setError("Значения не могут быть отрицательными");
+            return;
+        }
+        if (deliveryPrice > freeDeliveryFrom) {
+            setError("Цена доставки не должна превышать порог бесплатной доставки");
+            return;
+        }
+        setError(null);
         await setDeliverySettings({ deliveryPrice, freeDeliveryFrom });
         alert("Настройки сохранены");
     };
 
     return (
-        <div className={classes.settingsPage}>
-            <h2>Настройки доставки</h2>
-            {isLoading ? (
-                <p>Загрузка...</p>
-            ) : (
-                <div className={classes.form}>
-                    <label>
-                        Цена доставки (₽):
-                        <input
+        <MainLayout heading="Настройки доставки" textCenter>
+            <div className={classes.settingsPage}>
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <div className={classes.form}>
+                        <SimpleTextField
+                            label="Цена доставки (₽)"
                             type="number"
-                            value={deliveryPrice}
+                            value={deliveryPrice.toString()}
                             onChange={(e) => setDeliveryPrice(Number(e.target.value))}
                         />
-                    </label>
 
-                    <label>
-                        Бесплатная доставка от (₽):
-                        <input
+                        <SimpleTextField
+                            label="Бесплатная доставка от (₽)"
                             type="number"
-                            value={freeDeliveryFrom}
+                            value={freeDeliveryFrom.toString()}
                             onChange={(e) => setFreeDeliveryFrom(Number(e.target.value))}
                         />
-                    </label>
 
-                    <button onClick={handleSubmit} disabled={isSaving}>
-                        {isSaving ? "Сохранение..." : "Сохранить изменения"}
-                    </button>
-                </div>
-            )}
-        </div>
+                        {error && <p className="error">{error}</p>}
+
+                        <Button onClick={handleSubmit} disabled={isSaving}>
+                            {isSaving ? "Сохранение..." : "Сохранить изменения"}
+                        </Button>
+                    </div>
+                )}
+            </div>
+        </MainLayout>
     );
 };
 
