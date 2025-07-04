@@ -45,16 +45,22 @@ export class BotService {
 
         if (!Array.isArray(adminIds) || adminIds.length === 0) return;
         const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
-        const inlineStatusButtons = [
-            [
-                { text: "Готовится", callback_data: `setStatus_готовится_${order.id}` },
-                { text: "Готово к выдачи", callback_data: `setStatus_готово к выдаче_${order.id}` },
-            ],
-            [
-                { text: "Выдано", callback_data: `setStatus_выдано_${order.id}` },
-                { text: "Отменен", callback_data: `setStatus_отменен_${order.id}` },
-            ]
+        const inlineStatusButtons = [];
+
+        const row1 = [
+            { text: "Готовится", callback_data: `setStatus_готовится_${order.id}` },
         ];
+
+        if (order.typeDelivery === 'Самовывоз') {
+            row1.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${order.id}` });
+        }
+
+        const row2 = [
+            { text: "Выдан", callback_data: `setStatus_выдано_${order.id}` },
+            { text: "Отменен", callback_data: `setStatus_отменен_${order.id}` },
+        ];
+
+        inlineStatusButtons.push(row1, row2);
 
         const message = this.formatOrderNotification(order);
         const keyboard = {

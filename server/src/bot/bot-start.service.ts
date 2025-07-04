@@ -305,17 +305,23 @@ export class BotStartService {
 
                 const updatedOrder = await this.ordersService.findOneOrder(orderId);
                 const updatedText = this.botService['formatOrderNotification'](updatedOrder); // доступ к приватке
+                const row1 = [
+                    { text: "Готовится", callback_data: `setStatus_готовится_${orderId}` },
+                ];
+                if (updatedOrder.typeDelivery === 'Самовывоз') {
+                    row1.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${orderId}` });
+                }
+
+                const row2 = [
+                    { text: "Выдан", callback_data: `setStatus_выдан_${orderId}` },
+                    { text: "Отменен", callback_data: `setStatus_отменен_${orderId}` },
+                ];
+
                 const updatedKeyboard = {
                     inline_keyboard: [
                         [{ text: "Посмотреть заказ", web_app: { url: `${process.env.WEB_APP_URL}order/${orderId}` } }],
-                        [
-                            { text: "Готовится", callback_data: `setStatus_готовится_${orderId}` },
-                            { text: "Готово", callback_data: `setStatus_готово к выдаче_${orderId}` }
-                        ],
-                        [
-                            { text: "Выдан", callback_data: `setStatus_выдано_${orderId}` },
-                            { text: "Отменен", callback_data: `setStatus_отменен_${orderId}` }
-                        ]
+                        row1,
+                        row2,
                     ]
                 };
 

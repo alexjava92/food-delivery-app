@@ -114,6 +114,15 @@ export class OrdersService {
     }
 
     async updateOrder(id: number, dto: UpdateOrderDto) {
+
+        const statusMessages = {
+            "новый": "🛎 Заказ №${id}\n\n📦 Статус: 🟡 Принят в обработку\n\nМы получили ваш заказ и уже начали подготовку!",
+            "готовится": "👨‍🍳 Заказ №${id}\n\n📦 Статус: 🔵 Готовится\n\nНаши повара уже работают над вашим заказом!",
+            "готово к выдаче": "📢 Заказ №${id}\n\n📦 Статус: 🟠 Готово к выдаче\n\nМожно забирать! Мы ждём вас 🍽",
+            "выдано": "✅ Заказ №${id}\n\n📦 Статус: 🟢 Выдан\n\nСпасибо, что выбрали нас! Приятного аппетита 😋",
+            "отменен": "⚠️ Заказ №${id}\n\n📦 Статус: 🔴 Отменён\n\nЕсли это ошибка — свяжитесь с нами, мы поможем."
+        };
+
         try {
             const order = await this.ordersRepository.findOne({where: {id}});
 
@@ -125,7 +134,8 @@ export class OrdersService {
             await order.update({...dto});
             const user = await this.usersService.findOneId(order.userId)
             if (dto.status) {
-                await this.botService.userNotification(user.chatId, `Номер заказа: ${id} - Изменен статус заказа на ${dto.status}`)
+                const message = statusMessages[dto.status] || `Номер заказа: ${id} - Статус: ${dto.status}`;
+                await this.botService.userNotification(user.chatId, message);
                 this.eventsGateway.emitToUser(user.id, 'order-notification', {
 
                     id: order.id,
