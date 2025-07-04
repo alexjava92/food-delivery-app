@@ -13,7 +13,17 @@ export const settingsApi = createApi({
         getDeliverySettings: build.query<IDeliverySettings, void>({
             query: () => "settings/delivery",
         }),
+        setDeliverySettings: build.mutation<any, IDeliverySettings>({
+            query: (body) => ({
+                url: "settings/delivery",
+                method: "PATCH",
+                body,
+            }),
+        }),
     }),
 });
 
-export const { useGetDeliverySettingsQuery } = settingsApi;
+export const {
+    useGetDeliverySettingsQuery,
+    useSetDeliverySettingsMutation,
+} = settingsApi;
