@@ -306,6 +306,12 @@ export class BotStartService {
                 return;
             }
 
+            if (msg.data === 'reset') {
+                await this.bot.answerCallbackQuery(msg.id);
+                await this.bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
+                return;
+            }
+
             if (msg.data?.startsWith('confirmCancel_')) {
                 const orderId = parseInt(msg.data.split('_')[1]);
 
