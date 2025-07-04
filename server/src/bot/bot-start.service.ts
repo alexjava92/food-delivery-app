@@ -313,11 +313,19 @@ export class BotStartService {
                             { text: "Готово", callback_data: `setStatus_готово к выдаче_${orderId}` }
                         ],
                         [
-                            { text: "Выдан", callback_data: `setStatus_выдан_${orderId}` },
+                            { text: "Выдан", callback_data: `setStatus_выдано_${orderId}` },
                             { text: "Отменен", callback_data: `setStatus_отменен_${orderId}` }
                         ]
                     ]
                 };
+
+                const newText = this.botService['formatOrderNotification'](updatedOrder);
+                // Проверка: если текст точно такой же — не обновляем
+                if (newText === msg.message.text) {
+                    await this.bot.answerCallbackQuery(msg.id, { text: 'Статус уже установлен', show_alert: false });
+                    return;
+                }
+
 
                 await this.bot.editMessageText(updatedText, {
                     chat_id: msg.message.chat.id,
