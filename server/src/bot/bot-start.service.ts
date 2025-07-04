@@ -313,7 +313,7 @@ export class BotStartService {
                 }
 
                 const row2 = [
-                    { text: "Выдан", callback_data: `setStatus_выдан_${orderId}` },
+                    { text: "Выдан", callback_data: `setStatus_выдано_${orderId}` },
                     { text: "Отменен", callback_data: `setStatus_отменен_${orderId}` },
                 ];
 
