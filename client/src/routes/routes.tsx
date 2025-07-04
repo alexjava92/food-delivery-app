@@ -20,6 +20,7 @@ import {AllOrdersPage} from "../pages/allOrders/allOrdersPageLazy";
 import {MaintenancePage} from "../pages/maintenance/MaintenanceLazy";
 import {MaintenanceTogglePage} from "../pages/maintenanceTogglePage/MaintenanceTogglePageLazy";
 import {MoreSettingsAppPage} from "../pages/moreSettingsApp/moreSettingsAppPageLazy";
+import { DeliverySettingsPage } from "../pages/moreSettingsApp/DeliverySettingsPageLazy";
 
 
 export const routes = [
@@ -60,5 +61,6 @@ export const superAdminRoutes =[
     {path: "/update-user/:id", element: <UpdateRoleUserPage/>},
     {path: "/more/add-admin", element: <AddAminPage/>},
     {path: "/more/more-settings-app", element: <MoreSettingsAppPage/>},
-    {path: "/more/maintenance-toggle", element: <MaintenanceTogglePage/>}
-]
+    {path: "/more/maintenance-toggle", element: <MaintenanceTogglePage/>},
+    { path: "/more/delivery-settings", element: <DeliverySettingsPage /> },
+];
