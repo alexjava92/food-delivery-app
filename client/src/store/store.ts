@@ -10,7 +10,7 @@ import { contactsApi } from "./API/contactsApi";
 import notificationReducer from "./slice/notificationSlice";
 import { maintenanceApi } from "./API/maintenanceApi";
 import { settingsApi } from "./API/settingsApi";
-import settingsReducer from './slice/settingsSlice';
+
 
 const rootReducer = combineReducers({
     [productsApi.reducerPath]: productsApi.reducer,
@@ -24,7 +24,6 @@ const rootReducer = combineReducers({
     productReducer,
     userReducer,
     notificationReducer,
-    settings: settingsReducer,
 });
 
 export const setupStore = () =>
