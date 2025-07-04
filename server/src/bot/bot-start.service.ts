@@ -316,7 +316,7 @@ export class BotStartService {
                     nextStatusButtons.push({ text: "Готовится", callback_data: `setStatus_готовится_${orderId}` });
                 }
 
-                if (currentStatus === 'готовится'  || 'отменен') {
+                if (currentStatus === 'готовится') {
                     if (isPickup) {
                         nextStatusButtons.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${orderId}` });
                     } else {
@@ -324,7 +324,7 @@ export class BotStartService {
                     }
                 }
 
-                if (currentStatus === 'готово к выдаче'  || 'отменен') {
+                if (currentStatus === 'готово к выдаче') {
                     nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${orderId}` });
                 }
 
