@@ -18,7 +18,7 @@ import { OrderMessageModel } from './order-message.model';
   controllers: [OrdersController],
   providers: [OrdersService,BotService,TelegramBot,UsersService],
   imports: [
-    SequelizeModule.forFeature([OrderProductsModel,CategoriesModel,OrdersModel, ProductsModel,UsersModel]),WsModule,OrderMessageModel,
+    SequelizeModule.forFeature([OrderProductsModel,CategoriesModel,OrdersModel, ProductsModel,UsersModel,OrderMessageModel]),WsModule,
   ],
   exports: [OrdersService]
 })
