@@ -32,12 +32,9 @@ const ChangeStatusOrderPage = () => {
     const [modal, setModal] = useState(false);
     const [textModal, setTextModal] = useState("");
 
-
     // получаем userId безопасно (можно с fallback на null)
     const userId: number | undefined = data?.rows?.[0]?.user?.id ?? undefined;
 
-
-// вызываем хук СРАЗУ
     const { subscribe } = useWebSocket(userId);
 
     useEffect(() => {
@@ -45,25 +42,38 @@ const ChangeStatusOrderPage = () => {
 
         const handler = (payload: any) => {
             console.log("📡 Обновление заказа по WS:", payload);
-            dispatch(ordersApi.util.invalidateTags([{ type: "Orders" }])); // или refetch()
+            dispatch(ordersApi.util.invalidateTags([{ type: "Orders" }]));
         };
 
         subscribe("order-notification", handler);
 
         return () => {
-            subscribe("order-notification", handler); // или socket.off(...)
+            subscribe("order-notification", handler);
         };
     }, [userId]);
 
     useEffect(() => {
-        console.log("data:", data);
+        if (!data) return;
+
+        const updatedMap: Record<string, string> = {};
+
+        data.rows.forEach(order => {
+            updatedMap[String(order.id)] = order.status ?? "новый"; // <- безопасно
+        });
+
+        setSelectMap(updatedMap);
     }, [data]);
 
-    useEffect(() => {
+
+    /*useEffect(() => {
+        console.log("data:", data);
+    }, [data]);*/
+
+   /* useEffect(() => {
         data?.rows.forEach((order) => {
             console.log(`ID: ${order.id}, type: ${order.typeDelivery}`);
         });
-    }, [data]);
+    }, [data]);*/
 
     useEffect(() => {
         if (isErrorUpdate) {
@@ -159,7 +169,8 @@ const ChangeStatusOrderPage = () => {
                                         }))
                                     }
                                     dataOption={variants}
-                                    initValue={selectMap[String(item.id)] ?? item?.status}
+                                    initValue={selectMap[String(item.id)] ?? item.status}
+
                                 />
                             </div>
                             <div className={classes.inner}>
