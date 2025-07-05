@@ -46,6 +46,11 @@ export class OrdersModel extends Model {
     @Column({type: DataType.INTEGER, allowNull: false, defaultValue: 0})
     deliveryPrice: number;
 
+    @ApiProperty({ example: 1234, description: 'ID сообщения Telegram, связанного с заказом' })
+    @Column({ type: DataType.INTEGER, allowNull: true })
+    messageIdOrder: number;
+
+
     @BelongsToMany(() => ProductsModel, {
         through: () => OrderProductsModel,
         as: 'orderProducts'

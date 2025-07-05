@@ -41,7 +41,7 @@ export class BotService {
     }
 
 
-    async notification(adminIds: string[], order: any) {
+    /*async notification(adminIds: string[], order: any) {
 
         if (!Array.isArray(adminIds) || adminIds.length === 0) return;
         const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
@@ -85,7 +85,60 @@ export class BotService {
                 console.error(`[BotService] Ошибка отправки сообщения chatId=${chatId}:`, e.message);
             }
         }
+
+    }*/
+
+    async notification(adminIds: string[], order: any) {
+        if (!Array.isArray(adminIds) || adminIds.length === 0) return [];
+
+        const status = order.status;
+        const isPickup = order.typeDelivery === 'Самовывоз';
+
+        const nextStatusButtons = [];
+
+        if (status === 'новый' || status === 'отменен') {
+            nextStatusButtons.push({ text: "Готовится", callback_data: `setStatus_готовится_${order.id}` });
+        }
+        if (status === 'готовится') {
+            if (isPickup) {
+                nextStatusButtons.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${order.id}` });
+            } else {
+                nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${order.id}` });
+            }
+        }
+        if (status === 'готово к выдаче') {
+            nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${order.id}` });
+        }
+
+        nextStatusButtons.push({ text: "Отменен", callback_data: `setStatus_отменен_${order.id}` });
+
+        const keyboard = {
+            reply_markup: {
+                inline_keyboard: [
+                    [{ text: "Посмотреть заказ", web_app: { url: `${process.env.WEB_APP_URL}order/${order.id}` } }],
+                    nextStatusButtons
+                ],
+            },
+        };
+
+        const message = this.formatOrderNotification(order);
+        const responses = [];
+
+        for (const chatId of adminIds) {
+            try {
+                const sent = await tgBot.sendMessage(chatId, message, keyboard);
+                responses.push({
+                    chatId,
+                    messageId: sent.message_id,
+                });
+            } catch (e) {
+                console.error(`[BotService] Ошибка отправки сообщения chatId=${chatId}:`, e.message);
+            }
+        }
+
+        return responses;
     }
+
 
     async userNotification(chatId: string | number, message: string) {
         try {

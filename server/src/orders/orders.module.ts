@@ -11,13 +11,14 @@ import {UsersService} from "../users/users.service";
 import {UsersModel} from "../users/users.model";
 import {CategoriesModel} from "../categories/categories.model";
 import {WsModule} from "../ws/ws.module";
+import { OrderMessageModel } from './order-message.model';
 
 
 @Module({
   controllers: [OrdersController],
   providers: [OrdersService,BotService,TelegramBot,UsersService],
   imports: [
-    SequelizeModule.forFeature([OrderProductsModel,CategoriesModel,OrdersModel, ProductsModel,UsersModel]),WsModule,
+    SequelizeModule.forFeature([OrderProductsModel,CategoriesModel,OrdersModel, ProductsModel,UsersModel]),WsModule,OrderMessageModel,
   ],
   exports: [OrdersService]
 })

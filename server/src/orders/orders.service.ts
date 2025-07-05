@@ -9,7 +9,8 @@ import {BotService} from "../bot/bot.service";
 import {UsersService} from "../users/users.service";
 import {CategoriesModel} from "../categories/categories.model";
 import {Op} from "sequelize";
-import { EventsGateway } from '../ws/events.gateway'; // путь зависит от твоей структуры
+import { EventsGateway } from '../ws/events.gateway';
+import {OrderMessageModel} from "./order-message.model"; // путь зависит от твоей структуры
 
 @Injectable()
 export class OrdersService {
@@ -21,6 +22,7 @@ export class OrdersService {
         private readonly botService: BotService,
         private readonly usersService: UsersService,
         private readonly eventsGateway: EventsGateway,
+        private readonly orderMessageModel: typeof OrderMessageModel,
     ) {
     }
 
@@ -40,7 +42,17 @@ export class OrdersService {
                 include: ProductsModel,
             });
 
-            await this.botService.notification(adminId, newOrder);
+            const botMessages = await this.botService.notification(adminId, newOrder);
+
+            if (Array.isArray(botMessages)) {
+                for (const { chatId, messageId } of botMessages) {
+                    await this.orderMessageModel.create({
+                        orderId: newOrder.id,
+                        chatId,
+                        messageId
+                    });
+                }
+            }
             return order;
         } catch (e) {
             await this.botService.errorMessage(`Произошла ошибка при создании заказа: ${e}`);
