@@ -570,12 +570,21 @@ export class BotStartService {
                     return;
                 }
 
-                await this.bot.editMessageText(updatedText, {
-                    chat_id: record.chatId,
-                    message_id: record.messageId,
-                    reply_markup: updatedKeyboard,
-                    parse_mode: "HTML"
-                });
+                try {
+                    await this.bot.editMessageText(updatedText, {
+                        chat_id: record.chatId,
+                        message_id: record.messageId,
+                        reply_markup: updatedKeyboard,
+                        parse_mode: "HTML"
+                    });
+                } catch (e) {
+                    const description = e.response?.body?.description;
+                    if (description?.includes('message is not modified')) {
+                        console.log(`⚠️ Сообщение уже актуально: orderId=${orderId}, chatId=${record.chatId}`);
+                    } else {
+                        console.error(`❌ Ошибка при обновлении сообщения orderId=${orderId}, chatId=${record.chatId}:`, e.message);
+                    }
+                }
 
                 await this.bot.answerCallbackQuery(msg.id);
                 return;
