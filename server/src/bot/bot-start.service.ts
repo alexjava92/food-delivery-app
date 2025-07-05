@@ -224,7 +224,12 @@ export class BotStartService {
                 const orderId = parseInt(orderIdStr);
 
                 const adminChatIds = await this.usersService.findAdmin();
-                if (!adminChatIds.includes(String(msg.from.id))) {
+                const cashier = await this.usersService.findCashier();
+
+                const fromId = String(msg.from.id);
+                const allowedIds = [...adminChatIds, ...cashier];
+
+                if (!allowedIds.includes(fromId)) {
                     await this.bot.answerCallbackQuery(msg.id);
                     await this.bot.sendMessage(msg.from.id, '❌ У вас нет прав для изменения статуса.');
                     return;

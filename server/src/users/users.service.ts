@@ -62,6 +62,26 @@ export class UsersService {
         });
         return admins.map(admin => admin.chatId);
     }
+    async findCashier() {
+        const cashier = await this.usersRepository.findAll({
+            where: {
+                [Op.or]: [
+                    {role: 'cashier'},
+                ]
+            }
+        });
+        return cashier.map(cashier => cashier.chatId);
+    }
+    async findCook() {
+        const cook = await this.usersRepository.findAll({
+            where: {
+                [Op.or]: [
+                    {role: 'cook'},
+                ]
+            }
+        });
+        return cook.map(cook => cook.chatId);
+    }
 
     async createUser(dto: UsersDto) {
         try {
