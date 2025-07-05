@@ -17,33 +17,10 @@ export class MessageSyncService {
     async updateAllAdminMessages(order: any) {
         const updatedText = this.botService.formatOrderNotification(order);
 
-        const currentStatus = order.status;
-        const isPickup = order.typeDelivery === 'Самовывоз';
-
-        const nextStatusButtons = [];
-
-        if (currentStatus === 'новый' || currentStatus === 'отменен') {
-            nextStatusButtons.push({ text: "Готовится", callback_data: `setStatus_готовится_${order.id}` });
-        }
-
-        if (currentStatus === 'готовится') {
-            if (isPickup) {
-                nextStatusButtons.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${order.id}` });
-            } else {
-                nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${order.id}` });
-            }
-        }
-
-        if (currentStatus === 'готово к выдаче') {
-            nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${order.id}` });
-        }
-
-        nextStatusButtons.push({ text: "Отменен", callback_data: `setStatus_отменен_${order.id}` });
-
         const updatedKeyboard = {
             inline_keyboard: [
                 [{ text: "Посмотреть заказ", web_app: { url: `${process.env.WEB_APP_URL}order/${order.id}` } }],
-                nextStatusButtons
+                this.botService.generateStatusButtons(order)
             ]
         };
 
