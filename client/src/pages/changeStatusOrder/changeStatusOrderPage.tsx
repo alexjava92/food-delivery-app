@@ -14,6 +14,9 @@ import {createPortal} from "react-dom";
 import {Modal} from "../../entities/modal/modal";
 import {useAppDispatch} from "../../hooks/useRedux";
 import {Store, Truck} from "lucide-react";
+import {useWebSocket} from "../../hooks/useWebSocket";
+
+
 
 
 const variants = ["новый", "готовится", "готово к выдаче", "выдано", "отменен"];
@@ -28,6 +31,29 @@ const ChangeStatusOrderPage = () => {
     const [selectMap, setSelectMap] = useState<Record<string, string>>({});
     const [modal, setModal] = useState(false);
     const [textModal, setTextModal] = useState("");
+
+
+    // получаем userId безопасно (можно с fallback на null)
+    const userId: number | undefined = data?.rows?.[0]?.user?.id ?? undefined;
+
+
+// вызываем хук СРАЗУ
+    const { subscribe } = useWebSocket(userId);
+
+    useEffect(() => {
+        if (!userId) return;
+
+        const handler = (payload: any) => {
+            console.log("📡 Обновление заказа по WS:", payload);
+            dispatch(ordersApi.util.invalidateTags([{ type: "Orders" }])); // или refetch()
+        };
+
+        subscribe("order-notification", handler);
+
+        return () => {
+            subscribe("order-notification", handler); // или socket.off(...)
+        };
+    }, [userId]);
 
     useEffect(() => {
         console.log("data:", data);
@@ -55,6 +81,7 @@ const ChangeStatusOrderPage = () => {
             return () => clearTimeout(timer);
         }
     }, [modal]);
+
 
     const handlerSubmit = (
         id: number | string,
