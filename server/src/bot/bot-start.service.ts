@@ -294,7 +294,7 @@ export class BotStartService {
                         inline_keyboard: [
                             [
                                 { text: "✅ Подтвердить отмену", callback_data: `setStatus_отменен_${orderId}` },
-                                { text: "↩️ Отмена", callback_data: `cancelAction` }
+                                { text: "↩️ Назад", callback_data: `cancelAction` }
                             ]
                         ]
                     },
@@ -304,7 +304,7 @@ export class BotStartService {
                     }
                 );
 
-                await this.bot.answerCallbackQuery(msg.id, { text: 'Вы уверены, что хотите отменить заказ?', show_alert: true });
+                await this.bot.answerCallbackQuery(msg.id);
                 return;
             }
 

@@ -18,14 +18,14 @@ export class BotService {
         const nextStatusButtons = [];
 
         if (status === 'новый' || status === 'отменен') {
-            nextStatusButtons.push({ text: "Готовится", callback_data: `setStatus_готовится_${order.id}` });
+            nextStatusButtons.push({ text: "🔵 Готовится", callback_data: `setStatus_готовится_${order.id}` });
         }
 
         if (status === 'готовится') {
             if (isPickup) {
-                nextStatusButtons.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${order.id}` });
+                nextStatusButtons.push({ text: "🟠 Готово к выдаче", callback_data: `setStatus_готово к выдаче_${order.id}` });
             } else {
-                nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${order.id}` });
+                nextStatusButtons.push({ text: "🟢 Выдан", callback_data: `setStatus_выдано_${order.id}` });
             }
         }
 
@@ -34,7 +34,7 @@ export class BotService {
         }
 
         nextStatusButtons.push({
-            text: "❗ Отменить",
+            text: "🔴 Отменить",
             callback_data: `confirmCancel_${order.id}`,
         })
 
