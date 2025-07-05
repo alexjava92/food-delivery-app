@@ -30,7 +30,7 @@ export class BotService {
         }
 
         if (status === 'готово к выдаче') {
-            nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${order.id}` });
+            nextStatusButtons.push({ text: "🟢 Выдан", callback_data: `setStatus_выдано_${order.id}` });
         }
 
         nextStatusButtons.push({
