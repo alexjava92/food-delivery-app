@@ -130,7 +130,6 @@ export class OrdersService {
     }
 
     async updateOrder(id: number, dto: UpdateOrderDto) {
-
         const statusMessages = {
             "новый": (id: number) => `🛎 Заказ №${id}\n\nСтатус: 🟡 Принят в обработку\n\nМы получили ваш заказ и уже начали подготовку!`,
             "готовится": (id: number) => `👨‍🍳 Заказ №${id}\n\nСтатус: 🔵 Готовится\n\nНаши повара уже работают над вашим заказом!`,
@@ -139,41 +138,47 @@ export class OrdersService {
             "отменен": (id: number) => `⚠️ Заказ №${id}\n\nСтатус: 🔴 Отменён\n\nЕсли это ошибка — свяжитесь с нами, мы поможем.`
         };
 
-
         try {
-            const order = await this.ordersRepository.findOne({where: {id}});
+            const order = await this.ordersRepository.findOne({ where: { id } });
 
-            if (dto.status && dto.status === order.status) {
-                // Статус не изменился — ничего не делаем
-                return order;
+            if (!order) {
+                throw new HttpException(`Заказ с ID ${id} не найден`, HttpStatus.NOT_FOUND);
             }
 
-            await order.update({...dto});
-            const user = await this.usersService.findOneId(order.userId)
+            if (dto.status && dto.status === order.status) {
+                return order; // статус не изменился
+            }
+
+            await order.update({ ...dto });
+
+            const user = await this.usersService.findOneId(order.userId);
             if (dto.status) {
                 const message = statusMessages[dto.status]?.(id) || `Номер заказа: ${id} - Статус: ${dto.status}`;
                 await this.botService.userNotification(user.chatId, message);
-                this.eventsGateway.emitToUser(user.id, 'order-notification', {
 
+                this.eventsGateway.emitToUser(user.id, 'order-notification', {
                     id: order.id,
                     status: dto.status,
                     message: `Ваш заказ №${order.id} теперь "${dto.status}"`,
-
                 });
-                console.log("📤 Отправка WS клиенту:", user.id);
-                await this.messageSyncService.updateAllAdminMessages({...order.dataValues, status: dto.status});
 
+                console.log("📤 Отправка WS клиенту:", user.id);
+
+                // Загружаем заказ с товарами, чтобы не было ошибки при .map
+                const fullOrder = await this.findOneOrder(order.id);
+                await this.messageSyncService.updateAllAdminMessages(fullOrder);
             }
 
             return order;
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при изменении статуса заказа: ${e}`)
+            await this.botService.errorMessage(`Произошла ошибка при изменении статуса заказа: ${e}`);
             throw new HttpException(
                 `Произошла ошибка при изменении статуса заказа: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     }
+
 
     async statistics(query: any) {
         try {
