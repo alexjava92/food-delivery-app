@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { tgBot } from "./bot";
 import TelegramBot from "node-telegram-bot-api";
-import { format } from 'date-fns';
-
+import {format, formatDistanceToNow} from "date-fns";
 
 @Injectable()
 export class BotService {
@@ -49,7 +48,6 @@ export class BotService {
             "выдано": "🟢",
             "готовится": "🔵",
             "новый": "🟡",
-            "получен": "✅"
         };
 
         const statusLine = `${statusEmojiMap[order.status] || ''} ${order.status}`;
@@ -58,23 +56,27 @@ export class BotService {
             `• ${p.title} [${p.OrderProductsModel?.count || p.order_product?.count || 1} шт.]`
         ).join('\n');
 
-        const createdAt = format(new Date(order.createdAt), 'dd.MM.yyyy HH:mm');
-        const updatedAt = format(new Date(order.updatedAt), 'dd.MM.yyyy HH:mm');
+        const createdAtFormatted = format(new Date(order.createdAt), 'dd.MM.yyyy HH:mm:ss');
+        const updatedAtFormatted = format(new Date(order.updatedAt), 'dd.MM.yyyy HH:mm:ss');
+        const duration = formatDistanceToNow(new Date(order.createdAt), { addSuffix: false });
 
-        let message = `${statusLine}\n\n`;
-        message += `Появился новый заказ ${emoji} №${order.id}\n\n`;
-        message += `🕒 Создан: ${createdAt}\n`;
+        let message = `${statusLine}\n\nПоявился новый заказ ${emoji} №${order.id}\n\n`;
+
+        if (!isPickup) message += `Адрес: ${order.address}\n`;
+        message += `Имя: ${order.name}\n`;
+        message += `Телефон: ${order.phone}\n`;
+        message += `Тип доставки: ${order.typeDelivery}\n`;
+        if (!isPickup) message += `Метод оплаты: ${order.paymentMethod}\n`;
+        message += `Комментарий: ${order.comment?.trim() || '-'}\n\n`;
+
+        message += `Статусы:\n`;
+        message += `${statusEmojiMap['новый']} Новый — ${createdAtFormatted}\n`;
         if (order.updatedAt !== order.createdAt) {
-            message += `📝 Обновлен: ${updatedAt}\n`;
+            message += `${statusEmojiMap[order.status] || ''} ${order.status.charAt(0).toUpperCase() + order.status.slice(1)} — ${updatedAtFormatted}\n`;
         }
+        message += `Прошло: ${duration}\n\n`;
 
-        if (!isPickup) message += `📍 Адрес: ${order.address}\n`;
-        message += `👤 Имя: ${order.name}\n`;
-        message += `📞 Телефон: ${order.phone}\n`;
-        message += `🚚 Тип доставки: ${order.typeDelivery}\n`;
-        if (!isPickup) message += `💳 Оплата: ${order.paymentMethod}\n`;
-        message += `💬 Комментарий: ${order.comment?.trim() || '-'}\n\n`;
-        message += `🛒 В заказе:\n${productsList}`;
+        message += `В заказе:\n${productsList}`;
 
         return message;
     }
