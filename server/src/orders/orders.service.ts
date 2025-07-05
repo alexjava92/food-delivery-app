@@ -11,6 +11,7 @@ import {CategoriesModel} from "../categories/categories.model";
 import {Op} from "sequelize";
 import { EventsGateway } from '../ws/events.gateway';
 import {OrderMessageModel} from "./order-message.model";
+import {MessageSyncService} from "../bot/message-sync/message-sync.service";
 
 
 @Injectable()
@@ -23,7 +24,9 @@ export class OrdersService {
         private readonly botService: BotService,
         private readonly usersService: UsersService,
         private readonly eventsGateway: EventsGateway,
+        private readonly messageSyncService: MessageSyncService,
         @InjectModel(OrderMessageModel) private orderMessageModel: typeof OrderMessageModel
+
     ) {
     }
 
@@ -158,6 +161,7 @@ export class OrdersService {
 
                 });
                 console.log("📤 Отправка WS клиенту:", user.id);
+                await this.messageSyncService.updateAllAdminMessages({...order.dataValues, status: dto.status});
 
             }
 
