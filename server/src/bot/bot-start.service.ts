@@ -294,139 +294,6 @@ export class BotStartService {
             }
 
 
-            /*if (msg.data?.startsWith('setStatus_отменен_')) {
-                const [, , orderIdStr] = msg.data.split('_');
-                const orderId = parseInt(orderIdStr);
-
-                await this.bot.answerCallbackQuery(msg.id);
-                await this.bot.sendMessage(msg.message.chat.id, `⚠️ Вы уверены, что хотите отменить заказ №${orderId}?`, {
-                    reply_markup: {
-                        inline_keyboard: [
-                            [
-                                { text: '✅ Подтвердить отмену', callback_data: `confirmCancel_${orderId}` },
-                                { text: '↩️ Назад', callback_data: `reset` }
-                            ]
-                        ]
-                    }
-                });
-                return;
-            }
-
-            if (msg.data === 'reset') {
-                await this.bot.answerCallbackQuery(msg.id);
-                await this.bot.deleteMessage(msg.message.chat.id, msg.message.message_id);
-                return;
-            }
-
-            if (msg.data?.startsWith('confirmCancel_')) {
-                const orderId = parseInt(msg.data.split('_')[1]);
-
-                await this.ordersService.updateOrder(orderId, {
-                    status: 'отменен',
-                    notifications: true,
-                });
-
-                const updatedOrder = await this.ordersService.findOneOrder(orderId);
-                const updatedText = this.botService.formatOrderNotification(updatedOrder);
-
-                const isPickup = updatedOrder.typeDelivery === 'Самовывоз';
-                const currentStatus = updatedOrder.status;
-                const nextStatusButtons = [];
-
-                // Только если был отменен, можно снова начать
-                if (currentStatus === 'отменен') {
-                    nextStatusButtons.push({ text: "Готовится", callback_data: `setStatus_готовится_${orderId}` });
-                }
-
-                nextStatusButtons.push({ text: "Отменен", callback_data: `setStatus_отменен_${orderId}` });
-
-                const updatedKeyboard = {
-                    inline_keyboard: [
-                        [{ text: "Посмотреть заказ", web_app: { url: `${process.env.WEB_APP_URL}order/${orderId}` } }],
-                        nextStatusButtons
-                    ]
-                };
-
-                await this.bot.editMessageText(updatedText, {
-                    chat_id: msg.message.chat.id,
-                    message_id: msg.message.message_id,
-                    reply_markup: updatedKeyboard,
-                    parse_mode: "HTML"
-                });
-
-                await this.bot.answerCallbackQuery(msg.id, { text: '❌ Заказ отменен' });
-                return;
-            }
-
-
-            //изменения статуса заказа
-            if (msg.data?.startsWith('setStatus_')) {
-                const [, status, orderIdStr] = msg.data.split('_');
-                const orderId = parseInt(orderIdStr);
-
-                const adminChatIds = await this.usersService.findAdmin();
-                if (!adminChatIds.includes(String(msg.from.id))) {
-                    await this.bot.answerCallbackQuery(msg.id);
-                    await this.bot.sendMessage(msg.from.id, '❌ У вас нет прав для изменения статуса.');
-                    return;
-                }
-
-                await this.ordersService.updateOrder(orderId, {
-                    status,
-                    notifications: true,
-                });
-
-                const updatedOrder = await this.ordersService.findOneOrder(orderId);
-                const updatedText = this.botService.formatOrderNotification(updatedOrder);
-
-                // === Формируем поэтапные кнопки ===
-                const currentStatus = updatedOrder.status;
-                const isPickup = updatedOrder.typeDelivery === 'Самовывоз';
-
-                const nextStatusButtons = [];
-
-                if (currentStatus === 'новый'  || currentStatus === 'отменен') {
-                    nextStatusButtons.push({ text: "Готовится", callback_data: `setStatus_готовится_${orderId}` });
-                }
-
-                if (currentStatus === 'готовится') {
-                    if (isPickup) {
-                        nextStatusButtons.push({ text: "Готово к выдаче", callback_data: `setStatus_готово к выдаче_${orderId}` });
-                    } else {
-                        nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${orderId}` });
-                    }
-                }
-
-                if (currentStatus === 'готово к выдаче') {
-                    nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${orderId}` });
-                }
-
-                // Отмена доступна всегда
-                nextStatusButtons.push({ text: "Отменен", callback_data: `setStatus_отменен_${orderId}` });
-
-                const updatedKeyboard = {
-                    inline_keyboard: [
-                        [{ text: "Посмотреть заказ", web_app: { url: `${process.env.WEB_APP_URL}order/${orderId}` } }],
-                        nextStatusButtons
-                    ]
-                };
-
-                // Проверка: если текст не меняется — не трогаем
-                if (updatedText === msg.message.text) {
-                    await this.bot.answerCallbackQuery(msg.id, { text: 'Статус уже установлен', show_alert: false });
-                    return;
-                }
-
-                await this.bot.editMessageText(updatedText, {
-                    chat_id: msg.message.chat.id,
-                    message_id: msg.message.message_id,
-                    reply_markup: updatedKeyboard,
-                    parse_mode: "HTML"
-                });
-
-                await this.bot.answerCallbackQuery(msg.id);
-                return;
-            }*/
 
             if (msg.data?.startsWith('setStatus_отменен_')) {
                 const [, , orderIdStr] = msg.data.split('_');
@@ -493,12 +360,21 @@ export class BotStartService {
                     return;
                 }
 
-                await this.bot.editMessageText(updatedText, {
-                    chat_id: record.chatId,
-                    message_id: record.messageId,
-                    reply_markup: updatedKeyboard,
-                    parse_mode: "HTML"
-                });
+                try {
+                    await this.bot.editMessageText(updatedText, {
+                        chat_id: record.chatId,
+                        message_id: record.messageId,
+                        reply_markup: updatedKeyboard,
+                        parse_mode: "HTML"
+                    });
+                } catch (e) {
+                    const description = e.response?.body?.description;
+                    if (description?.includes('message is not modified')) {
+                        console.log(`⚠️ Сообщение уже актуально: orderId=${orderId}, chatId=${record.chatId}`);
+                    } else {
+                        console.error(`❌ Ошибка при обновлении сообщения orderId=${orderId}, chatId=${record.chatId}:`, e.message);
+                    }
+                }
 
                 await this.bot.answerCallbackQuery(msg.id, { text: '❌ Заказ отменен' });
                 return;
