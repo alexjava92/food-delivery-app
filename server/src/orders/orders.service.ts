@@ -10,7 +10,8 @@ import {UsersService} from "../users/users.service";
 import {CategoriesModel} from "../categories/categories.model";
 import {Op} from "sequelize";
 import { EventsGateway } from '../ws/events.gateway';
-import {OrderMessageModel} from "./order-message.model"; // путь зависит от твоей структуры
+import {OrderMessageModel} from "./order-message.model";
+
 
 @Injectable()
 export class OrdersService {
@@ -22,7 +23,7 @@ export class OrdersService {
         private readonly botService: BotService,
         private readonly usersService: UsersService,
         private readonly eventsGateway: EventsGateway,
-        private readonly orderMessageModel: typeof OrderMessageModel,
+        @InjectModel(OrderMessageModel) private orderMessageModel: typeof OrderMessageModel
     ) {
     }
 
