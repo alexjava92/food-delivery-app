@@ -33,7 +33,10 @@ export class BotService {
             nextStatusButtons.push({ text: "Выдан", callback_data: `setStatus_выдано_${order.id}` });
         }
 
-        nextStatusButtons.push({ text: "Отменен", callback_data: `setStatus_отменен_${order.id}` });
+        nextStatusButtons.push({
+            text: "❗ Отменить",
+            callback_data: `confirmCancel_${order.id}`,
+        })
 
         return nextStatusButtons;
     }
@@ -56,11 +59,11 @@ export class BotService {
             `• ${p.title} [${p.OrderProductsModel?.count || p.order_product?.count || 1} шт.]`
         ).join('\n');
 
-        const createdAtFormatted = format(new Date(order.createdAt), 'dd.MM.yyyy HH:mm:ss');
-        const updatedAtFormatted = format(new Date(order.updatedAt), 'dd.MM.yyyy HH:mm:ss');
+        const createdAtFormatted = format(new Date(order.createdAt), 'dd.MM.yyyy HH:mm');
+        const updatedAtFormatted = format(new Date(order.updatedAt), 'dd.MM.yyyy HH:mm');
         const duration = formatDistanceToNow(new Date(order.createdAt), { addSuffix: false });
 
-        let message = `${statusLine}\n\nПоявился новый заказ ${emoji} №${order.id}\n\n`;
+        let message = `${statusLine}\n\nЗаказ ${emoji} №${order.id}\n\n`;
 
         if (!isPickup) message += `Адрес: ${order.address}\n`;
         message += `Имя: ${order.name}\n`;

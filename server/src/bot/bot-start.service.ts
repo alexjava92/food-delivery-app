@@ -285,6 +285,59 @@ export class BotStartService {
                 await this.bot.answerCallbackQuery(msg.id);
                 return;
             }
+
+            if (msg.data?.startsWith('confirmCancel_')) {
+                const orderId = parseInt(msg.data.split('_')[1]);
+
+                await this.bot.editMessageReplyMarkup(
+                    {
+                        inline_keyboard: [
+                            [
+                                { text: "✅ Подтвердить отмену", callback_data: `setStatus_отменен_${orderId}` },
+                                { text: "↩️ Отмена", callback_data: `cancelAction` }
+                            ]
+                        ]
+                    },
+                    {
+                        chat_id: msg.message.chat.id,
+                        message_id: msg.message.message_id,
+                    }
+                );
+
+                await this.bot.answerCallbackQuery(msg.id, { text: 'Вы уверены, что хотите отменить заказ?', show_alert: true });
+                return;
+            }
+
+            if (msg.data === 'cancelAction') {
+                await this.bot.answerCallbackQuery(msg.id, { text: 'Действие отменено' });
+
+                const orderIdStr = msg.message?.text?.match(/№(\d+)/)?.[1];
+                if (!orderIdStr) return;
+
+                const orderId = parseInt(orderIdStr, 10);
+
+                const order = await this.ordersService.findOneOrder(orderId);
+                const updatedKeyboard = {
+                    inline_keyboard: [
+                        [
+                            { text: "Посмотреть заказ", web_app: { url: `${process.env.WEB_APP_URL}order/${order.id}` } }
+                        ],
+                        this.botService.generateStatusButtons(order)
+                    ]
+                };
+
+                try {
+                    await this.bot.editMessageReplyMarkup(updatedKeyboard, {
+                        chat_id: msg.message.chat.id,
+                        message_id: msg.message.message_id
+                    });
+                } catch (e) {
+                    console.error("❌ Ошибка при восстановлении кнопок:", e.message);
+                }
+
+                return;
+            }
+
         })
     }
 }
