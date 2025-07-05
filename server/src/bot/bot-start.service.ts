@@ -10,6 +10,7 @@ import {AuthService} from "../auth/auth.service";
 import { OrdersService } from "../orders/orders.service";
 import { BotService } from "./bot.service";
 import {OrderMessageModel} from "../orders/order-message.model";
+import {InjectModel} from "@nestjs/sequelize";
 
 
 
@@ -41,7 +42,9 @@ export class BotStartService {
                 private usersService: UsersService,
                 private ordersService: OrdersService,
                 private botService: BotService,
-                private readonly orderMessageModel: typeof OrderMessageModel,
+                @InjectModel(OrderMessageModel)
+                private readonly orderMessageModel: typeof OrderMessageModel
+        ,
                 ) {
         this.bot = tgBot
         this.start()
