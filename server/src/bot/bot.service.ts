@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { tgBot } from "./bot";
 import TelegramBot from "node-telegram-bot-api";
+import { format } from 'date-fns';
+
 
 @Injectable()
 export class BotService {
@@ -9,6 +11,7 @@ export class BotService {
             await tgBot.sendMessage(chatId, text);
         }
     }
+
     public generateStatusButtons(order: any) {
         const status = order.status;
         const isPickup = order.typeDelivery === 'Самовывоз';
@@ -45,7 +48,8 @@ export class BotService {
             "готово к выдаче": "🟠",
             "выдано": "🟢",
             "готовится": "🔵",
-            "новый": "🟡"
+            "новый": "🟡",
+            "получен": "✅"
         };
 
         const statusLine = `${statusEmojiMap[order.status] || ''} ${order.status}`;
@@ -54,19 +58,26 @@ export class BotService {
             `• ${p.title} [${p.OrderProductsModel?.count || p.order_product?.count || 1} шт.]`
         ).join('\n');
 
-        let message = `${statusLine}\n\nПоявился новый заказ ${emoji} №${order.id}\n\n`;
+        const createdAt = format(new Date(order.createdAt), 'dd.MM.yyyy HH:mm');
+        const updatedAt = format(new Date(order.updatedAt), 'dd.MM.yyyy HH:mm');
 
-        if (!isPickup) message += `Адрес: ${order.address}\n`;
-        message += `Имя: ${order.name}\n`;
-        message += `Телефон: ${order.phone}\n`;
-        message += `Тип доставки: ${order.typeDelivery}\n`;
-        if (!isPickup) message += `Метод оплаты: ${order.paymentMethod}\n`;
-        message += `Комментарий: ${order.comment?.trim() || '-'}\n\n`;
-        message += `В заказе:\n${productsList}`;
+        let message = `${statusLine}\n\n`;
+        message += `Появился новый заказ ${emoji} №${order.id}\n\n`;
+        message += `🕒 Создан: ${createdAt}\n`;
+        if (order.updatedAt !== order.createdAt) {
+            message += `📝 Обновлен: ${updatedAt}\n`;
+        }
+
+        if (!isPickup) message += `📍 Адрес: ${order.address}\n`;
+        message += `👤 Имя: ${order.name}\n`;
+        message += `📞 Телефон: ${order.phone}\n`;
+        message += `🚚 Тип доставки: ${order.typeDelivery}\n`;
+        if (!isPickup) message += `💳 Оплата: ${order.paymentMethod}\n`;
+        message += `💬 Комментарий: ${order.comment?.trim() || '-'}\n\n`;
+        message += `🛒 В заказе:\n${productsList}`;
 
         return message;
     }
-
 
     async notification(adminIds: string[], order: any) {
         if (!Array.isArray(adminIds) || adminIds.length === 0) return [];
@@ -97,7 +108,6 @@ export class BotService {
 
         return responses;
     }
-
 
     async userNotification(chatId: string | number, message: string) {
         try {
