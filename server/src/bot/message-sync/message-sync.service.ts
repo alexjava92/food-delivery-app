@@ -46,7 +46,9 @@ export class MessageSyncService {
             ]
         };
 
-        const messages = await this.orderMessageModel.findAll({ where: { orderId: order.id } });
+        const messages = await this.orderMessageModel.findAll({
+            where: { orderId: order.id }
+        });
 
         for (const msg of messages) {
             try {
@@ -57,13 +59,14 @@ export class MessageSyncService {
                     parse_mode: "HTML"
                 });
             } catch (e) {
-                if (e.response?.body?.description?.includes('message is not modified')) {
-                    console.log(`ℹ️ Сообщение уже актуально: orderId=${order.id}, chatId=${msg.chatId}`);
-                    continue;
+                const description = e.response?.body?.description;
+                if (description?.includes('message is not modified')) {
+                    console.log(`⚠️ Telegram: сообщение уже актуально — chatId=${msg.chatId}, orderId=${order.id}`);
+                } else {
+                    console.error(`❌ Ошибка обновления сообщения chatId=${msg.chatId}, orderId=${order.id}:`, e.message);
                 }
-                console.error(`❌ Ошибка обновления сообщения: orderId=${order.id}, chatId=${msg.chatId}:`, e.message);
             }
         }
-
     }
+
 }
