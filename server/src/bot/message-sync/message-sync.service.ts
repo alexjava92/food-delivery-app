@@ -57,8 +57,13 @@ export class MessageSyncService {
                     parse_mode: "HTML"
                 });
             } catch (e) {
-                console.error(`❌ Ошибка обновления сообщения в чате ${msg.chatId}: ${e.message}`);
+                if (e.response?.body?.description?.includes('message is not modified')) {
+                    console.log(`ℹ️ Сообщение уже актуально: orderId=${order.id}, chatId=${msg.chatId}`);
+                    continue;
+                }
+                console.error(`❌ Ошибка обновления сообщения: orderId=${order.id}, chatId=${msg.chatId}:`, e.message);
             }
         }
+
     }
 }
