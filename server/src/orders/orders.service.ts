@@ -40,13 +40,17 @@ export class OrdersService {
                 });
             }
 
-            const adminId = await this.usersService.findAdmin();
+            // 🔧 Получаем админов и кассиров
+            const adminIds = await this.usersService.findAdmin();
+            const cashierIds = await this.usersService.findCashier();
+            const receivers = [...new Set([...adminIds, ...cashierIds])];
+
             const newOrder = await this.ordersRepository.findOne({
                 where: { id: order.id },
                 include: ProductsModel,
             });
 
-            const botMessages = await this.botService.notification(adminId, newOrder);
+            const botMessages = await this.botService.notification(receivers, newOrder);
 
             if (Array.isArray(botMessages)) {
                 for (const { chatId, messageId } of botMessages) {
