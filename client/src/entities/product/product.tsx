@@ -3,6 +3,7 @@ import classes from "./product.module.scss";
 import {IProduct} from "../../types/types";
 import {FavoritesIcon} from "../../shared/images/icons/favoritesIcon";
 import {PlusAndMinus} from "../../shared/plusAndMinus/plusAndMinus";
+import {ImageZoomModal} from "../../shared/imageZoomModal/ImageZoomModal";
 
 interface IType {
     data: IProduct;
@@ -14,6 +15,8 @@ interface IType {
 }
 
 export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin, oneProduct}) => {
+
+    const [openZoom, setOpenZoom] = useState(false);
 
     const classesArr = [classes.product]
     if (oneProduct) classesArr.push(classes.oneProduct)
@@ -57,6 +60,12 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
             <div className={classes.image}>
                 <img src={process.env.REACT_APP_API_URL + data?.image} alt={data?.title}/>
             </div>
+            {openZoom && (
+                <ImageZoomModal
+                    src={process.env.REACT_APP_API_URL + data?.image}
+                    onClose={() => setOpenZoom(false)}
+                />
+            )}
 
             <div className={classes.box}>
                 <div className={classes.title}>

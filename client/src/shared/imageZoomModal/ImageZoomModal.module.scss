@@ -1,0 +1,21 @@
+.zoom-overlay {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: none;
+}
+
+/* Стиль картинки */
+.zoom-image {
+  max-width: 90%;
+  max-height: 90%;
+  touch-action: none;
+  user-select: none;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  will-change: transform;
+}
