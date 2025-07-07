@@ -1,8 +1,7 @@
-// components/ImageZoomModal.tsx
 import React from "react";
 import { useGesture } from "@use-gesture/react";
 import { useSpring, animated } from "@react-spring/web";
-import "./ImageZoomModal.css";
+import classes from './ImageZoomModal.module.scss';
 
 interface Props {
     src: string;
@@ -25,11 +24,11 @@ export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
     );
 
     return (
-        <div className="zoom-overlay" onClick={onClose}>
+        <div className={classes.zoomOverlay} onClick={onClose}>
             <animated.img
                 {...bind()}
                 src={src}
-                className="zoom-image"
+                className={classes.zoomImage}
                 style={{ scale, x, y }}
                 onClick={(e) => e.stopPropagation()}
             />
