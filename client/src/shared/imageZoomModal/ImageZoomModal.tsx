@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classes from './ImageZoomModal.module.scss';
+import { X } from "lucide-react"; // если ты используешь lucide (иначе — любая иконка)
 
 interface Props {
     src: string;
@@ -10,9 +11,7 @@ export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        // плавное появление
         setVisible(true);
-        // блокируем прокрутку фона
         document.body.style.overflow = 'hidden';
         return () => {
             document.body.style.overflow = '';
@@ -24,6 +23,13 @@ export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
             className={`${classes.zoomOverlay} ${visible ? classes.visible : ''}`}
             onClick={onClose}
         >
+            <div className={classes.closeButton} onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+            }}>
+                <X size={28} color="#fff" />
+            </div>
+
             <img
                 src={src}
                 alt="product"
