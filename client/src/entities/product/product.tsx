@@ -61,7 +61,7 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
                     <img
                         src={process.env.REACT_APP_API_URL + data?.image}
                         alt={data?.title}
-                        style={{ borderRadius: "12px", width: "100%", objectFit: "cover" }}
+                        /*style={{ borderRadius: "12px", width: "100%", objectFit: "cover" }}*/
                     />
                 </Zoom>
             </div>
