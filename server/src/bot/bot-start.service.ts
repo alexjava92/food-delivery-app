@@ -311,7 +311,7 @@ export class BotStartService {
             if (msg.data === 'cancelAction') {
                 await this.bot.answerCallbackQuery(msg.id, { text: 'Действие отменено' });
 
-                const orderIdStr = msg.message?.text?.match(/№(\d+)/)?.[1];
+                const orderIdStr = msg.message?.text?.match(/#n(\d+)/)?.[1];
                 if (!orderIdStr) return;
 
                 const orderId = parseInt(orderIdStr, 10);
