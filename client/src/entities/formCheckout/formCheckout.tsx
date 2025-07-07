@@ -28,10 +28,11 @@ export const FormCheckout: FC<IType> = memo(() => {
         skip: !user?.id,
     });
 
-    const address = useInput(freshUser?.address || '');
-    const phone = useInput(freshUser?.phone || '');
-    const name = useInput(freshUser?.name || '');
+    const address = useInput('');
+    const phone = useInput('');
+    const name = useInput('');
     const commentInput = useInput('');
+
 
     useEffect(() => {
         if (freshUser) {
