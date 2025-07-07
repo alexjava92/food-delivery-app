@@ -1,20 +1,27 @@
 .zoomOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
+  z-index: 9999;
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
   touch-action: none;
+}
+
+.visible {
+  opacity: 1;
 }
 
 .zoomImage {
   max-width: 90%;
   max-height: 90%;
-  touch-action: none;
-  user-select: none;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  touch-action: none;
+  user-select: none;
   will-change: transform;
 }
