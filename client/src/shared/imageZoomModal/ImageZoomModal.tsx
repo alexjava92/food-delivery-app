@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useGesture } from "@use-gesture/react";
+import { useSpring, animated } from "@react-spring/web";
 import { X } from "lucide-react";
 import classes from './ImageZoomModal.module.scss';
 
@@ -9,7 +11,7 @@ interface Props {
 
 export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
     const [visible, setVisible] = useState(false);
-    const [zoom, setZoom] = useState(1);
+    const [{ scale }, api] = useSpring(() => ({ scale: 1 }));
 
     useEffect(() => {
         setVisible(true);
@@ -19,11 +21,15 @@ export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
         };
     }, []);
 
-    const handleWheel = (e: React.WheelEvent) => {
-        e.preventDefault();
-        const delta = e.deltaY > 0 ? -0.1 : 0.1;
-        setZoom((prev) => Math.min(Math.max(1, prev + delta), 3));
-    };
+    const bind = useGesture(
+        {
+            onPinch: ({ offset: [s] }) => api.start({ scale: s }),
+            onWheel: ({ offset: [, s] }) => api.start({ scale: 1 + s / 100 }),
+        },
+        {
+            pinch: { scaleBounds: { min: 1, max: 3 }, rubberband: true },
+        }
+    );
 
     return (
         <div
@@ -40,18 +46,14 @@ export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
                 <X size={28} color="#fff" />
             </div>
 
-            <div
-                className={classes.scrollContainer}
-                onClick={(e) => e.stopPropagation()}
-                onWheel={handleWheel}
-            >
-                <img
-                    src={src}
-                    alt="product"
-                    className={classes.zoomImage}
-                    style={{ transform: `scale(${zoom})` }}
-                />
-            </div>
+            <animated.img
+                {...bind()}
+                src={src}
+                alt="product"
+                className={classes.zoomImage}
+                style={{ scale }}
+                onClick={onClose} // клик по фото — тоже закрывает
+            />
         </div>
     );
 };

@@ -3,33 +3,29 @@
   inset: 0;
   z-index: 9999;
   background: rgba(20, 20, 20, 0.9);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0;
   transition: opacity 0.3s ease;
+  touch-action: none;
 }
 
 .visible {
   opacity: 1;
 }
 
-.scrollContainer {
+.zoomImage {
+  all: unset;
   max-width: 100%;
   max-height: 100%;
-  overflow: auto;
-  touch-action: pinch-zoom;
-  -webkit-overflow-scrolling: touch;
-}
-
-.zoomImage {
-
-  display: block;
-  margin: auto;
-  transition: transform 0.2s ease;
-  transform-origin: center center;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
   user-select: none;
-  pointer-events: none; // отключаем перехват, если не нужен drag
+  touch-action: none;
+  cursor: zoom-out;
+  will-change: transform;
 }
 
 .closeButton {
