@@ -8,6 +8,7 @@ import {ProductsModel} from "../products/products.model";
 import {Inject} from '@nestjs/common';
 import {CACHE_MANAGER} from '@nestjs/cache-manager';
 import {Cache} from 'cache-manager';
+import {AuthService} from "../auth/auth.service";
 
 @Injectable()
 export class UsersService {
@@ -15,6 +16,7 @@ export class UsersService {
         @InjectModel(UsersModel) private usersRepository: typeof UsersModel,
         private botService: BotService,
         @Inject(CACHE_MANAGER) private cacheManager: Cache,
+        private readonly authService: AuthService,
     ) {
     }
 
@@ -106,6 +108,12 @@ export class UsersService {
             if (user.chatId) {
                 await this.cacheManager.del(`auth:user:${user.chatId}`);
             }
+
+            // 👉 Переавторизация после обновления
+            await this.authService.authentication({
+                chatId: user.chatId,
+                username: user.username,
+            });
 
             return user;
         } catch (e) {
