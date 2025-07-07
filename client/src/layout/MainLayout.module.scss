@@ -1,0 +1,29 @@
+.pageHeader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px; // чтобы текст не наезжал на стрелку
+  margin-bottom: 16px;
+
+  .back {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    cursor: pointer;
+    padding: 8px;
+  }
+
+  .h1 {
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    word-break: break-word;
+    max-width: 100%;
+  }
+}
+.textCenter {
+  text-align: center;
+}
