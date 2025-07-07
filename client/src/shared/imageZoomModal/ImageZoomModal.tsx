@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import classes from './ImageZoomModal.module.scss';
-import { X } from "lucide-react"; // если ты используешь lucide (иначе — любая иконка)
+import { X } from "lucide-react";
 
 interface Props {
     src: string;
@@ -21,12 +21,15 @@ export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
     return (
         <div
             className={`${classes.zoomOverlay} ${visible ? classes.visible : ''}`}
-            onClick={onClose}
+            onClick={onClose} // ✅ клик по фону
         >
-            <div className={classes.closeButton} onClick={(e) => {
-                e.stopPropagation();
-                onClose();
-            }}>
+            <div
+                className={classes.closeButton}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onClose(); // ✅ крестик
+                }}
+            >
                 <X size={28} color="#fff" />
             </div>
 
@@ -34,7 +37,7 @@ export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
                 src={src}
                 alt="product"
                 className={classes.zoomImage}
-                onClick={(e) => e.stopPropagation()}
+                onClick={onClose} // ✅ клик по картинке
             />
         </div>
     );
