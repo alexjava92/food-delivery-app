@@ -15,7 +15,7 @@ export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
 
     useEffect(() => {
         setVisible(true);
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = '';
         return () => {
             document.body.style.overflow = '';
         };
