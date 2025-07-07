@@ -9,7 +9,7 @@ import { useCreateNewOrderMutation } from "../../store/API/ordersApi";
 import { useNavigate } from "react-router-dom";
 import { IOrderCreate } from "../../types/types";
 import { BtnGroup } from "../../shared/btnGroup/btnGroup";
-import { useUpdateUserMutation, useGetUserQuery } from "../../store/API/userApi";
+import { useUpdateUserMutation } from "../../store/API/userApi";
 import { createPortal } from "react-dom";
 import { Modal } from "../modal/modal";
 import { deleteProductInCart } from "../../store/slice/productsSlice";
@@ -19,28 +19,16 @@ import { useGetDeliverySettingsQuery } from "../../store/API/settingsApi";
 interface IType {}
 
 export const FormCheckout: FC<IType> = memo(() => {
+
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const { user } = useAppSelector((state) => state.userReducer);
     const { productsInCart } = useAppSelector((state) => state.productReducer);
 
-    const { data: freshUser, refetch: refetchUser } = useGetUserQuery(user?.id, {
-        skip: !user?.id,
-    });
-
-    const address = useInput('');
-    const phone = useInput('');
-    const name = useInput('');
+    const address = useInput(user?.address || '');
+    const phone = useInput(user?.phone || '');
+    const name = useInput(user?.name || '');
     const commentInput = useInput('');
-
-
-    useEffect(() => {
-        if (freshUser) {
-            address.setValue(freshUser.address || '');
-            phone.setValue(freshUser.phone || '');
-            name.setValue(freshUser.name || '');
-        }
-    }, [freshUser]);
 
     const [typeDelivery, setTypeDelivery] = useState('Доставка');
     const [paymentMethod, setPaymentMethod] = useState('');
@@ -101,8 +89,6 @@ export const FormCheckout: FC<IType> = memo(() => {
                     phone: phone.value,
                     name: name.value,
                 }
-            }).unwrap().then(() => {
-                refetchUser(); // ⬅️ подтягиваем актуального пользователя
             });
         }
     };
