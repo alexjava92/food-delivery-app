@@ -4,11 +4,10 @@ import {InjectModel} from '@nestjs/sequelize';
 import {UsersDto} from './users.dto';
 import {BotService} from "../bot/bot.service";
 import {Op} from "sequelize";
-import {ProductsModel} from "../products/products.model";
 import {Inject} from '@nestjs/common';
 import {CACHE_MANAGER} from '@nestjs/cache-manager';
 import {Cache} from 'cache-manager';
-import {AuthService} from "../auth/auth.service";
+
 
 @Injectable()
 export class UsersService {
@@ -16,7 +15,7 @@ export class UsersService {
         @InjectModel(UsersModel) private usersRepository: typeof UsersModel,
         private botService: BotService,
         @Inject(CACHE_MANAGER) private cacheManager: Cache,
-        private readonly authService: AuthService,
+
     ) {
     }
 
@@ -104,16 +103,22 @@ export class UsersService {
             const user = await this.usersRepository.findByPk(id);
             await user.update(dto);
 
-            // Удаляем кэш по chatId
             if (user.chatId) {
-                await this.cacheManager.del(`auth:user:${user.chatId}`);
-            }
+                const cacheKey = `auth:user:${user.chatId}`;
+                const cached = await this.cacheManager.get<any>(cacheKey);
 
-            // 👉 Переавторизация после обновления
-            await this.authService.authentication({
-                chatId: user.chatId,
-                username: user.username,
-            });
+                if (cached) {
+                    // Обновляем только переданные поля
+                    const updatedCache = {
+                        ...cached,
+                        ...Object.fromEntries(
+                            Object.entries(dto).filter(([_, v]) => v !== undefined)
+                        ),
+                    };
+
+                    await this.cacheManager.set(cacheKey, updatedCache, 60 * 60);
+                }
+            }
 
             return user;
         } catch (e) {
@@ -124,6 +129,7 @@ export class UsersService {
             );
         }
     }
+
 
 
     async updateRoleUser(id: string, body) {
