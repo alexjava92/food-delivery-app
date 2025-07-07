@@ -60,16 +60,6 @@ export class BotService {
             return `• ${p.title} [${count} шт.]`;
         }).join('\n');
 
-        let message = `${statusLine}\n\nЗаказ ${emoji} #n${order.id}\n\n`;
-
-        if (!isPickup) message += `Адрес: ${order.address}\n`;
-        message += `Имя: ${order.name}\n`;
-        message += `Телефон: ${order.phone}\n`;
-        message += `Тип доставки: ${order.typeDelivery}\n`;
-        if (!isPickup) message += `Метод оплаты: ${order.paymentMethod}\n`;
-        message += `Комментарий: ${order.comment?.trim() || '-'}\n\n`;
-        message += `В заказе:\n${productsList}`;
-
         // 💰 Расчёт итогов
         const total = order.orderProducts.reduce((sum, p) => {
             const count = p.OrderProductsModel?.count || p.order_product?.count || 1;
@@ -80,14 +70,32 @@ export class BotService {
         const delivery = !isPickup ? Number(order.deliveryPrice || 0) : 0;
         const grandTotal = total + delivery;
 
+        // 🕒 Формат времени
+        const createdAt = new Date(order.createdAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+        const updatedAt = new Date(order.updatedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+        let message = `${statusLine}\n\nЗаказ ${emoji} #n${order.id}\n\n`;
+
+        if (!isPickup) message += `Адрес: ${order.address}\n`;
+        message += `Имя: ${order.name}\n`;
+        message += `Телефон: ${order.phone}\n`;
+        message += `Тип доставки: ${order.typeDelivery}\n`;
+        if (!isPickup) message += `Метод оплаты: ${order.paymentMethod}\n`;
+        message += `Комментарий: ${order.comment?.trim() || '-'}\n\n`;
+
+        message += `В заказе:\n${productsList}`;
+
         if (!isPickup) {
             message += `\n\nСумма заказа: ${total}₽\nДоставка: ${delivery}₽\nИтого: ${grandTotal}₽`;
         } else {
             message += `\n\nИтого к оплате: ${grandTotal}₽`;
         }
 
+        message += `\n\n⏱ Принят: ${createdAt}\n🕓 Обновлен: ${updatedAt}`;
+
         return message;
     }
+
 
 
     async notification(adminIds: string[], order: any) {
