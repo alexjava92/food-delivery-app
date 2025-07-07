@@ -21,6 +21,7 @@ export const roles = [
     { id: 3, role: "user", name: "Пользователь" },
     { id: 4, role: "cashier", name: "Кассир" },
     { id: 5, role: "cook", name: "Повар" },
+    { id: 6, role: "block", name: "Заблокирован" },
 ];
 
 const AddAminPage = () => {
