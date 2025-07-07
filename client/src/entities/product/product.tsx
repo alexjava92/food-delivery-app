@@ -3,8 +3,6 @@ import classes from "./product.module.scss";
 import {IProduct} from "../../types/types";
 import {FavoritesIcon} from "../../shared/images/icons/favoritesIcon";
 import {PlusAndMinus} from "../../shared/plusAndMinus/plusAndMinus";
-import Zoom from 'react-medium-image-zoom';
-import 'react-medium-image-zoom/dist/styles.css';
 
 interface IType {
     data: IProduct;
@@ -57,13 +55,7 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
             }
 
             <div className={classes.image}>
-                <Zoom>
-                    <img
-                        src={process.env.REACT_APP_API_URL + data?.image}
-                        alt={data?.title}
-                        /*style={{ borderRadius: "12px", width: "100%", objectFit: "cover" }}*/
-                    />
-                </Zoom>
+                <img src={process.env.REACT_APP_API_URL + data?.image} alt={data?.title}/>
             </div>
 
             <div className={classes.box}>
