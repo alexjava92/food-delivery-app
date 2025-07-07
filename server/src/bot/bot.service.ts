@@ -60,7 +60,6 @@ export class BotService {
             return `• ${p.title} [${count} шт.]`;
         }).join('\n');
 
-        // 💰 Сумма, доставка, итог
         const total = order.orderProducts.reduce((sum, p) => {
             const count = p.OrderProductsModel?.count || p.order_product?.count || 1;
             const price = Number(p.price) || 0;
@@ -70,20 +69,11 @@ export class BotService {
         const delivery = !isPickup ? Number(order.deliveryPrice || 0) : 0;
         const grandTotal = total + delivery;
 
-        // 🕒 Формат времени
         const formatTime = (date: string) =>
             new Date(date).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 
         const createdAt = formatTime(order.createdAt);
-
-        // 🧾 История статусов
-        const historyLines = (order.statusHistory || [])
-            .filter((entry: any) => entry?.status && entry?.createdAt)
-            .map((entry: any) => {
-                const time = formatTime(entry.createdAt);
-                const emoji = statusEmojiMap[entry.status] || '';
-                return `${emoji} ${entry.status} (${time})`;
-            });
+        const updatedAt = formatTime(order.updatedAt);
 
         let message = `${statusLine}\n\nЗаказ ${emoji} #n${order.id}\n\n`;
 
@@ -102,13 +92,13 @@ export class BotService {
             message += `\n\nИтого к оплате: ${grandTotal}₽`;
         }
 
+        // Добавляем блок статусов
         message += `\n\n⏱ Принят: ${createdAt}`;
-        if (historyLines.length) {
-            message += `\n📋 История:\n${historyLines.join('\n')}`;
-        }
+        message += `\n📋 Статус: ${statusEmojiMap[order.status] || ''} ${order.status} (${updatedAt})`;
 
         return message;
     }
+
 
 
 
