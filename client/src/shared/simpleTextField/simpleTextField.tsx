@@ -18,7 +18,7 @@ export const SimpleTextField: FC<IType> = memo(({placeholder, type, label, value
         return (
             <textarea
                 className={classes.textarea}
-                placeholder="Описание"
+                placeholder="Комментарий"
                 value={value}
                 onChange={onChange}
             ></textarea>

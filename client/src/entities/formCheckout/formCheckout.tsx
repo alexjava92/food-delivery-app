@@ -118,7 +118,7 @@ export const FormCheckout: FC<IType> = memo(() => {
                 )}
                 <SimpleTextField label={"Телефон"} type='phone' value={phone.value} onChange={phone.onChange} error={phone.error} />
                 <SimpleTextField label={"Имя"} value={name.value} onChange={name.onChange} />
-                <SimpleTextField label={'Описание'} onChange={commentInput.onChange} value={commentInput.value} description />
+                <SimpleTextField label={'Комментарий'} onChange={commentInput.onChange} value={commentInput.value} description />
             </div>
 
             {typeDelivery === 'Доставка' && (
