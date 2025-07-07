@@ -20,12 +20,21 @@ const ProfilePage = () => {
     const emailInput = useInput(user.email)
     const phoneInput = useInput(user.phone || '')
 
+    useEffect(() => {
+        if (user) {
+            nameInput.setValue(user.name || '');
+            emailInput.setValue(user.email || '');
+            phoneInput.setValue(user.phone || '');
+        }
+    }, [user]);
+
     const [date, setDate] = useState('')
     const [gender, setGender] = useState({id: 1, text: 'Мужской'})
     const [modal, setModal] = useState(false)
     const [textModal, setTextModal] = useState('')
 
-    useEffect(() => {}, [user]);
+
+
     useEffect(() => {
         if (isError) {
             setTextModal('Ошибка при обновлении профиля')
