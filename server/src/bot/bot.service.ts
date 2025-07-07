@@ -60,7 +60,7 @@ export class BotService {
             return `• ${p.title} [${count} шт.]`;
         }).join('\n');
 
-        let message = `${statusLine}\n\nЗаказ ${emoji} #${order.id}\n\n`;
+        let message = `${statusLine}\n\nЗаказ ${emoji} #n${order.id}\n\n`;
 
         if (!isPickup) message += `Адрес: ${order.address}\n`;
         message += `Имя: ${order.name}\n`;
