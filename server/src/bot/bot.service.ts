@@ -50,20 +50,17 @@ export class BotService {
             "готово к выдаче": "🟠",
             "выдано": "🟢",
             "готовится": "🔵",
-            "новый": "🟡",
+            "новый": "🟡"
         };
 
         const statusLine = `${statusEmojiMap[order.status] || ''} ${order.status}`;
 
-        const productsList = order.orderProducts.map(p =>
-            `• ${p.title} [${p.OrderProductsModel?.count || p.order_product?.count || 1} шт.]`
-        ).join('\n');
+        const productsList = order.orderProducts.map(p => {
+            const count = p.OrderProductsModel?.count || p.order_product?.count || 1;
+            return `• ${p.title} [${count} шт.]`;
+        }).join('\n');
 
-        const createdAtFormatted = format(new Date(order.createdAt), 'dd.MM.yyyy HH:mm');
-        const updatedAtFormatted = format(new Date(order.updatedAt), 'dd.MM.yyyy HH:mm');
-        const duration = formatDistanceToNow(new Date(order.createdAt), { addSuffix: false });
-
-        let message = `${statusLine}\n\nЗаказ ${emoji} №${order.id}\n\n`;
+        let message = `${statusLine}\n\nЗаказ ${emoji} №#${order.id}\n\n`;
 
         if (!isPickup) message += `Адрес: ${order.address}\n`;
         message += `Имя: ${order.name}\n`;
@@ -71,18 +68,27 @@ export class BotService {
         message += `Тип доставки: ${order.typeDelivery}\n`;
         if (!isPickup) message += `Метод оплаты: ${order.paymentMethod}\n`;
         message += `Комментарий: ${order.comment?.trim() || '-'}\n\n`;
-
-        message += `Статусы:\n`;
-        message += `${statusEmojiMap['новый']} Новый — ${createdAtFormatted}\n`;
-        if (order.updatedAt !== order.createdAt) {
-            message += `${statusEmojiMap[order.status] || ''} ${order.status.charAt(0).toUpperCase() + order.status.slice(1)} — ${updatedAtFormatted}\n`;
-        }
-        message += `Прошло: ${duration}\n\n`;
-
         message += `В заказе:\n${productsList}`;
+
+        // 💰 Расчёт итогов
+        const total = order.orderProducts.reduce((sum, p) => {
+            const count = p.OrderProductsModel?.count || p.order_product?.count || 1;
+            const price = Number(p.price) || 0;
+            return sum + count * price;
+        }, 0);
+
+        const delivery = !isPickup ? Number(order.deliveryPrice || 0) : 0;
+        const grandTotal = total + delivery;
+
+        if (!isPickup) {
+            message += `\n\nСумма заказа: ${total}₽\nДоставка: ${delivery}₽\nИтого: ${grandTotal}₽`;
+        } else {
+            message += `\n\nИтого к оплате: ${grandTotal}₽`;
+        }
 
         return message;
     }
+
 
     async notification(adminIds: string[], order: any) {
         if (!Array.isArray(adminIds) || adminIds.length === 0) return [];
