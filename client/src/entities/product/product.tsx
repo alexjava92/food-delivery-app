@@ -57,8 +57,8 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
                 </>
             }
 
-            <div className={classes.image}>
-                <img src={process.env.REACT_APP_API_URL + data?.image} alt={data?.title}/>
+            <div className={classes.image} onClick={() => setOpenZoom(true)}>
+                <img src={process.env.REACT_APP_API_URL + data?.image} alt={data?.title} />
             </div>
             {openZoom && (
                 <ImageZoomModal
