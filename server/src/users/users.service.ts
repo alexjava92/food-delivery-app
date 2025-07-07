@@ -62,6 +62,7 @@ export class UsersService {
         });
         return admins.map(admin => admin.chatId);
     }
+
     async findCashier() {
         const cashier = await this.usersRepository.findAll({
             where: {
@@ -72,6 +73,7 @@ export class UsersService {
         });
         return cashier.map(cashier => cashier.chatId);
     }
+
     async findCook() {
         const cook = await this.usersRepository.findAll({
             where: {
@@ -99,15 +101,22 @@ export class UsersService {
         try {
             const user = await this.usersRepository.findByPk(id);
             await user.update(dto);
+
+            // Удаляем кэш по chatId
+            if (user.chatId) {
+                await this.cacheManager.del(`auth:user:${user.chatId}`);
+            }
+
             return user;
         } catch (e) {
-            await this.botService.errorMessage(`Произошла ошибка при обновлении пользователя: ${e}`)
+            await this.botService.errorMessage(`Произошла ошибка при обновлении пользователя: ${e}`);
             throw new HttpException(
                 `Произошла ошибка при обновлении пользователя: ${e}`,
                 HttpStatus.INTERNAL_SERVER_ERROR,
             );
         }
     }
+
 
     async updateRoleUser(id: string, body) {
         try {
@@ -146,9 +155,6 @@ export class UsersService {
             );
         }
     }
-
-
-
 
     async search(query: string) {
         console.log('query', query);
