@@ -11,7 +11,7 @@ interface Props {
 
 export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
     const [visible, setVisible] = useState(false);
-    const [{ scale, x, y }, api] = useSpring(() => ({ scale: 1, x: 0, y: 0 }));
+    const [{ scale }, api] = useSpring(() => ({ scale: 1 }));
 
     useEffect(() => {
         setVisible(true);
@@ -24,12 +24,10 @@ export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
     const bind = useGesture(
         {
             onPinch: ({ offset: [s] }) => api.start({ scale: s }),
-            onDrag: ({ offset: [dx, dy] }) => api.start({ x: dx, y: dy }),
             onWheel: ({ offset: [, s] }) => api.start({ scale: 1 + s / 100 }),
         },
         {
             pinch: { scaleBounds: { min: 1, max: 3 }, rubberband: true },
-            drag: { rubberband: true }
         }
     );
 
@@ -53,8 +51,8 @@ export const ImageZoomModal: React.FC<Props> = ({ src, onClose }) => {
                 src={src}
                 alt="product"
                 className={classes.zoomImage}
-                style={{ scale, x, y }}
-                onClick={(e) => e.stopPropagation()}
+                style={{ scale }}
+                onClick={onClose} // клик по фото — тоже закрывает
             />
         </div>
     );
