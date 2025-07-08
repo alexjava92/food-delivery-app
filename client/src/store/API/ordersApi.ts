@@ -59,7 +59,10 @@ export const ordersApi = createApi({
                 body,
                 headers: { Authorization: `Bearer ${token}` },
             }),
-            invalidatesTags: [{ type: "Orders", id: "LIST" }],
+            invalidatesTags: (result, error, arg) => [
+                { type: "Orders", id: "LIST" },
+                { type: "Orders", id: arg.userId },
+            ]
         }),
 
         // Обновление статуса заказа

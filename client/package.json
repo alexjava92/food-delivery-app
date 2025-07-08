@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@react-spring/web": "^10.0.1",
     "@reduxjs/toolkit": "^2.1.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -12,6 +13,7 @@
     "@types/react": "^18.2.54",
     "@types/react-dom": "^18.2.18",
     "@types/react-input-mask": "^3.0.5",
+    "@use-gesture/react": "^10.3.1",
     "dotenv": "^16.4.1",
     "lucide-react": "^0.525.0",
     "node-telegram-bot-api": "^0.64.0",
