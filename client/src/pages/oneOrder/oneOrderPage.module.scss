@@ -24,12 +24,12 @@
     display: flex;
     justify-content: space-between;
     font-size: 16px;
-    color: #333;
+    /*color: #333;*/
 
     b {
       font-weight: 600;
       font-size: 18px;
-      color: #222;
+      /*color: #222;*/
     }
   }
 }
@@ -44,12 +44,12 @@
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 8px;
-    color: #333;
+    /*color: #333;*/
   }
 
   span {
     font-weight: 500;
-    color: #555;
+   /* color: #555;*/
     margin-right: 4px;
   }
 }
@@ -60,14 +60,14 @@
   justify-content: center;
   gap: 12px;
   font-weight: 500;
-  color: #0070f3;
+  color: var(--tg-theme-link-color);
   text-decoration: none;
   transition: color 0.2s;
 
   margin-top: 24px;
 
   &:hover {
-    color: #005ad3;
+    color: var(--tg-theme-link-color);
   }
 
   .line {

@@ -8,7 +8,10 @@ import { Loader } from "../../shared/loader/loader";
 
 const OneOrderPage = () => {
     const { id } = useParams();
-    const { data, error, isLoading } = useGetOneOrderQuery(`${id}`);
+    const { data, error, isLoading } = useGetOneOrderQuery(`${id}`, {
+        refetchOnMountOrArgChange: true,
+        pollingInterval: 5000,
+    });
 
     if (error) return <h2 className={'error'}>Данные о заказе не загружены</h2>;
 
