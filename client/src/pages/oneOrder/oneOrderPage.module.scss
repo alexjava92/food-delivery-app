@@ -1,63 +1,78 @@
+.oneOrderCard {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  padding: 24px;
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .products {
-  margin-bottom: 33px;
   display: flex;
   flex-direction: column;
-  gap: 17px;
-}
-
-.sum {
-  display: flex;
-  gap: 20px;
-  font-weight: 600;
-  font-size: 18px;
-}
-.desc{
-  margin-top: 20px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-weight: 500;
-  span{
-    font-weight: 600;
-  }
-}
-.link {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-  gap: 6px;
-  margin-top: auto;
-  font-weight: 400;
-  font-size: 15px;
-  color: var(--tg-theme-hint-color);
-}
-
-.line {
-  margin-top: 1px;
-  width: 100%;
-  height: 1px;
-  background-color: var(--tg-theme-hint-color);
+  gap: 16px;
 }
 
 .sum {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 16px 20px;
-
-
-
 
   div {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    line-height: 1.5;
-  }
+    font-size: 16px;
+    color: #333;
 
-  b {
-    font-weight: 600;
+    b {
+      font-weight: 600;
+      font-size: 18px;
+      color: #222;
+    }
   }
 }
 
+.desc {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  & > div:first-child {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+  }
+
+  span {
+    font-weight: 500;
+    color: #555;
+    margin-right: 4px;
+  }
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-weight: 500;
+  color: #0070f3;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  margin-top: 24px;
+
+  &:hover {
+    color: #005ad3;
+  }
+
+  .line {
+    flex: 1;
+    height: 1px;
+    background: #ccc;
+  }
+}

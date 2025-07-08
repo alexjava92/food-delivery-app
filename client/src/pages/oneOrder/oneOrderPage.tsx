@@ -1,16 +1,16 @@
-import {MainLayout} from "../../layout/mainLayout"
+import { MainLayout } from "../../layout/mainLayout";
 import classes from "./oneOrderPage.module.scss";
 import React from "react";
-import {NavLink, useParams} from "react-router-dom";
-import {useGetOneOrderQuery} from "../../store/API/ordersApi";
-import {Product} from "../../entities/product/product";
-import {Loader} from "../../shared/loader/loader";
+import { NavLink, useParams } from "react-router-dom";
+import { useGetOneOrderQuery } from "../../store/API/ordersApi";
+import { Product } from "../../entities/product/product";
+import { Loader } from "../../shared/loader/loader";
 
 const OneOrderPage = () => {
-    const {id} = useParams()
-    const {data, error, isLoading} = useGetOneOrderQuery(`${id}`)
+    const { id } = useParams();
+    const { data, error, isLoading } = useGetOneOrderQuery(`${id}`);
 
-    if (error) return <h2 className={'error'}>Данные о товаре не загружены</h2>
+    if (error) return <h2 className={'error'}>Данные о заказе не загружены</h2>;
 
     const productsTotal = data?.orderProducts?.reduce((acc, item) =>
         acc + (+item?.price * (item.count ? item.count : 0)), 0
@@ -21,12 +21,12 @@ const OneOrderPage = () => {
 
     return (
         <MainLayout heading={`Заказ №${id}`} textCenter>
-            <div>
+            <div className={classes.oneOrderCard}>
                 <div className={classes.products}>
-                    {isLoading && <Loader height={86}/>}
+                    {isLoading && <Loader height={86} />}
                     {
                         data?.orderProducts?.map(item =>
-                            <Product key={item.id} data={item} inOrder/>
+                            <Product key={item.id} data={item} inOrder />
                         )
                     }
                 </div>
@@ -40,17 +40,18 @@ const OneOrderPage = () => {
                 </div>
 
                 <div className={classes.desc}>
-                    <div><span>Информация о заказе</span></div>
+                    <div>Информация о заказе</div>
+                    <div><span>Статус:</span> {data?.status}</div>
                     {data?.typeDelivery !== 'Самовывоз' && (
-                        <div><span>Адрес: </span>{data?.address}</div>
+                        <div><span>Адрес:</span> {data?.address}</div>
                     )}
-                    <div><span>Имя: </span>{data?.name}</div>
-                    <div><span>Телефон: </span>{data?.phone}</div>
-                    <div><span>Тип доставки: </span>{data?.typeDelivery}</div>
+                    <div><span>Имя:</span> {data?.name}</div>
+                    <div><span>Телефон:</span> {data?.phone}</div>
+                    <div><span>Тип доставки:</span> {data?.typeDelivery}</div>
                     {data?.typeDelivery !== 'Самовывоз' && (
-                        <div><span>Метод оплаты: </span>{data?.paymentMethod}</div>
+                        <div><span>Метод оплаты:</span> {data?.paymentMethod}</div>
                     )}
-                    <div><span>Комментарий: </span>{data?.comment}</div>
+                    <div><span>Комментарий:</span> {data?.comment}</div>
                 </div>
             </div>
 
