@@ -34,7 +34,7 @@ export class BotService {
         }
 
         nextStatusButtons.push({
-            text: "🔴 Отменить",
+            text: "Отменить",
             callback_data: `confirmCancel_${order.id}`,
         })
 
@@ -98,10 +98,6 @@ export class BotService {
 
         return message;
     }
-
-
-
-
 
     async notification(adminIds: string[], order: any) {
         if (!Array.isArray(adminIds) || adminIds.length === 0) return [];
