@@ -121,11 +121,13 @@ export class BotService {
 
         for (const chatId of adminIds) {
             try {
-                const sent = await tgBot.sendMessage(chatId, message, keyboard);
+                const sent = await tgBot.sendMessage(chatId, message, {
+                    parse_mode: "HTML",
+                    ...keyboard,
+                });
                 responses.push({
                     chatId,
                     messageId: sent.message_id,
-                    parse_mode: "HTML",
                 });
             } catch (e) {
                 console.error(`[BotService] Ошибка отправки сообщения chatId=${chatId}:`, e.message);
