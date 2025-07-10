@@ -43,48 +43,17 @@ export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmi
         }
     };
 
-    const [{ scale, x, y }, api] = useSpring(() => ({ scale: 1, x: 0, y: 0 }));
-
+    const [{ scale }, api] = useSpring(() => ({ scale: 1 }));
     const bind = useGesture(
         {
-            onPinch: ({ da: [d], origin, event, memo }) => {
-                event.preventDefault();
-
-                const target = event.target as HTMLElement;
-                if (!memo) {
-                    const rect = target.getBoundingClientRect();
-                    const offsetX = origin[0] - (rect.left + rect.width / 2);
-                    const offsetY = origin[1] - (rect.top + rect.height / 2);
-                    memo = { offsetX, offsetY };
-                }
-
-                const nextScale = Math.max(1, Math.min(3, d));
-                api.start({ scale: nextScale });
-                return memo;
-            },
-            onDrag: ({ offset: [dx, dy], pinching }) => {
-                if (!pinching && scale.get() > 1) {
-                    api.start({ x: dx, y: dy });
-                }
-            },
-            onDoubleClick: () => {
-                const next = scale.get() > 1 ? 1 : 2;
-                api.start({ scale: next, x: 0, y: 0 });
-            },
+            onPinch: ({ offset: [s] }) => api.start({ scale: s }),
+            onWheel: ({ offset: [, s] }) => api.start({ scale: 1 + s / 100 }),
+            onDoubleClick: () => api.start({ scale: 1 }),
         },
         {
-            drag: {
-                from: () => [x.get(), y.get()],
-                filterTaps: true,
-                bounds: scale.get() > 1 ? undefined : { left: 0, right: 0, top: 0, bottom: 0 },
-                rubberband: true,
-            },
             pinch: { scaleBounds: { min: 1, max: 3 }, rubberband: true },
-            target: undefined,
-            eventOptions: { passive: false },
         }
     );
-
 
 
 
@@ -99,12 +68,12 @@ export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmi
                 </>
             )}
 
-            <animated.div className={classes.image} {...bind()} style={{ touchAction: "none", overflow: "hidden" }}>
+            <animated.div className={classes.image} {...bind()} style={{ touchAction: "none" }}>
                 <animated.img
                     src={process.env.REACT_APP_API_URL + data?.image}
                     alt={data?.title}
-                    className={classes.zoomImage}
-                    style={{ scale, x, y }}
+                    style={{ scale }}
+                    className={classes.zoomImage} // можно стилизовать под нужные размеры
                 />
             </animated.div>
 
