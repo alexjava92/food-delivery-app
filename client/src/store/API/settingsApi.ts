@@ -9,9 +9,11 @@ export interface IDeliverySettings {
 export const settingsApi = createApi({
     reducerPath: "settingsApi",
     baseQuery: baseQueryWithReauth,
+    tagTypes: ['DeliverySettings'], // <--- добавлено
     endpoints: (build) => ({
         getDeliverySettings: build.query<IDeliverySettings, void>({
             query: () => "settings/delivery",
+            providesTags: ['DeliverySettings'], // <--- добавлено
         }),
         setDeliverySettings: build.mutation<any, IDeliverySettings>({
             query: (body) => ({
@@ -19,9 +21,11 @@ export const settingsApi = createApi({
                 method: "PATCH",
                 body,
             }),
+            invalidatesTags: ['DeliverySettings'], // <--- добавлено
         }),
     }),
 });
+
 
 export const {
     useGetDeliverySettingsQuery,
