@@ -43,7 +43,7 @@ export class BotService {
 
     public formatOrderNotification(order: any): string {
         const isPickup = order.typeDelivery === 'Самовывоз';
-        const emoji = isPickup ? '🏠' : '🚚';
+        const emoji = isPickup ? '📍🚶‍♂️' : '🚚';
 
         const statusEmojiMap = {
             "отменен": "🔴",
@@ -75,7 +75,7 @@ export class BotService {
         const createdAt = formatTime(order.createdAt);
         const updatedAt = formatTime(order.updatedAt);
 
-        let message = `${statusLine}\n\nЗаказ ${emoji} #n${order.id}\n\n`;
+        let message = `${statusLine}\n\nЗаказ #n${order.id}  ${emoji}\n\n`;
 
         if (!isPickup) message += `Адрес: ${order.address}\n`;
         message += `Имя: ${order.name}\n`;
