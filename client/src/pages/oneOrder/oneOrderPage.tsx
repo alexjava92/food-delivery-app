@@ -16,17 +16,11 @@ const OneOrderPage = () => {
     if (error) return <h2 className={'error'}>Данные о заказе не загружены</h2>;
 
     const productsTotal = data?.orderProducts?.reduce((acc, item) =>
-        acc + (+item?.price * getCount(item)), 0
+        acc + (+item?.price * (item.count ? item.count : 0)), 0
     ) || 0;
 
     const delivery = data?.typeDelivery === 'Доставка' ? (data?.deliveryPrice || 0) : 0;
     const total = productsTotal + delivery;
-
-    const getCount = (item: any) =>
-        item.OrderProductsModel?.count ||
-        item.order_product?.count ||
-        item.count ||
-        1;
 
     return (
         <MainLayout heading={`Заказ №${id}`} textCenter>
