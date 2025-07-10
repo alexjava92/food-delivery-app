@@ -58,11 +58,11 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
 
 
     const countProduct = inOrder
-        ? (data as any)?.OrderProductsModel?.count ||
+        ? (data && ((data as any)?.OrderProductsModel?.count ||
         (data as any)?.order_product?.count ||
-        data.count ||
-        1
-        : data.count || 1;
+        data.count)) || 1
+        : data?.count || 1;
+
 
 
     return (
