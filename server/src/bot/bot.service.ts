@@ -41,7 +41,7 @@ export class BotService {
         return nextStatusButtons;
     }
 
-    public formatOrderNotification(order: any): string {
+    /*public formatOrderNotification(order: any): string {
         const isPickup = order.typeDelivery === 'Самовывоз';
         const emoji = isPickup ? '📍🚶‍♂️' : '🚚';
 
@@ -87,7 +87,7 @@ export class BotService {
         message += `В заказе:\n${productsList}`;
 
         if (!isPickup) {
-            message += `\n\nСумма заказа: ${total}₽\nДоставка: ${delivery}₽\nИтого: ${grandTotal}₽`;
+            message += `\n\nСумма заказа: ${total}₽\nДоставка: ${delivery}₽\nИтого к оплате: ${grandTotal}₽`;
         } else {
             message += `\n\nИтого к оплате: ${grandTotal}₽`;
         }
@@ -97,7 +97,87 @@ export class BotService {
         message += `\n📋 Статус: ${statusEmojiMap[order.status] || ''} ${order.status} (${updatedAt})`;
 
         return message;
+    }*/
+
+    public formatOrderNotification(order: any): string {
+        const isPickup = order.typeDelivery === 'Самовывоз';
+        const emoji = isPickup ? '📍🚶‍♂️' : '🚚';
+
+        const statusEmojiMap = {
+            "отменен": "🔴",
+            "готово к выдаче": "🟠",
+            "выдано": "🟢",
+            "готовится": "🔵",
+            "новый": "🟡"
+        };
+
+        const statusRaw = order.status.toUpperCase();
+        const statusEmoji = statusEmojiMap[order.status] || '';
+
+        // Вариант 1 — жирный текст
+        const statusLineBold = `<b>${statusEmoji} СТАТУС: ${statusRaw}</b>`;
+
+        // Вариант 2 — рамка из эмодзи
+        const statusLineFramed = `🔔🔔🔔\n<b>🛎 СТАТУС: ${statusEmoji} ${statusRaw}</b>\n🔔🔔🔔`;
+
+        // Вариант 3 — плашка с квадратом
+        const statusLineBoxed = `🔷 <b>[${statusRaw}]</b> ${statusEmoji}`;
+
+        // Вариант 4 — простой акцент в начале
+        const statusLineSimple = `${statusEmoji} ${order.status}`;
+
+        const productsList = order.orderProducts.map(p => {
+            const count = p.OrderProductsModel?.count || p.order_product?.count || 1;
+            return `• ${p.title} [${count} шт.]`;
+        }).join('\n');
+
+        const total = order.orderProducts.reduce((sum, p) => {
+            const count = p.OrderProductsModel?.count || p.order_product?.count || 1;
+            const price = Number(p.price) || 0;
+            return sum + count * price;
+        }, 0);
+
+        const delivery = !isPickup ? Number(order.deliveryPrice || 0) : 0;
+        const grandTotal = total + delivery;
+
+        const formatTime = (date: string) =>
+            new Date(date).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+        const createdAt = formatTime(order.createdAt);
+        const updatedAt = formatTime(order.updatedAt);
+
+        let message = '';
+
+        // 🔁 Выводим все варианты для сравнения
+        message += `${statusLineBold}\n\n`;
+        message += `${statusLineFramed}\n\n`;
+        message += `${statusLineBoxed}\n\n`;
+        message += `${statusLineSimple}\n\n`;
+
+        message += `Заказ #n${order.id}  ${emoji}\n\n`;
+
+        if (!isPickup) message += `Адрес: ${order.address}\n`;
+        message += `Имя: ${order.name}\n`;
+        message += `Телефон: ${order.phone}\n`;
+        message += `Тип доставки: ${order.typeDelivery}\n`;
+        if (!isPickup) message += `Метод оплаты: ${order.paymentMethod}\n`;
+        message += `Комментарий: ${order.comment?.trim() || '-'}\n\n`;
+
+        message += `В заказе:\n${productsList}`;
+
+        if (!isPickup) {
+            message += `\n\nСумма заказа: ${total}₽\nДоставка: ${delivery}₽\nИтого к оплате: ${grandTotal}₽`;
+        } else {
+            message += `\n\nИтого к оплате: ${grandTotal}₽`;
+        }
+
+        // Информация о времени
+        message += `\n\n⏱ Принят: ${createdAt}`;
+        message += `\n📋 Статус: ${statusEmoji} ${order.status} (${updatedAt})`;
+
+        return message;
     }
+
 
     async notification(adminIds: string[], order: any) {
         if (!Array.isArray(adminIds) || adminIds.length === 0) return [];
