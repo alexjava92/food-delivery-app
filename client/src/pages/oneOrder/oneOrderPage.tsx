@@ -36,11 +36,6 @@ const OneOrderPage = () => {
     const delivery = data?.typeDelivery === 'Доставка' ? (data?.deliveryPrice || 0) : 0;
     const total = productsTotal + delivery;
 
-    const getCount = (item: any) =>
-        item.OrderProductsModel?.count ||
-        item.order_product?.count ||
-        item.count ||
-        1;
 
     return (
         <MainLayout heading={`Заказ №${id}`} textCenter>

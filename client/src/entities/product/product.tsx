@@ -55,16 +55,14 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
         }
     );
 
-    const enrichedData = data as IProduct & {
-        order_product?: { count?: number };
-        OrderProductsModel?: { count?: number };
-    };
 
-    const countProduct =
-        enrichedData.OrderProductsModel?.count ||
-        enrichedData.order_product?.count ||
-        enrichedData.count ||
-        1;
+
+    const countProduct = inOrder
+        ? (data as any)?.OrderProductsModel?.count ||
+        (data as any)?.order_product?.count ||
+        data.count ||
+        1
+        : data.count || 1;
 
 
     return (
