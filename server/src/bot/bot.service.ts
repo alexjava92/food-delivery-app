@@ -125,6 +125,7 @@ export class BotService {
                 responses.push({
                     chatId,
                     messageId: sent.message_id,
+                    parse_mode: "HTML",
                 });
             } catch (e) {
                 console.error(`[BotService] Ошибка отправки сообщения chatId=${chatId}:`, e.message);
