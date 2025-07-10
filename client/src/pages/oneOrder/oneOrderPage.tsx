@@ -5,6 +5,7 @@ import { NavLink, useParams } from "react-router-dom";
 import { useGetOneOrderQuery } from "../../store/API/ordersApi";
 import { Product } from "../../entities/product/product";
 import { Loader } from "../../shared/loader/loader";
+import {IProduct} from "../../types/types";
 
 const OneOrderPage = () => {
     const { id } = useParams();
@@ -15,9 +16,22 @@ const OneOrderPage = () => {
 
     if (error) return <h2 className={'error'}>Данные о заказе не загружены</h2>;
 
-    const productsTotal = data?.orderProducts?.reduce((acc, item) =>
-        acc + (+item?.price * getCount(item)), 0
-    ) || 0;
+    const productsTotal = data?.orderProducts?.reduce((acc, item) => {
+        const enrichedItem = item as IProduct & {
+            order_product?: { count?: number };
+            OrderProductsModel?: { count?: number };
+        };
+
+        const count =
+            enrichedItem.OrderProductsModel?.count ||
+            enrichedItem.order_product?.count ||
+            enrichedItem.count ||
+            1;
+
+        const price = Number(enrichedItem.price) || 0;
+        return acc + (price * count);
+    }, 0) || 0;
+
 
     const delivery = data?.typeDelivery === 'Доставка' ? (data?.deliveryPrice || 0) : 0;
     const total = productsTotal + delivery;
