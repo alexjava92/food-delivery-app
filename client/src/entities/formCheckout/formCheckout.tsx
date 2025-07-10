@@ -37,7 +37,9 @@ export const FormCheckout: FC<IType> = memo(() => {
 
     const [createOrder, { data: dataCreate, error, isLoading }] = useCreateNewOrderMutation();
     const [updateUser] = useUpdateUserMutation();
-    const { data: deliverySettings } = useGetDeliverySettingsQuery();
+    const { data: deliverySettings } = useGetDeliverySettingsQuery(undefined, {
+        refetchOnMountOrArgChange: true,
+    });
 
     const productsTotalPrice = productsInCart.reduce(
         (acc, item) => acc + +item.price * +item.count,
