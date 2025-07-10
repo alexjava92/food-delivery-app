@@ -6,11 +6,11 @@
 }
 
 .image {
+  overflow: hidden;
   position: relative;
-  overflow: hidden; // важно!
-  touch-action: none; // отключает нативную прокрутку
+  touch-action: none;
   width: 100%;
-  height: auto;
+  height: 300px; // или авто, если адаптивно
   display: flex;
   justify-content: center;
   align-items: center;
@@ -20,6 +20,9 @@
   will-change: transform;
   touch-action: none;
   user-select: none;
+  max-width: none;
+  width: auto;
+  height: auto;
 }
 
 .box {
