@@ -53,7 +53,7 @@ export class BotService {
             "новый": "🟡"
         };
 
-        const statusLine = `🛎 <b>СТАТУС: ${statusEmojiMap[order.status] || ''} ${order.status.toUpperCase()}</b>`;
+        const statusLine = `<b>СТАТУС: ${statusEmojiMap[order.status] || ''} ${order.status.toUpperCase()}</b>`;
 
 
         const productsList = order.orderProducts.map(p => {
