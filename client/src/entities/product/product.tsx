@@ -43,17 +43,24 @@ export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmi
         }
     };
 
-    const [{ scale }, api] = useSpring(() => ({ scale: 1 }));
+    const [{ scale, x, y }, api] = useSpring(() => ({ scale: 1, x: 0, y: 0 }));
+
     const bind = useGesture(
         {
             onPinch: ({ offset: [s] }) => api.start({ scale: s }),
+            onDrag: ({ offset: [dx, dy], pinching }) => {
+                if (!pinching) api.start({ x: dx, y: dy });
+            },
             onWheel: ({ offset: [, s] }) => api.start({ scale: 1 + s / 100 }),
-            onDoubleClick: () => api.start({ scale: 1 }),
+            onDoubleClick: () => api.start({ scale: 1, x: 0, y: 0 }),
         },
         {
+            drag: { from: () => [x.get(), y.get()], filterTaps: true },
             pinch: { scaleBounds: { min: 1, max: 3 }, rubberband: true },
         }
     );
+
+
 
     return (
         <div className={classesArr.join(" ")}>
@@ -66,12 +73,12 @@ export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmi
                 </>
             )}
 
-            <animated.div className={classes.image} {...bind()} style={{ touchAction: "none" }}>
+            <animated.div className={classes.image} {...bind()} style={{ touchAction: "none", overflow: "hidden" }}>
                 <animated.img
                     src={process.env.REACT_APP_API_URL + data?.image}
                     alt={data?.title}
-                    style={{ scale }}
-                    className={classes.zoomImage} // можно стилизовать под нужные размеры
+                    className={classes.zoomImage}
+                    style={{ scale, x, y }}
                 />
             </animated.div>
 
