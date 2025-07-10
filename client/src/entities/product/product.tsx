@@ -15,7 +15,7 @@ interface IType {
     count?: number;
 }
 
-export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmin, oneProduct }) => {
+export const Product: FC<IType> = memo(({ data, inOrder, inCart, /*count,*/ editAdmin, oneProduct }) => {
     const [favouritesProduct, setFavouritesProduct] = useState<IProduct[]>();
 
     const classesArr = [classes.product];
@@ -54,7 +54,13 @@ export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmi
             pinch: { scaleBounds: { min: 1, max: 3 }, rubberband: true },
         }
     );
+    const getCount = (item: any) =>
+        item.OrderProductsModel?.count ||
+        item.order_product?.count ||
+        item.count ||
+        1;
 
+    const count = getCount(data);
 
 
     return (
@@ -116,23 +122,20 @@ export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmi
                 </div>
             )}
 
-            {inOrder && (
-                <div className={classes.priceBox}>
-                    {inOrder && <span className={classes.count}>x{data?.count}</span>}
-                    <div className={classes.price}>
-                        {data.count && data.count > 1 ? (
-                            <>
-                                <span className={classes.subPrice}>
-                                    {data.count} x {data.price}
-                                </span>{" "}
-                                {data.count * +data.price} ₽
-                            </>
-                        ) : (
-                            `${data.price} ₽`
-                        )}
-                    </div>
-                </div>
-            )}
+            {inOrder && <span className={classes.count}>x{count}</span>}
+            <div className={classes.price}>
+                {count > 1 ? (
+                    <>
+            <span className={classes.subPrice}>
+                {count} x {data.price}
+            </span>{" "}
+                        {count * +data.price} ₽
+                    </>
+                ) : (
+                    `${data.price} ₽`
+                )}
+            </div>
+
         </div>
     );
 });
