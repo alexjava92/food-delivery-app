@@ -1,10 +1,10 @@
-import React, { FC, memo, useEffect, useState } from "react";
+import React, {FC, memo, useEffect, useState} from "react";
 import classes from "./product.module.scss";
-import { IProduct } from "../../types/types";
-import { FavoritesIcon } from "../../shared/images/icons/favoritesIcon";
-import { PlusAndMinus } from "../../shared/plusAndMinus/plusAndMinus";
-import { useSpring, animated } from "@react-spring/web";
-import { useGesture } from "@use-gesture/react";
+import {IProduct} from "../../types/types";
+import {FavoritesIcon} from "../../shared/images/icons/favoritesIcon";
+import {PlusAndMinus} from "../../shared/plusAndMinus/plusAndMinus";
+import {useSpring, animated} from "@react-spring/web";
+import {useGesture} from "@use-gesture/react";
 
 interface IType {
     data: IProduct;
@@ -15,7 +15,7 @@ interface IType {
     count?: number;
 }
 
-export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmin, oneProduct }) => {
+export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin, oneProduct}) => {
     const [favouritesProduct, setFavouritesProduct] = useState<IProduct[]>();
 
     const classesArr = [classes.product];
@@ -43,18 +43,28 @@ export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmi
         }
     };
 
-    const [{ scale }, api] = useSpring(() => ({ scale: 1 }));
+    const [{scale}, api] = useSpring(() => ({scale: 1}));
     const bind = useGesture(
         {
-            onPinch: ({ offset: [s] }) => api.start({ scale: s }),
-            onWheel: ({ offset: [, s] }) => api.start({ scale: 1 + s / 100 }),
-            onDoubleClick: () => api.start({ scale: 1 }),
+            onPinch: ({offset: [s]}) => api.start({scale: s}),
+            onWheel: ({offset: [, s]}) => api.start({scale: 1 + s / 100}),
+            onDoubleClick: () => api.start({scale: 1}),
         },
         {
-            pinch: { scaleBounds: { min: 1, max: 3 }, rubberband: true },
+            pinch: {scaleBounds: {min: 1, max: 3}, rubberband: true},
         }
     );
 
+    const enrichedData = data as IProduct & {
+        order_product?: { count?: number };
+        OrderProductsModel?: { count?: number };
+    };
+
+    const countProduct =
+        enrichedData.OrderProductsModel?.count ||
+        enrichedData.order_product?.count ||
+        enrichedData.count ||
+        1;
 
 
     return (
@@ -68,11 +78,11 @@ export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmi
                 </>
             )}
 
-            <animated.div className={classes.image} {...bind()} style={{ touchAction: "none" }}>
+            <animated.div className={classes.image} {...bind()} style={{touchAction: "none"}}>
                 <animated.img
                     src={process.env.REACT_APP_API_URL + data?.image}
                     alt={data?.title}
-                    style={{ scale }}
+                    style={{scale}}
                     className={classes.zoomImage} // можно стилизовать под нужные размеры
                 />
             </animated.div>
@@ -100,7 +110,7 @@ export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmi
 
             {inCart && (
                 <div className={classes.priceBox}>
-                    <PlusAndMinus data={data} />
+                    <PlusAndMinus data={data}/>
                     <div className={classes.price}>
                         {data.count && data.count > 1 ? (
                             <>
@@ -118,14 +128,14 @@ export const Product: FC<IType> = memo(({ data, inOrder, inCart, count, editAdmi
 
             {inOrder && (
                 <div className={classes.priceBox}>
-                    {inOrder && <span className={classes.count}>x{data?.count}</span>}
+                    <span className={classes.count}>x{countProduct}</span>
                     <div className={classes.price}>
-                        {data.count && data.count > 1 ? (
+                        {countProduct > 1 ? (
                             <>
-                                <span className={classes.subPrice}>
-                                    {data.count} x {data.price}
-                                </span>{" "}
-                                {data.count * +data.price} ₽
+          <span className={classes.subPrice}>
+            {countProduct} x {data.price}
+          </span>{" "}
+                                {countProduct * +data.price} ₽
                             </>
                         ) : (
                             `${data.price} ₽`
