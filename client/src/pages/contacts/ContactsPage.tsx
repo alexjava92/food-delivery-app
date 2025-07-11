@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import styles from './ContactsPage.module.css';
+import styles from './ContactsPage.module.scss';
 import { FiCopy } from 'react-icons/fi';
 
 const ContactsPage = () => {
