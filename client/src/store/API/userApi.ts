@@ -55,6 +55,7 @@ export const userApi = createApi({
                     method: 'DELETE',
                 }
             },
+            invalidatesTags: ['Users'],
         }),
         getUsersByRole: build.query({
             query: (role) => ({

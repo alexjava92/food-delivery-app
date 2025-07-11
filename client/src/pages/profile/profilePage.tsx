@@ -6,14 +6,16 @@ import React, {useEffect, useLayoutEffect, useState} from "react";
 import {SimpleTextField} from "../../shared/simpleTextField/simpleTextField";
 import {useUpdateUserMutation} from "../../store/API/userApi";
 import {Button} from "../../shared/button/button";
-import {useAppSelector} from "../../hooks/useRedux";
+import {useAppDispatch, useAppSelector} from "../../hooks/useRedux";
 import {createPortal} from "react-dom";
 import {Modal} from "../../entities/modal/modal";
 import {Loader} from "../../shared/loader/loader";
+import {fetchUser} from "../../store/slice/userSlice";
 
 
 const ProfilePage = () => {
-    const {user} = useAppSelector((state) => state.userReducer);useEffect(() => {}, [user]);
+    const {user} = useAppSelector((state) => state.userReducer);
+    useEffect(() => {}, [user]);
     const [updateUser, {data, isLoading, isError}] = useUpdateUserMutation()
 
     const nameInput = useInput(user.name)
@@ -32,6 +34,7 @@ const ProfilePage = () => {
     const [gender, setGender] = useState({id: 1, text: 'Мужской'})
     const [modal, setModal] = useState(false)
     const [textModal, setTextModal] = useState('')
+    const dispatch = useAppDispatch();
 
 
 
@@ -54,8 +57,25 @@ const ProfilePage = () => {
                 birthdate: date,
                 phone: phoneInput.value,
             }
-        })
-    }
+        }).unwrap().then(() => {
+            // ✅ обновляем данные в редьюсере
+            dispatch(fetchUser({
+                ...user,
+                name: nameInput.value,
+                email: emailInput.value,
+                phone: phoneInput.value,
+            }));
+
+            // ✅ сохраняем в localStorage
+            localStorage.setItem("user", JSON.stringify({
+                ...user,
+                name: nameInput.value,
+                email: emailInput.value,
+                phone: phoneInput.value,
+            }));
+        });
+    };
+
     return (
         <MainLayout heading={'Профиль'} textCenter>
             <form onSubmit={(e) => e.preventDefault()}>
