@@ -1,0 +1,47 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.title {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.text {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.text a {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.text ul {
+    list-style: disc;
+    padding-left: 20px;
+}
+
+.copyBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 8px;
+    vertical-align: middle;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+}
+
+.copyBtn svg {
+    stroke: currentColor;
+}
+
+.copiedText {
+    margin-left: 10px;
+    color: green;
+    font-size: 14px;
+}
