@@ -1,12 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-
 import styles from './ContactsPage.module.scss';
-import { Store, Phone, Clock, Copy } from 'lucide-react';
-import {useGetContactsQuery} from "../../store/API/contactsApi";
-import {MainLayout} from "../../layout/mainLayout";
-
+import { Store, Phone, Clock, Copy, MapPin } from 'lucide-react';
+import { useGetContactsQuery } from "../../store/API/contactsApi";
+import { MainLayout } from "../../layout/mainLayout";
 
 const ContactsPage = () => {
     const { data, isLoading, isError } = useGetContactsQuery(null);
@@ -25,41 +23,57 @@ const ContactsPage = () => {
     return (
         <MainLayout heading="Контакты">
             <div className={styles.wrapper}>
-                {isLoading && <p>Загрузка...</p>}
-                {isError && <p>Ошибка загрузки данных</p>}
+                {isLoading && (
+                    <div className={styles.skeletonWrapper}>
+                        <div className={styles.skeletonCard} />
+                        <div className={styles.skeletonCard} />
+                        <div className={styles.skeletonCard} />
+                    </div>
+                )}
+                {isError && <p className={styles.errorText}>Ошибка загрузки данных. Попробуйте позже.</p>}
                 {data && (
                     <>
                         <div className={styles.card}>
-                            <Store size={20} className={styles.icon} />
+                            <Store size={24} className={styles.icon} />
                             <div className={styles.info}>
                                 <div className={styles.label}>Адрес заведения</div>
                                 <div className={styles.value}>{data.address}</div>
+                                <a
+                                    href={`https://yandex.com/maps/?text=${encodeURIComponent(data.address)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={styles.mapLink}
+
+                                >
+                                    <MapPin size={16} className={styles.mapIcon} />
+                                    Открыть в Яндекс.Картах
+                                </a>
                             </div>
                         </div>
 
                         <div className={styles.card}>
-                            <Phone size={20} className={styles.icon} />
+                            <Phone size={24} className={styles.icon} />
                             <div className={styles.info}>
                                 <div className={styles.label}>Телефон</div>
                                 <div className={styles.phoneRow}>
-                                    <a href={`tel:${data.phone.replace(/\s/g, '')}`} className={styles.link}>
+                                    <a href={`tel:${data.phone.replace(/\s+/g, '')}`} className={styles.link}>
                                         {data.phone}
                                     </a>
                                     <button onClick={() => handleCopy(data.phone)} className={styles.copyBtn}>
-                                        <Copy size={16} />
+                                        <Copy size={18} />
                                     </button>
-                                    {copied && <span className={styles.copied}>Ok!</span>}
+                                    {copied && <span className={styles.copied}>Скопировано!</span>}
                                 </div>
                             </div>
                         </div>
 
                         <div className={styles.card}>
-                            <Clock size={20} className={styles.icon} />
+                            <Clock size={24} className={styles.icon} />
                             <div className={styles.info}>
                                 <div className={styles.label}>Часы работы</div>
                                 <div className={styles.value}>
                                     {data.worktime.split('\n').map((line: string, i: number) => (
-                                        <div key={i}>{line}</div>
+                                        <p key={i} className={styles.workLine}>{line}</p>
                                     ))}
                                 </div>
                             </div>
