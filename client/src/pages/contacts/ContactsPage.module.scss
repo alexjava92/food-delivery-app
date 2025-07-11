@@ -1,47 +1,66 @@
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+.wrapper {
+    padding: 16px;
 }
 
 .title {
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 16px;
 }
 
-.text {
-    font-size: 18px;
-    line-height: 1.6;
+.card {
+    display: flex;
+    align-items: flex-start;
+    padding: 14px;
+    border-radius: 12px;
+    background-color: var(--tg-theme-bg-color, #ffffff);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 12px;
 }
 
-.text a {
-    color: inherit;
-    text-decoration: underline;
+.icon {
+    margin-right: 12px;
+    color: var(--tg-theme-hint-color, #a0a0a0);
+    margin-top: 2px;
 }
 
-.text ul {
-    list-style: disc;
-    padding-left: 20px;
+.info {
+    flex: 1;
+}
+
+.label {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color, #888);
+    margin-bottom: 4px;
+}
+
+.value {
+    font-size: 16px;
+    color: var(--tg-theme-text-color, #000);
+    line-height: 1.4;
+}
+
+.link {
+    font-size: 16px;
+    color: var(--tg-theme-link-color, #007aff);
+    text-decoration: none;
+}
+
+.phoneRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .copyBtn {
     background: none;
     border: none;
+    padding: 4px;
     cursor: pointer;
-    margin-left: 8px;
-    vertical-align: middle;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
+    color: var(--tg-theme-link-color, #007aff);
 }
 
-.copyBtn svg {
-    stroke: currentColor;
-}
-
-.copiedText {
-    margin-left: 10px;
+.copied {
+    font-size: 13px;
     color: green;
-    font-size: 14px;
 }
