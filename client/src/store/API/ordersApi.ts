@@ -73,7 +73,7 @@ export const ordersApi = createApi({
                 body,
                 headers: { Authorization: `Bearer ${token}` },
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: "Orders", id }],
+            invalidatesTags: (result, error, { id }) => [{ type: "Orders", id: "USER_ORDERS" }],
         }),
 
         // Обновление уведомления
@@ -84,7 +84,7 @@ export const ordersApi = createApi({
                 body,
                 headers: { Authorization: `Bearer ${token}` },
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: "Orders", id }],
+            invalidatesTags: (result, error, { id }) => [{ type: "Orders", id: "USER_ORDERS" }],
         }),
     }),
 });
