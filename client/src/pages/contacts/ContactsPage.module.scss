@@ -1,3 +1,4 @@
+/*
 .wrapper {
     padding: 16px;
 }
@@ -20,7 +21,7 @@
 
 .icon {
     margin-right: 12px;
-    color: var(--tg-theme-hint-color, #a0a0a0);
+   !* color: var(--tg-theme-hint-color, #a0a0a0);*!
     margin-top: 2px;
 }
 
@@ -30,13 +31,13 @@
 
 .label {
     font-size: 14px;
-    color: var(--tg-theme-hint-color, #888);
+    !*color: var(--tg-theme-hint-color, #888);*!
     margin-bottom: 4px;
 }
 
 .value {
     font-size: 16px;
-    color: var(--tg-theme-text-color, #000);
+   !* color: var(--tg-theme-text-color, #000);*!
     line-height: 1.4;
 }
 
@@ -64,3 +65,4 @@
     font-size: 13px;
     color: green;
 }
+*/
