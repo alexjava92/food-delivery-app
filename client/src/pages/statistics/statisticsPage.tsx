@@ -95,6 +95,18 @@ const StatisticsPage = memo(() => {
                     <span className={classes.statLabel}>Средний чек: </span>
                     <span className={classes.statValue}>{data?.averageCheck} ₽</span>
                 </div>
+                <div>
+                    <span className={classes.statLabel}>Доставки: </span>
+                    <span className={classes.statValue}>{data?.delivery?.count || 0} шт</span>
+                </div>
+                <div>
+                    <span className={classes.statLabel}>Сумма доставок: </span>
+                    <span className={classes.statValue}>{data?.delivery?.total || 0} ₽</span>
+                </div>
+                <div>
+                    <span className={classes.statLabel}>Самовывоз: </span>
+                    <span className={classes.statValue}>{data?.pickupCount || 0} шт</span>
+                </div>
             </div>
 
 
