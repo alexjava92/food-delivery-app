@@ -17,7 +17,7 @@ const ContactsPage = () => {
             await navigator.clipboard.writeText(text);
             /*setCopied(true);
             setTimeout(() => setCopied(false), 2000);*/
-            tg?.showPopup({ message: 'Скопировано!' });
+            tg?.showPopup({ message: '🎉' });
         } catch (err) {
             console.error('Ошибка копирования:', err);
         }
