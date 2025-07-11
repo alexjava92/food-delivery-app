@@ -7,13 +7,13 @@ import {OrdersIcon} from "../../shared/images/icons/ordersIcon";
 import {ProfileIcon} from "../../shared/images/icons/profileIcon";
 import {SettingsIcon} from "../../shared/images/icons/settingsIcon";
 import {StatisticsIcon} from "../../shared/images/icons/statisticsIcon";
-import {MapPin} from "lucide-react";
+import {ContactsIcon} from "../../shared/images/icons/ContactsIcon";
 
 const linkArr = [
     {to: "orders", text: "Заказы", icon: <OrdersIcon/>},
     {to: "/profile", text: "Профиль", icon: <ProfileIcon isSimple/>},
     {to: "/more/favorites", text: "Избранное ", icon: <FavoritesIcon/>},
-    {to: "/contacts", text: "Контакты ", icon: <MapPin size={20}/>},
+    {to: "/contacts", text: "Контакты", icon: <ContactsIcon isSimple />}
 ];
 const linkArrAdmin = [
     {to: "/more/all-orders", text: "Все заказы", icon: <OrdersIcon/>},,
