@@ -10,7 +10,7 @@ import {useAppDispatch, useAppSelector} from "../../hooks/useRedux";
 import {createPortal} from "react-dom";
 import {Modal} from "../../entities/modal/modal";
 import {Loader} from "../../shared/loader/loader";
-import {fetchUser} from "../../store/slice/userSlice";
+import {fetchUser, updateLocalUser} from "../../store/slice/userSlice";
 
 
 const ProfilePage = () => {
@@ -58,17 +58,7 @@ const ProfilePage = () => {
                 phone: phoneInput.value,
             }
         }).unwrap().then(() => {
-            // ✅ обновляем данные в редьюсере
-            dispatch(fetchUser({
-                ...user,
-                name: nameInput.value,
-                email: emailInput.value,
-                phone: phoneInput.value,
-            }));
-
-            // ✅ сохраняем в localStorage
-            localStorage.setItem("user", JSON.stringify({
-                ...user,
+            dispatch(updateLocalUser({
                 name: nameInput.value,
                 email: emailInput.value,
                 phone: phoneInput.value,
