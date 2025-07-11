@@ -13,7 +13,7 @@ import {roles} from "../addAmin/addAminPage";
 const UpdateRoleUserPage = () => {
     const navigate = useNavigate();
     const {id} = useParams()
-    const {data} = useGetUserQuery(`${id}`)
+    const {data, refetch } = useGetUserQuery(`${id}`)
     const [update,{data:dataUpdateUser,isLoading,error}]=useUpdateRoleUserMutation()
     const [select, setSelect] = useState('')
     useEffect(() => {
@@ -27,8 +27,10 @@ const UpdateRoleUserPage = () => {
             body: {
                 role: select,
             }
-        })
-    }
+        }).unwrap().then(() => {
+            refetch(); // обновляем данные пользователя
+        });
+    };
     return (
         <MainLayout heading={'Обновление роли пользователя'}>
             <div className="mb-4">

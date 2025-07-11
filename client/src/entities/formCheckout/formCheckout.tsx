@@ -9,12 +9,13 @@ import { useCreateNewOrderMutation } from "../../store/API/ordersApi";
 import { useNavigate } from "react-router-dom";
 import { IOrderCreate } from "../../types/types";
 import { BtnGroup } from "../../shared/btnGroup/btnGroup";
-import { useUpdateUserMutation } from "../../store/API/userApi";
+import {useGetUserQuery, useUpdateUserMutation} from "../../store/API/userApi";
 import { createPortal } from "react-dom";
 import { Modal } from "../modal/modal";
 import { deleteProductInCart } from "../../store/slice/productsSlice";
 import { Loader } from "../../shared/loader/loader";
 import { useGetDeliverySettingsQuery } from "../../store/API/settingsApi";
+
 
 interface IType {}
 
@@ -37,6 +38,7 @@ export const FormCheckout: FC<IType> = memo(() => {
 
     const [createOrder, { data: dataCreate, error, isLoading }] = useCreateNewOrderMutation();
     const [updateUser] = useUpdateUserMutation();
+    const { refetch } = useGetUserQuery(user?.id);
     const { data: deliverySettings } = useGetDeliverySettingsQuery(undefined, {
         refetchOnMountOrArgChange: true,
     });
@@ -84,6 +86,7 @@ export const FormCheckout: FC<IType> = memo(() => {
 
         if (data.address && data.phone && !data.phone.includes('_') && data.paymentMethod) {
             createOrder(data);
+
             updateUser({
                 userId: user?.id,
                 body: {
@@ -91,6 +94,8 @@ export const FormCheckout: FC<IType> = memo(() => {
                     phone: phone.value,
                     name: name.value,
                 }
+            }).unwrap().then(() => {
+                refetch(); // обновляет данные пользователя
             });
         }
     };
