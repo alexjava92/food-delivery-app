@@ -19,7 +19,7 @@ const ContactsPage = () => {
         try {
             await navigator.clipboard.writeText(text);
             triggerEmoji('🎉'); // или '✅', '❤️', '🔥'
-            tg?.showPopup({ message: 'Скопировано!' });
+            /*tg?.showPopup({ message: 'Скопировано!' });*/
         } catch (err) {
             console.error('Ошибка копирования:', err);
         }
