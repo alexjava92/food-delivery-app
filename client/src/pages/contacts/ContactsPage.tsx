@@ -48,7 +48,7 @@ const ContactsPage = () => {
                                     <button onClick={() => handleCopy(data.phone)} className={styles.copyBtn}>
                                         <Copy size={16} />
                                     </button>
-                                    {copied && <span className={styles.copied}>Скопировано</span>}
+                                    {copied && <span className={styles.copied}>Ok!</span>}
                                 </div>
                             </div>
                         </div>
