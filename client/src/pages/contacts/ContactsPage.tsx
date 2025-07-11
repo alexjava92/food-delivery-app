@@ -4,15 +4,17 @@ import React, { useState } from 'react';
 
 import styles from './ContactsPage.module.scss';
 import { Store, Phone, Clock, Copy } from 'lucide-react';
+import {useGetContactsQuery} from "../../store/API/contactsApi";
 import {MainLayout} from "../../layout/mainLayout";
 
-const ContactsPage = () => {
-    const [copied, setCopied] = useState(false);
-    const phone = '+7 980 734 6224';
 
-    const handleCopy = async () => {
+const ContactsPage = () => {
+    const { data, isLoading, isError } = useGetContactsQuery(null);
+    const [copied, setCopied] = useState(false);
+
+    const handleCopy = async (text: string) => {
         try {
-            await navigator.clipboard.writeText(phone);
+            await navigator.clipboard.writeText(text);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
@@ -23,38 +25,47 @@ const ContactsPage = () => {
     return (
         <MainLayout heading="Контакты">
             <div className={styles.wrapper}>
-                <div className={styles.card}>
-                    <Store size={20} className={styles.icon} />
-                    <div className={styles.info}>
-                        <div className={styles.label}>Адрес заведения</div>
-                        <div className={styles.value}>ул. 3-я Заречная д. 1</div>
-                    </div>
-                </div>
-
-                <div className={styles.card}>
-                    <Phone size={20} className={styles.icon} />
-                    <div className={styles.info}>
-                        <div className={styles.label}>Телефон</div>
-                        <div className={styles.phoneRow}>
-                            <a href="tel:+79807346224" className={styles.link}>{phone}</a>
-                            <button onClick={handleCopy} className={styles.copyBtn} aria-label="Скопировать">
-                                <Copy size={16} />
-                            </button>
-                            {copied && <span className={styles.copied}>Скопировано</span>}
+                {isLoading && <p>Загрузка...</p>}
+                {isError && <p>Ошибка загрузки данных</p>}
+                {data && (
+                    <>
+                        <div className={styles.card}>
+                            <Store size={20} className={styles.icon} />
+                            <div className={styles.info}>
+                                <div className={styles.label}>Адрес заведения</div>
+                                <div className={styles.value}>{data.address}</div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div className={styles.card}>
-                    <Clock size={20} className={styles.icon} />
-                    <div className={styles.info}>
-                        <div className={styles.label}>Часы работы</div>
-                        <div className={styles.value}>
-                            <div>Пн–Пт: 10:00–23:00</div>
-                            <div>Сб–Вс: 10:00–24:00</div>
+                        <div className={styles.card}>
+                            <Phone size={20} className={styles.icon} />
+                            <div className={styles.info}>
+                                <div className={styles.label}>Телефон</div>
+                                <div className={styles.phoneRow}>
+                                    <a href={`tel:${data.phone.replace(/\s/g, '')}`} className={styles.link}>
+                                        {data.phone}
+                                    </a>
+                                    <button onClick={() => handleCopy(data.phone)} className={styles.copyBtn}>
+                                        <Copy size={16} />
+                                    </button>
+                                    {copied && <span className={styles.copied}>Скопировано</span>}
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+
+                        <div className={styles.card}>
+                            <Clock size={20} className={styles.icon} />
+                            <div className={styles.info}>
+                                <div className={styles.label}>Часы работы</div>
+                                <div className={styles.value}>
+                                    {data.worktime.split('\n').map((line: string, i: number) => (
+                                        <div key={i}>{line}</div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
         </MainLayout>
     );
