@@ -248,8 +248,19 @@ export class OrdersService {
             } else {
                 const categoryMap = new Map<number, { title: string; count: number }>();
                 let gain = 0;
+                let deliveryCount = 0;
+                let deliverySum = 0;
+                let pickupCount = 0;
 
                 for (const order of orders) {
+                    // ➕ тип доставки
+                    if (order.typeDelivery  === 'Доставка') {
+                        deliveryCount++;
+                        deliverySum += Number(order.deliveryPrice) || 0;
+                    } else if (order.typeDelivery  === 'Самовывоз') {
+                        pickupCount++;
+                    }
+
                     for (const product of order.orderProducts) {
                         const categoryId = Number(product.categoryId);
                         const count = product.order_product?.count || 1;
@@ -279,7 +290,18 @@ export class OrdersService {
                 const countOfOrders = orders.length;
                 const averageCheck = countOfOrders ? (gain / countOfOrders).toFixed(2) : 0;
 
-                return { gain, countOfOrders, averageCheck, stat };
+                return {
+                    gain,
+                    countOfOrders,
+                    averageCheck,
+                    stat,
+                    delivery: {
+                        count: deliveryCount,
+                        total: deliverySum
+                    },
+                    pickupCount
+                };
+
             }
         } catch (e) {
             await this.botService.errorMessage(`Произошла ошибка при получении статистики: ${e}`);
