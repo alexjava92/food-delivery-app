@@ -6,18 +6,20 @@ import { Store, Phone, Clock, Copy, MapPin } from 'lucide-react';
 import { useGetContactsQuery } from "../../store/API/contactsApi";
 import { MainLayout } from "../../layout/mainLayout";
 import {useTelegram} from "../../hooks/useTelegram";
+import {useTelegramEffects} from "../../hooks/useTelegramEffects";
 
 const ContactsPage = () => {
     const { tg } = useTelegram();
     const { data, isLoading, isError } = useGetContactsQuery(null);
     const [copied, setCopied] = useState(false);
 
+    const { triggerEmoji } = useTelegramEffects();
+
     const handleCopy = async (text: string) => {
         try {
             await navigator.clipboard.writeText(text);
-            /*setCopied(true);
-            setTimeout(() => setCopied(false), 2000);*/
-            tg?.showPopup({ message: '🎉' });
+            triggerEmoji('🎉'); // или '✅', '❤️', '🔥'
+            tg?.showPopup({ message: 'Скопировано!' });
         } catch (err) {
             console.error('Ошибка копирования:', err);
         }
