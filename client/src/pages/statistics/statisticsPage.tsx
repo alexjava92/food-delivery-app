@@ -96,21 +96,32 @@ const StatisticsPage = memo(() => {
                     <span className={classes.statValue}>{data?.averageCheck} ₽</span>
                 </div>
                 {(data?.delivery?.count > 0 || data?.delivery?.total > 0 || data?.pickupCount > 0) && (
-                    <>
-                        <div>
-                            <span className={classes.statLabel}>Доставки: </span>
-                            <span className={classes.statValue}>{data.delivery.count} шт</span>
+                    <div className={classes.mainStatsCol}>
+                        <div className={classes.mainStatsTitle}>Доставка и самовывоз</div>
+
+                        <div className={classes.statGroup}>
+                            {data?.delivery?.count > 0 && (
+                                <div className={classes.statRow}>
+                                    <span className={classes.statLabel}>Доставки:</span>
+                                    <span className={classes.statValue}>{data.delivery.count} шт</span>
+                                </div>
+                            )}
+                            {data?.delivery?.total > 0 && (
+                                <div className={classes.statRow}>
+                                    <span className={classes.statLabel}>Сумма доставок:</span>
+                                    <span className={classes.statValue}>{data.delivery.total} ₽</span>
+                                </div>
+                            )}
+                            {data?.pickupCount > 0 && (
+                                <div className={classes.statRow}>
+                                    <span className={classes.statLabel}>Самовывоз:</span>
+                                    <span className={classes.statValue}>{data.pickupCount} шт</span>
+                                </div>
+                            )}
                         </div>
-                        <div>
-                            <span className={classes.statLabel}>Сумма доставок: </span>
-                            <span className={classes.statValue}>{data.delivery.total} ₽</span>
-                        </div>
-                        <div>
-                            <span className={classes.statLabel}>Самовывоз: </span>
-                            <span className={classes.statValue}>{data.pickupCount} шт</span>
-                        </div>
-                    </>
+                    </div>
                 )}
+
             </div>
 
 

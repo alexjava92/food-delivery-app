@@ -72,3 +72,27 @@
    font-weight: 600;
 }
 
+.mainStatsCol {
+   display: flex;
+   flex-direction: column;
+   gap: 12px;
+}
+
+.mainStatsTitle {
+   font-size: 18px;
+   font-weight: 600;
+   margin-bottom: 4px;
+}
+
+.statGroup {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+}
+
+.statRow {
+   display: flex;
+   justify-content: space-between;
+}
+
+
