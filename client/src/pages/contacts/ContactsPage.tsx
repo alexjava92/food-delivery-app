@@ -1,25 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './ContactsPage.module.scss';
 import { Store, Phone, Clock, Copy, MapPin } from 'lucide-react';
 import { useGetContactsQuery } from "../../store/API/contactsApi";
 import { MainLayout } from "../../layout/mainLayout";
 import {useTelegram} from "../../hooks/useTelegram";
-import {useTelegramEffects} from "../../hooks/useTelegramEffects";
+
 
 const ContactsPage = () => {
     const { tg } = useTelegram();
     const { data, isLoading, isError } = useGetContactsQuery(null);
-    const [copied, setCopied] = useState(false);
-
-    const { triggerEmoji } = useTelegramEffects();
 
     const handleCopy = async (text: string) => {
         try {
             await navigator.clipboard.writeText(text);
-            triggerEmoji('🎉'); // или '✅', '❤️', '🔥'
-            /*tg?.showPopup({ message: 'Скопировано!' });*/
+            tg?.showPopup({ message: 'Скопировано!' });
         } catch (err) {
             console.error('Ошибка копирования:', err);
         }
@@ -68,7 +64,7 @@ const ContactsPage = () => {
                                 >
                                     <span className={styles.link}>{data.phone}</span>
                                     <Copy size={18} className={styles.copyIcon} />
-                                    {copied && <span className={styles.copied}>Скопировано!</span>}
+
                                 </div>
                             </div>
                         </div>
