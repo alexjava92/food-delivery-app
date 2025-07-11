@@ -12,6 +12,7 @@ const linkArr = [
     {to: "orders", text: "Заказы", icon: <OrdersIcon/>},
     {to: "/profile", text: "Профиль", icon: <ProfileIcon isSimple/>},
     {to: "/more/favorites", text: "Избранное ", icon: <FavoritesIcon/>},
+    {to: "/contacts", text: "Контакты ", icon: <FavoritesIcon/>},
 ];
 const linkArrAdmin = [
     {to: "/more/all-orders", text: "Все заказы", icon: <OrdersIcon/>},,

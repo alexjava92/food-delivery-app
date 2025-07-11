@@ -21,6 +21,7 @@ import {MaintenancePage} from "../pages/maintenance/MaintenanceLazy";
 import {MaintenanceTogglePage} from "../pages/maintenanceTogglePage/MaintenanceTogglePageLazy";
 import {MoreSettingsAppPage} from "../pages/moreSettingsApp/moreSettingsAppPageLazy";
 import { DeliverySettingsPage } from "../pages/moreSettingsApp/DeliverySettingsPageLazy";
+import {ContactsPage} from "../pages/contacts/ContactsPageLazy";
 
 
 export const routes = [
@@ -36,7 +37,8 @@ export const routes = [
     {path: "/more/orders", element: <OrdersPage/>},
     {path: "/more/favorites", element: <FavoritesPage/>},
     {path: "/qrcode", element: <QrcodePage/>},
-    {path: "/maintenance", element: <MaintenancePage />}
+    {path: "/maintenance", element: <MaintenancePage />},
+    {path: "/contacts", element: <ContactsPage />}
 ]
 export const cashierRoutes =[
     {path: "/more/change-status-order", element: <ChangeStatusOrderPage/>},
