@@ -30,7 +30,10 @@ export const ordersApi = createApi({
             query: (id) => ({
                 url: `/user/${id}`,
             }),
-            providesTags: (result, error, id) => [{ type: "Orders", id }],
+            providesTags: (result, error, id) => [
+                { type: "Orders", id },
+                { type: "Orders", id: "LIST" },
+                { type: "Orders", id: `USER_${id}` },],
         }),
 
         // Один заказ
@@ -84,7 +87,11 @@ export const ordersApi = createApi({
                 body,
                 headers: { Authorization: `Bearer ${token}` },
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: "Orders", id }],
+            invalidatesTags: (result, error, { id }) => [{
+                type: "Orders", id },
+                { type: "Orders", id: "LIST" },
+                { type: "Orders", id: `USER_${id}` },
+            ],
         }),
     }),
 });
