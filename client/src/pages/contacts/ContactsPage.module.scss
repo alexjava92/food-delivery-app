@@ -88,6 +88,10 @@
     &:hover .copyIcon {
         opacity: 0.8;
     }
+    svg {
+        fill: none;
+        color: var(--tg-theme-link-color, #007aff);
+    }
 }
 
 .copyBtn {
