@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import React, {FC, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {ArrowIconBack} from "../shared/images/icons/arrowIconBack";
 import classes from "./MainLayout.module.scss"
@@ -17,6 +17,21 @@ interface IType {
 export const MainLayout: FC<IType> = ({children, heading, homePage, textCenter, isSearch,}) => {
     const {tg} = useTelegram();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!homePage && tg?.BackButton) {
+            tg.BackButton.show();
+            const handleBack = () => navigate(-1);
+            tg.BackButton.onClick(handleBack);
+
+            return () => {
+                tg.BackButton.hide();
+                tg.BackButton.offClick(handleBack);
+            };
+        }
+    }, [tg, homePage, navigate]);
+
+
     return (
         <div className={tg?.colorScheme === 'light' ? 'container' : 'container darkTheme'}>
             <div className={classes.pageHeader}>
