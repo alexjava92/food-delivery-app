@@ -78,6 +78,7 @@
 
 .mapIcon {
     color: var(--tg-theme-link-color, #007aff);
+    fill: none;
 }
 
 .phoneRow {
@@ -97,6 +98,9 @@
 
     &:hover {
         transform: scale(1.1);
+    }
+    svg {
+        fill: none;
     }
 }
 
