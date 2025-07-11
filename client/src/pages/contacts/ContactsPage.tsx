@@ -76,9 +76,18 @@ const ContactsPage = () => {
                             <div className={styles.info}>
                                 <div className={styles.label}>Часы работы</div>
                                 <div className={styles.value}>
-                                    {data.worktime.split('\n').map((line: string, i: number) => (
-                                        <p key={i} className={styles.workLine}>{line}</p>
-                                    ))}
+                                    {data.worktime.includes('Сб') ? (
+                                        <>
+                                            <p className={styles.workLine}>
+                                                {data.worktime.slice(0, data.worktime.indexOf('Сб')).trim()}
+                                            </p>
+                                            <p className={styles.workLine}>
+                                                {data.worktime.slice(data.worktime.indexOf('Сб')).trim()}
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <p className={styles.workLine}>{data.worktime}</p>
+                                    )}
                                 </div>
                             </div>
                         </div>

@@ -31,8 +31,6 @@
 }
 
 .label {
-    font-size: 14px;
-    font-weight: 500;
     color: var(--tg-theme-hint-color, #888888);
     margin-bottom: 6px;
 }
@@ -152,6 +150,11 @@
     background-size: 200% 200%;
     animation: skeleton 1.5s infinite;
 }
+.workLine {
+    line-height: 1.5;
+    margin: 2px 0;
+}
+
 
 @keyframes skeleton {
     0% {
