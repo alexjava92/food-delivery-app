@@ -85,6 +85,9 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    &:hover .copyIcon {
+        opacity: 0.8;
+    }
 }
 
 .copyBtn {

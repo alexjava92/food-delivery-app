@@ -5,16 +5,19 @@ import styles from './ContactsPage.module.scss';
 import { Store, Phone, Clock, Copy, MapPin } from 'lucide-react';
 import { useGetContactsQuery } from "../../store/API/contactsApi";
 import { MainLayout } from "../../layout/mainLayout";
+import {useTelegram} from "../../hooks/useTelegram";
 
 const ContactsPage = () => {
+    const { tg } = useTelegram();
     const { data, isLoading, isError } = useGetContactsQuery(null);
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async (text: string) => {
         try {
             await navigator.clipboard.writeText(text);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
+            /*setCopied(true);
+            setTimeout(() => setCopied(false), 2000);*/
+            tg?.showPopup({ message: 'Скопировано!' });
         } catch (err) {
             console.error('Ошибка копирования:', err);
         }
@@ -55,13 +58,14 @@ const ContactsPage = () => {
                             <Phone size={24} className={styles.icon} />
                             <div className={styles.info}>
                                 <div className={styles.label}>Телефон</div>
-                                <div className={styles.phoneRow}>
-                                    <a href={`tel:${data.phone.replace(/\s+/g, '')}`} className={styles.link}>
-                                        {data.phone}
-                                    </a>
-                                    <button onClick={() => handleCopy(data.phone)} className={styles.copyBtn}>
-                                        <Copy size={18} />
-                                    </button>
+                                <div
+                                    className={styles.phoneRow}
+                                    onClick={() => handleCopy(data.phone)}
+                                    role="button"
+                                    tabIndex={0}
+                                >
+                                    <span className={styles.link}>{data.phone}</span>
+                                    <Copy size={18} className={styles.copyIcon} />
                                     {copied && <span className={styles.copied}>Скопировано!</span>}
                                 </div>
                             </div>
