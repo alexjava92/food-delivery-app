@@ -194,6 +194,9 @@ export class OrdersService {
                     createdAt: {
                         [Op.between]: [startTime, endTime],
                     },
+                    status: {
+                        [Op.ne]: 'отменен'
+                    }
                 },
                 include: [
                     {
