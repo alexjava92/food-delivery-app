@@ -33,107 +33,17 @@ const StatisticsPage = memo(() => {
         <MainLayout heading={'Статистика'} textCenter>
 
 
-            {/*<div className={classes.box}>
-                <Button className={classes.compact} size="small" active={btnId === 1} onClick={() => handler(today, date, 1)}>Сегодня</Button>
-                <Button className={classes.compact} size="small" active={btnId === 2} onClick={() => handler(
-                    new Date(new Date(date.setDate(date.getDate() - 1)).setHours(0, 0, 0, 0)),
-                    new Date(new Date(date.setDate(date.getDate())).setHours(23, 59, 59, 999)),
-                    2
-                )}>Вчера</Button>
-                <Button className={classes.compact} size="small" active={btnId === 3} onClick={() => handler(
-                    new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7),
-                    date,
-                    3
-                )}>За 7 дней</Button>
-                <Button className={classes.compact} size="small" active={btnId === 4} onClick={() => handler(
-                    new Date(date.getFullYear(), date.getMonth(), 1),
-                    new Date(date.getFullYear(), date.getMonth() + 1, 0),
-                    4
-                )}>Этот месяц</Button>
-                <Button className={classes.compact} size="small" active={btnId === 5} onClick={() => handler(
-                    new Date(endOfPreviousMonth.getFullYear(), endOfPreviousMonth.getMonth(), 1),
-                    new Date(startOfCurrentMonth.getTime() - 1),
-                    5
-                )}>Предыдущий месяц</Button>
-                <Button className={classes.compact} size="small" active={btnId === 6} onClick={() => handler(
-                    new Date(today.getFullYear(), 0, 1),
-                    new Date(today.getFullYear(), 11, 31),
-                    6
-                )}>За год</Button>
-            </div>*/}
 
-           {/* <ButtonGroup
-                items={[
-                    {
-                        label: "Сегодня",
-                        active: btnId === 1,
-                        onClick: () => handler(today, date, 1),
-                    },
-                    {
-                        label: "Вчера",
-                        active: btnId === 2,
-                        onClick: () =>
-                            handler(
-                                new Date(new Date(date.setDate(date.getDate() - 1)).setHours(0, 0, 0, 0)),
-                                new Date(new Date(date.setDate(date.getDate())).setHours(23, 59, 59, 999)),
-                                2
-                            ),
-                    },
-                    {
-                        label: "За 7 дней",
-                        active: btnId === 3,
-                        onClick: () =>
-                            handler(
-                                new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7),
-                                date,
-                                3
-                            ),
-                    },
-                    {
-                        label: "Этот месяц",
-                        active: btnId === 4,
-                        onClick: () =>
-                            handler(
-                                new Date(date.getFullYear(), date.getMonth(), 1),
-                                new Date(date.getFullYear(), date.getMonth() + 1, 0),
-                                4
-                            ),
-                    },
-                    {
-                        label: "Предыдущий месяц",
-                        active: btnId === 5,
-                        onClick: () =>
-                            handler(
-                                new Date(endOfPreviousMonth.getFullYear(), endOfPreviousMonth.getMonth(), 1),
-                                new Date(startOfCurrentMonth.getTime() - 1),
-                                5
-                            ),
-                    },
-                    {
-                        label: "За год",
-                        active: btnId === 6,
-                        onClick: () =>
-                            handler(
-                                new Date(today.getFullYear(), 0, 1),
-                                new Date(today.getFullYear(), 11, 31),
-                                6
-                            ),
-                    },
-                ]}
-            />*/}
 
             <ButtonGroup
                 items={[
                     {
                         label: "Сегодня",
-                        icon: <Timer size={16} />,
                         active: btnId === 1,
                         onClick: () => handler(today, date, 1),
-                        haptic: "light",
                     },
                     {
                         label: "Вчера",
-                        icon: <History size={16} />,
                         active: btnId === 2,
                         onClick: () =>
                             handler(
@@ -141,11 +51,9 @@ const StatisticsPage = memo(() => {
                                 new Date(new Date(date.setDate(date.getDate())).setHours(23, 59, 59, 999)),
                                 2
                             ),
-                        haptic: "light",
                     },
                     {
                         label: "За 7 дней",
-                        icon: <CalendarRange size={16} />,
                         active: btnId === 3,
                         onClick: () =>
                             handler(
@@ -153,11 +61,9 @@ const StatisticsPage = memo(() => {
                                 date,
                                 3
                             ),
-                        haptic: "light",
                     },
                     {
                         label: "Этот месяц",
-                        icon: <CalendarDays size={16} />,
                         active: btnId === 4,
                         onClick: () =>
                             handler(
@@ -165,11 +71,9 @@ const StatisticsPage = memo(() => {
                                 new Date(date.getFullYear(), date.getMonth() + 1, 0),
                                 4
                             ),
-                        haptic: "light",
                     },
                     {
                         label: "Предыдущий месяц",
-                        icon: <CalendarCheck size={16} />,
                         active: btnId === 5,
                         onClick: () =>
                             handler(
@@ -177,11 +81,9 @@ const StatisticsPage = memo(() => {
                                 new Date(startOfCurrentMonth.getTime() - 1),
                                 5
                             ),
-                        haptic: "light",
                     },
                     {
                         label: "За год",
-                        icon: <CalendarClock size={16} />,
                         active: btnId === 6,
                         onClick: () =>
                             handler(
@@ -189,10 +91,11 @@ const StatisticsPage = memo(() => {
                                 new Date(today.getFullYear(), 11, 31),
                                 6
                             ),
-                        haptic: "light",
                     },
                 ]}
             />
+
+
 
 
 
