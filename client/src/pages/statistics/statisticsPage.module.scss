@@ -6,16 +6,15 @@
    justify-content: flex-start;
 }
 
-/* Переопределение стилей кнопок ТОЛЬКО внутри .box */
-.box :global(.button) {
-   padding: 6px 12px !important;
-   font-size: 13px !important;
-   border-radius: 999px !important;
+.box button {
+   padding: 6px 12px;
+   font-size: 13px;
+   border-radius: 999px;
+   line-height: 1.2;
+   transition: transform 0.2s ease;
+   flex-shrink: 0;
    height: auto;
    min-height: unset;
-   line-height: 1.2;
-   flex-shrink: 0;
-   transition: transform 0.2s ease;
 
    &:active {
       transform: scale(0.96);
