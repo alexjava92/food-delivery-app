@@ -20,7 +20,8 @@ body {
   --tg-theme-button-color: #F3D535;
   --tg-theme-button-text-color: #2D3146;
 
-  font-family: 'Montserrat', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: var(--tg-theme-text-color, #000);
 }
 
 svg {
