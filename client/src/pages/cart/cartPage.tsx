@@ -9,6 +9,7 @@ import {useGetContactsQuery} from "../../store/API/contactsApi";
 import {createPortal} from "react-dom";
 import {Modal} from "../../entities/modal/modal";
 import {useWorkTime} from "../../hooks/useWorkTime";
+import {useTelegram} from "../../hooks/useTelegram";
 
 
 const CartPage = () => {
@@ -18,11 +19,13 @@ const CartPage = () => {
     const [checkout, setCheckout] = useState(false)
     const [modal, setModal] = useState(false)
     const workTime = useWorkTime(contactsData?.worktime);
+    const { tg } = useTelegram();
 
 
     const addOrder = () => {
         if (!workTime) {
             setModal(true)
+            tg?.HapticFeedback.impactOccurred('rigid');
         } else {
             setCheckout(true)
         }
