@@ -6,15 +6,14 @@
    justify-content: flex-start;
 }
 
-.compact {
+:global(.button.compact) {
    padding: 6px 12px !important;
    font-size: 13px !important;
    border-radius: 999px !important;
-   line-height: 1.2;
-   transition: transform 0.2s ease;
-   height: auto;
-   min-height: unset;
-   flex-shrink: 0;
+   height: auto !important;
+   min-height: unset !important;
+   line-height: 1.2 !important;
+   flex-shrink: 0 !important;
 
    &:active {
       transform: scale(0.96);
