@@ -29,6 +29,15 @@ const StatisticsPage = memo(() => {
         setBtnId(btnId);
     };
 
+    const isStatsEmpty =
+        (data?.gain ?? 0) === 0 &&
+        (data?.countOfOrders ?? 0) === 0 &&
+        (data?.averageCheck ?? 0) === 0 &&
+        (data?.delivery?.count ?? 0) === 0 &&
+        (data?.delivery?.total ?? 0) === 0 &&
+        (data?.pickupCount ?? 0) === 0 &&
+        (data?.stat?.length ?? 0) === 0;
+
     return (
         <MainLayout heading={'Статистика'} textCenter>
 
@@ -173,6 +182,13 @@ const StatisticsPage = memo(() => {
                 )}
 
             </div>
+
+            {isStatsEmpty && (
+                <div className={classes.emptyBlock}>
+                    <img src="/public/empty.png" alt="Пусто" className={classes.emptyImage} />
+                    <div className={classes.emptyText}>Пока нет данных для отображения</div>
+                </div>
+            )}
 
 
             <div className={classes.statsGrid}>

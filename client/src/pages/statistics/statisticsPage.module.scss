@@ -93,3 +93,26 @@
    display: flex;
    justify-content: space-between;
 }
+
+.emptyBlock {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   justify-content: center;
+   margin-top: 32px;
+   gap: 12px;
+   color: var(--tg-theme-text-color, #666);
+   text-align: center;
+}
+
+.emptyImage {
+   width: 96px;
+   height: 96px;
+   opacity: 0.4;
+}
+
+.emptyText {
+   font-size: 15px;
+   font-weight: 500;
+}
+
