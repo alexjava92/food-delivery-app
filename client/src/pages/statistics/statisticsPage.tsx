@@ -185,7 +185,7 @@ const StatisticsPage = memo(() => {
 
             {isStatsEmpty && (
                 <div className={classes.emptyBlock}>
-                    <img src="/public/empty.png" alt="Пусто" className={classes.emptyImage} />
+                    <div className={classes.emoji}>📦</div>
                     <div className={classes.emptyText}>Пока нет данных для отображения</div>
                 </div>
             )}

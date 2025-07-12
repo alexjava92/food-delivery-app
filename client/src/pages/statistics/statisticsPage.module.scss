@@ -94,6 +94,11 @@
    justify-content: space-between;
 }
 
+.emoji {
+   font-size: 48px;
+   line-height: 1;
+}
+
 .emptyBlock {
    display: flex;
    flex-direction: column;
@@ -101,8 +106,8 @@
    justify-content: center;
    margin-top: 32px;
    gap: 12px;
-   color: var(--tg-theme-text-color, #666);
    text-align: center;
+   color: var(--tg-theme-text-color, #666);
 }
 
 .emptyImage {
