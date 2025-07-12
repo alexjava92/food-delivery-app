@@ -147,7 +147,7 @@ const StatisticsPage = memo(() => {
                             )}
                             {data?.averageCheck > 0 && (
                                 <div className={classes.statRow}>
-                                    <span className={classes.statLabel}>Средний чек:</span>
+                                    <span className={classes.statLabel}>Средний чек: </span>
                                     <span className={classes.statValue}>{data.averageCheck} ₽</span>
                                 </div>
                             )}
