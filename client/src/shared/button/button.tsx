@@ -1,5 +1,6 @@
 import React, { FC, memo } from "react";
 import classes from './button.module.scss';
+import {useTelegram} from "../../hooks/useTelegram";
 
 interface IType {
     children: React.ReactNode;
@@ -7,11 +8,12 @@ interface IType {
     active?: boolean;
     size?: "small" | "medium" | "large";
     disabled?: boolean;
-    color?: "primary" | "success" | "danger" | "gray"; 
+    color?: "primary" | "success" | "danger" | "gray";
+    haptic?: "light" | "medium" | "heavy" | "soft" | "rigid";
 }
 
 export const Button: FC<IType> = memo(
-    ({ children, onClick, active, size = "medium", disabled = false, color = "primary" }) => {
+    ({ children, onClick, active, size = "medium", disabled = false, color = "primary", haptic  }) => {
         const classNames = [
             classes.button,
             classes[color],
@@ -22,16 +24,21 @@ export const Button: FC<IType> = memo(
             .filter(Boolean)
             .join(" ");
 
+        const { tg } = useTelegram();
+
         const handleClick = () => {
             if (!disabled && onClick) {
+                if (haptic) {
+                    tg?.HapticFeedback?.impactOccurred(haptic);
+                }
                 onClick();
             }
         };
 
         return (
-            <div className={classNames} onClick={handleClick}>
+            <button className={classNames} onClick={handleClick}>
                 {children}
-            </div>
+            </button>
         );
     }
 );
