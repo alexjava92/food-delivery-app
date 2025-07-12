@@ -100,7 +100,7 @@ export const Product: FC<IType> = memo(({data, inOrder, inCart, count, editAdmin
                         </span>
                     )}
                 </div>
-                {oneProduct && data?.description && (
+                {!inCart && !inOrder && !editAdmin && data?.description && (
                     <div className={classes.description}>{data.description}</div>
                 )}
 

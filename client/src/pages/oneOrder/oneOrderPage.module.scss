@@ -19,6 +19,10 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin: 20px 0px 20px 0px;
+  border: 1px solid var(--tg-theme-hint-color);
+  border-radius: 10px;
+  padding: 10px;
 
   div {
     display: flex;
