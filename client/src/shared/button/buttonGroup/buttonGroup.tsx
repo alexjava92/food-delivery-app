@@ -1,7 +1,5 @@
 import React, { FC } from "react";
-
 import styles from "./buttonGroup.module.scss";
-import {Button} from "../button";
 
 interface RangeButton {
     label: string;
@@ -17,18 +15,17 @@ interface ButtonGroupProps {
 
 export const ButtonGroup: FC<ButtonGroupProps> = ({ items, className }) => {
     return (
-        <div className={`${styles.group} ${className || ""}`}>
+        <div className={`${styles.group} ${className || ""}`.trim()}>
             {items.map((item, idx) => (
-                <Button
+                <button
                     key={idx}
-                    size="small"
-                    active={item.active}
                     onClick={item.onClick}
-                    className={styles.compact}
-                    haptic={item.haptic || "light"}
+                    className={
+                        item.active ? `${styles.button} ${styles.active}` : styles.button
+                    }
                 >
                     {item.label}
-                </Button>
+                </button>
             ))}
         </div>
     );
