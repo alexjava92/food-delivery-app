@@ -48,13 +48,14 @@ const OneOrderPage = () => {
                         )
                     }
                 </div>
-
-                <div className={classes.sum}>
-                    <div><span>Сумма товаров:</span><span>{productsTotal} ₽</span></div>
-                    {data?.typeDelivery === 'Доставка' && (
-                        <div><span>Доставка:</span><span>{delivery} ₽</span></div>
-                    )}
-                    <div><b><span>Итого: </span><span>{total} ₽</span></b></div>
+                <div className="borderContainer">
+                    <div className={classes.sum}>
+                        <div><span>Сумма товаров:</span><span>{productsTotal} ₽</span></div>
+                        {data?.typeDelivery === 'Доставка' && (
+                            <div><span>Доставка:</span><span>{delivery} ₽</span></div>
+                        )}
+                        <div><b><span>Итого: </span><span>{total} ₽</span></b></div>
+                    </div>
                 </div>
                 <div className="borderContainer">
                     <div className={classes.desc}>
