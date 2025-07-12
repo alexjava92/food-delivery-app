@@ -6,10 +6,10 @@
    justify-content: flex-start;
 }
 
-.box button {
-   padding: 6px 12px;
-   font-size: 13px;
-   border-radius: 999px;
+.box :global(.button) {
+   padding: 6px 12px !important;
+   font-size: 13px !important;
+   border-radius: 999px !important;
    line-height: 1.2;
    transition: transform 0.2s ease;
    flex-shrink: 0;
