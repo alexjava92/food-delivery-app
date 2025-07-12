@@ -16,6 +16,7 @@ const ContactsPage = () => {
         try {
             await navigator.clipboard.writeText(text);
             tg?.showPopup({ message: 'Скопировано!' });
+            tg.HapticFeedback.impactOccurred('medium');
         } catch (err) {
             console.error('Ошибка копирования:', err);
         }
