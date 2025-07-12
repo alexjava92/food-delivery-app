@@ -15,6 +15,7 @@ import { Modal } from "../modal/modal";
 import { deleteProductInCart } from "../../store/slice/productsSlice";
 import { Loader } from "../../shared/loader/loader";
 import { useGetDeliverySettingsQuery } from "../../store/API/settingsApi";
+import {useTelegram} from "../../hooks/useTelegram";
 
 
 interface IType {}
@@ -42,6 +43,7 @@ export const FormCheckout: FC<IType> = memo(() => {
     const { data: deliverySettings } = useGetDeliverySettingsQuery(undefined, {
         refetchOnMountOrArgChange: true,
     });
+    const { tg } = useTelegram();
 
     const productsTotalPrice = productsInCart.reduce(
         (acc, item) => acc + +item.price * +item.count,
@@ -67,6 +69,8 @@ export const FormCheckout: FC<IType> = memo(() => {
     }, [dataCreate]);
 
     const submitHandler = () => {
+        tg?.HapticFeedback.impactOccurred('medium');
+
         const data: IOrderCreate = {
             userId: user?.id,
             address: typeDelivery === 'Доставка' ? address.value : 'Самовывоз',
