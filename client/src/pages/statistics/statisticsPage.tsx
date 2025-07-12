@@ -1,8 +1,8 @@
-import { MainLayout } from "../../layout/mainLayout";
-import React, { memo, useState } from "react";
-import { useGetStatisticsQuery } from "../../store/API/ordersApi";
-import { Button } from "../../shared/button/button";
-import { Calendar } from "../../shared/calendar/calendar";
+import {MainLayout} from "../../layout/mainLayout";
+import React, {memo, useState} from "react";
+import {useGetStatisticsQuery} from "../../store/API/ordersApi";
+import {Button} from "../../shared/button/button";
+import {Calendar} from "../../shared/calendar/calendar";
 import classes from "./statisticsPage.module.scss";
 import {ButtonGroup} from "../../shared/button/buttonGroup/buttonGroup";
 import {CalendarCheck, CalendarClock, CalendarDays, CalendarRange, Timer, History} from "lucide-react";
@@ -21,7 +21,7 @@ const StatisticsPage = memo(() => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [btnId, setBtnId] = useState(0);
-    const { data } = useGetStatisticsQuery({ startTime, endTime, catId });
+    const {data} = useGetStatisticsQuery({startTime, endTime, catId});
 
     const handler = (start: any, end: any, btnId: number) => {
         setStartTime(start);
@@ -31,8 +31,6 @@ const StatisticsPage = memo(() => {
 
     return (
         <MainLayout heading={'Статистика'} textCenter>
-
-
 
 
             <ButtonGroup
@@ -96,14 +94,11 @@ const StatisticsPage = memo(() => {
             />
 
 
-
-
-
             <div className={classes.box}>
                 <div className={classes.calendarBox}>
-                    <Calendar changeDate={setStartDate} formatISO />
+                    <Calendar changeDate={setStartDate} formatISO/>
                     -
-                    <Calendar changeDate={setEndDate} formatISO />
+                    <Calendar changeDate={setEndDate} formatISO/>
                 </div>
                 <Button
                     className={classes.compact}
@@ -119,22 +114,37 @@ const StatisticsPage = memo(() => {
                 </Button>
             </div>
             <div className="mb-4">
-                {catId && <Button className={classes.compact} size="small" color="danger" onClick={() => setCatId('')}>Назад</Button>}
+                {catId && <Button className={classes.compact} size="small" color="danger"
+                                  onClick={() => setCatId('')}>Назад</Button>}
             </div>
 
             <div className={classes.mainStatsRow}>
-                <div>
-                    <span className={classes.statLabel}>Выручка: </span>
-                    <span className={classes.statValue}>{data?.gain} ₽</span>
-                </div>
-                <div>
-                    <span className={classes.statLabel}>Заказы: </span>
-                    <span className={classes.statValue}>{data?.countOfOrders} шт</span>
-                </div>
-                <div>
-                    <span className={classes.statLabel}>Средний чек: </span>
-                    <span className={classes.statValue}>{data?.averageCheck} ₽</span>
-                </div>
+                {(data?.gain > 0 || data?.countOfOrders > 0 || data?.averageCheck > 0) && (
+                    <div className={classes.mainStatsCol}>
+                        <div className={classes.mainStatsTitle}>Выручка и заказы</div>
+
+                        <div className={classes.statGroup}>
+                            {data?.gain > 0 && (
+                                <div className={classes.statRow}>
+                                    <span className={classes.statLabel}>Выручка:</span>
+                                    <span className={classes.statValue}>{data.gain} ₽</span>
+                                </div>
+                            )}
+                            {data?.countOfOrders > 0 && (
+                                <div className={classes.statRow}>
+                                    <span className={classes.statLabel}>Заказы:</span>
+                                    <span className={classes.statValue}>{data.countOfOrders} шт</span>
+                                </div>
+                            )}
+                            {data?.averageCheck > 0 && (
+                                <div className={classes.statRow}>
+                                    <span className={classes.statLabel}>Средний чек:</span>
+                                    <span className={classes.statValue}>{data.averageCheck} ₽</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
                 {(data?.delivery?.count > 0 || data?.delivery?.total > 0 || data?.pickupCount > 0) && (
                     <div className={classes.mainStatsCol}>
                         <div className={classes.mainStatsTitle}>Доставка и самовывоз</div>
@@ -163,7 +173,6 @@ const StatisticsPage = memo(() => {
                 )}
 
             </div>
-
 
 
             <div className={classes.statsGrid}>
