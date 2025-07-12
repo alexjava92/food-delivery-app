@@ -6,21 +6,24 @@
    justify-content: flex-start;
 }
 
-.box :global(.button) {
+.box :global(div[class*="button"]) {
    padding: 6px 12px !important;
    font-size: 13px !important;
    border-radius: 999px !important;
-   line-height: 1.2;
-   transition: transform 0.2s ease;
-   flex-shrink: 0;
    height: auto;
    min-height: unset;
+   flex-shrink: 0;
+   line-height: 1.2;
+   transition: transform 0.2s ease;
 
    &:active {
       transform: scale(0.96);
       box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
    }
 }
+
+
+
 
 .calendarBox {
    display: flex;
