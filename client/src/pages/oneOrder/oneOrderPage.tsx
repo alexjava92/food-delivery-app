@@ -40,13 +40,15 @@ const OneOrderPage = () => {
     return (
         <MainLayout heading={`Заказ №${id}`} textCenter>
             <div className={classes.oneOrderCard}>
-                <div className={classes.products}>
-                    {isLoading && <Loader height={86}/>}
-                    {
-                        data?.orderProducts?.map(item =>
-                            <Product key={item.id} data={item} inOrder/>
-                        )
-                    }
+                <div className="borderContainer">
+                    <div className={classes.products}>
+                        {isLoading && <Loader height={86}/>}
+                        {
+                            data?.orderProducts?.map(item =>
+                                <Product key={item.id} data={item} inOrder/>
+                            )
+                        }
+                    </div>
                 </div>
                 <div className="borderContainer">
                     <div className={classes.sum}>
