@@ -32,28 +32,28 @@ const StatisticsPage = memo(() => {
 
 
             <div className={classes.box}>
-                <Button size="small" active={btnId === 1} onClick={() => handler(today, date, 1)}>Сегодня</Button>
-                <Button size="small" active={btnId === 2} onClick={() => handler(
+                <Button className={classes.compact} size="small" active={btnId === 1} onClick={() => handler(today, date, 1)}>Сегодня</Button>
+                <Button className={classes.compact} size="small" active={btnId === 2} onClick={() => handler(
                     new Date(new Date(date.setDate(date.getDate() - 1)).setHours(0, 0, 0, 0)),
                     new Date(new Date(date.setDate(date.getDate())).setHours(23, 59, 59, 999)),
                     2
                 )}>Вчера</Button>
-                <Button size="small" active={btnId === 3} onClick={() => handler(
+                <Button className={classes.compact} size="small" active={btnId === 3} onClick={() => handler(
                     new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7),
                     date,
                     3
                 )}>За 7 дней</Button>
-                <Button size="small" active={btnId === 4} onClick={() => handler(
+                <Button className={classes.compact} size="small" active={btnId === 4} onClick={() => handler(
                     new Date(date.getFullYear(), date.getMonth(), 1),
                     new Date(date.getFullYear(), date.getMonth() + 1, 0),
                     4
                 )}>Этот месяц</Button>
-                <Button size="small" active={btnId === 5} onClick={() => handler(
+                <Button className={classes.compact} size="small" active={btnId === 5} onClick={() => handler(
                     new Date(endOfPreviousMonth.getFullYear(), endOfPreviousMonth.getMonth(), 1),
                     new Date(startOfCurrentMonth.getTime() - 1),
                     5
                 )}>Предыдущий месяц</Button>
-                <Button size="small" active={btnId === 6} onClick={() => handler(
+                <Button className={classes.compact} size="small" active={btnId === 6} onClick={() => handler(
                     new Date(today.getFullYear(), 0, 1),
                     new Date(today.getFullYear(), 11, 31),
                     6
@@ -67,6 +67,7 @@ const StatisticsPage = memo(() => {
                     <Calendar changeDate={setEndDate} formatISO />
                 </div>
                 <Button
+                    className={classes.compact}
                     size="small"
                     active={btnId === 7}
                     onClick={() => handler(
@@ -79,7 +80,7 @@ const StatisticsPage = memo(() => {
                 </Button>
             </div>
             <div className="mb-4">
-                {catId && <Button size="small" color="danger" onClick={() => setCatId('')}>Назад</Button>}
+                {catId && <Button className={classes.compact} size="small" color="danger" onClick={() => setCatId('')}>Назад</Button>}
             </div>
 
             <div className={classes.mainStatsRow}>

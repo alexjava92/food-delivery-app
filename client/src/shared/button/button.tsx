@@ -10,16 +10,20 @@ interface IType {
     disabled?: boolean;
     color?: "primary" | "success" | "danger" | "gray";
     haptic?: "light" | "medium" | "heavy" | "soft" | "rigid";
+    className?: string;
 }
 
+
+
 export const Button: FC<IType> = memo(
-    ({ children, onClick, active, size = "medium", disabled = false, color = "primary", haptic  }) => {
+    ({ children, onClick, active, size = "medium", disabled = false, color = "primary", haptic, className  }) => {
         const classNames = [
             classes.button,
             classes[color],
             active ? classes.active : "",
             disabled ? classes.disabled : "",
             size && classes[size],
+            className,
         ]
             .filter(Boolean)
             .join(" ");
