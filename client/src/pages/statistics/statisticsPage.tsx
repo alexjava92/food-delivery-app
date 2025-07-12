@@ -4,6 +4,7 @@ import { useGetStatisticsQuery } from "../../store/API/ordersApi";
 import { Button } from "../../shared/button/button";
 import { Calendar } from "../../shared/calendar/calendar";
 import classes from "./statisticsPage.module.scss";
+import {ButtonGroup} from "../../shared/button/buttonGroup/buttonGroup";
 
 const StatisticsPage = memo(() => {
     const date = new Date();
@@ -31,7 +32,7 @@ const StatisticsPage = memo(() => {
         <MainLayout heading={'Статистика'} textCenter>
 
 
-            <div className={classes.box}>
+            {/*<div className={classes.box}>
                 <Button className={classes.compact} size="small" active={btnId === 1} onClick={() => handler(today, date, 1)}>Сегодня</Button>
                 <Button className={classes.compact} size="small" active={btnId === 2} onClick={() => handler(
                     new Date(new Date(date.setDate(date.getDate() - 1)).setHours(0, 0, 0, 0)),
@@ -58,7 +59,68 @@ const StatisticsPage = memo(() => {
                     new Date(today.getFullYear(), 11, 31),
                     6
                 )}>За год</Button>
-            </div>
+            </div>*/}
+
+            <ButtonGroup
+                items={[
+                    {
+                        label: "Сегодня",
+                        active: btnId === 1,
+                        onClick: () => handler(today, date, 1),
+                    },
+                    {
+                        label: "Вчера",
+                        active: btnId === 2,
+                        onClick: () =>
+                            handler(
+                                new Date(new Date(date.setDate(date.getDate() - 1)).setHours(0, 0, 0, 0)),
+                                new Date(new Date(date.setDate(date.getDate())).setHours(23, 59, 59, 999)),
+                                2
+                            ),
+                    },
+                    {
+                        label: "За 7 дней",
+                        active: btnId === 3,
+                        onClick: () =>
+                            handler(
+                                new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7),
+                                date,
+                                3
+                            ),
+                    },
+                    {
+                        label: "Этот месяц",
+                        active: btnId === 4,
+                        onClick: () =>
+                            handler(
+                                new Date(date.getFullYear(), date.getMonth(), 1),
+                                new Date(date.getFullYear(), date.getMonth() + 1, 0),
+                                4
+                            ),
+                    },
+                    {
+                        label: "Предыдущий месяц",
+                        active: btnId === 5,
+                        onClick: () =>
+                            handler(
+                                new Date(endOfPreviousMonth.getFullYear(), endOfPreviousMonth.getMonth(), 1),
+                                new Date(startOfCurrentMonth.getTime() - 1),
+                                5
+                            ),
+                    },
+                    {
+                        label: "За год",
+                        active: btnId === 6,
+                        onClick: () =>
+                            handler(
+                                new Date(today.getFullYear(), 0, 1),
+                                new Date(today.getFullYear(), 11, 31),
+                                6
+                            ),
+                    },
+                ]}
+            />
+
 
             <div className={classes.box}>
                 <div className={classes.calendarBox}>

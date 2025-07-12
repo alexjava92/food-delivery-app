@@ -1,0 +1,23 @@
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+.compact {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 999px;
+  height: auto;
+  min-height: unset;
+  flex-shrink: 0;
+  line-height: 1.2;
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(0.96);
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+  }
+}
