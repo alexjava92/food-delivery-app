@@ -6,6 +6,23 @@
    justify-content: flex-start;
 }
 
+/* Переопределение стилей кнопок ТОЛЬКО внутри .box */
+.box :global(.button) {
+   padding: 6px 12px !important;
+   font-size: 13px !important;
+   border-radius: 999px !important;
+   height: auto;
+   min-height: unset;
+   line-height: 1.2;
+   flex-shrink: 0;
+   transition: transform 0.2s ease;
+
+   &:active {
+      transform: scale(0.96);
+      box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+   }
+}
+
 .calendarBox {
    display: flex;
    align-items: center;
@@ -52,6 +69,7 @@
    font-size: 16px;
    color: #111;
 }
+
 .mainStatsRow {
    display: flex;
    gap: 32px;
@@ -63,12 +81,10 @@
 }
 
 .statLabel {
-   /*color: #666;*/
    font-weight: 500;
 }
 
 .statValue {
-   /*color: #111;*/
    font-weight: 600;
 }
 
@@ -94,5 +110,3 @@
    display: flex;
    justify-content: space-between;
 }
-
-
