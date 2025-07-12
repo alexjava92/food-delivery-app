@@ -1,17 +1,17 @@
 .box {
    margin-bottom: 12px;
    display: flex;
-   flex-wrap: wrap;
+  /* flex-wrap: wrap;*/
    gap: 8px;
-   justify-content: flex-start;
+   /*justify-content: flex-start;*/
+   align-items: center;
 }
 
 .calendarBox {
    display: flex;
    align-items: center;
-   justify-content: center;
-   width: 100%;
-   gap: 8px;
+   gap: 6px;
+
 }
 
 .statsGrid {
