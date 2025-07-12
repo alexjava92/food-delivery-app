@@ -35,11 +35,11 @@ export const MainLayout: FC<IType> = ({children, heading, homePage, textCenter, 
     return (
         <div className={tg?.colorScheme === 'light' ? 'container' : 'container darkTheme'}>
             <div className={classes.pageHeader}>
-                {!homePage &&
+            {/*    {!homePage &&
                     <span className={classes.back} onClick={() => navigate(-1)}>
                 <ArrowIconBack />
             </span>
-                }
+                }*/}
                 <h1 className={`${classes.h1} ${textCenter ? classes.textCenter : ''}`}>
                     {heading}
                 </h1>
