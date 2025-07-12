@@ -186,7 +186,7 @@ const StatisticsPage = memo(() => {
             {isStatsEmpty && (
                 <div className={classes.emptyBlock}>
                     <div className={classes.emoji}>📦</div>
-                    <div className={classes.emptyText}>Пока нет данных для отображения</div>
+                    <div className={classes.emptyText}>Пока ничего не заработали 😁</div>
                 </div>
             )}
 
